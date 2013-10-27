@@ -24,7 +24,7 @@
 - (void) sendToken: (NSString *) creditCardId;
 
 /*
-  Submits payment form to WePay.
+  Submit payment form to WePay.
  */
 - (IBAction)submit:(id)sender;
 
