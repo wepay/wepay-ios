@@ -61,7 +61,11 @@ If you want to use our testing (stage.wepay) environment:
 
 	/* 
 
-	If the customer has a non-US billing address, we require you to send their full billing address; however, if he/she has a US billing address, only the zipcode is required. If you only want to send the zipcode, you must make sure the "Enable ZIP-only billing address" option is checked on the app configuration page.
+	If the customer has a non-US billing address, we require you to send their
+	full billing address; however, if he/she has a US billing address, only
+	the zipcode is required. If you only want to send the zipcode, you must
+	make sure the "Enable ZIP-only billing address" option is checked on the 
+	app configuration page.
 
 	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] init];
 	addressDescriptor.address1 = @"Main Street";
