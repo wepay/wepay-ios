@@ -56,7 +56,7 @@
 		309F024E181C2C5A005596DE /* WPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3028868A1811E65600278D6C /* WPError.m */; };
 		309F024F181C2C5B005596DE /* WPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3028868A1811E65600278D6C /* WPError.m */; };
 		309F0251181C2C81005596DE /* WePay.strings in Resources */ = {isa = PBXBuildFile; fileRef = 309F024B181C2C0F005596DE /* WePay.strings */; };
-		30CC00D8181B1CF2008771F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30CC00D7181B1CF2008771F9 /* Default-568h@2x.png */; };
+		30BDAB01181F2CAE0095EE78 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */; };
 		30E4791E1817961200DB2124 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30543B21180DB44C0089B7BB /* SenTestingKit.framework */; };
 		30E4791F1817961200DB2124 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30543AFD180DB44C0089B7BB /* UIKit.framework */; };
 		30E479201817961200DB2124 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30543AFF180DB44C0089B7BB /* Foundation.framework */; };
@@ -106,9 +106,9 @@
 		308FCD1F181852530073EC9F /* WPUserDescriptorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPUserDescriptorTests.m; sourceTree = "<group>"; };
 		3091E1071814B46F002856DB /* WePaySDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WePaySDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30991789181B09F600192B11 /* WPResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPResource.h; sourceTree = "<group>"; };
-		309F024A181C2C0F005596DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = Base.lproj/WePay.strings; sourceTree = "<group>"; };
-		309F024C181C2C22005596DE /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/WePay.strings; sourceTree = "<group>"; };
-		30CC00D7181B1CF2008771F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		309F024A181C2C0F005596DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/WePay.strings; sourceTree = "<group>"; };
+		309F024C181C2C22005596DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/WePay.strings; sourceTree = "<group>"; };
+		30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		30E4791D1817961200DB2124 /* WePayTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WePayTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30E479231817961200DB2124 /* WePayTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WePayTests-Info.plist"; sourceTree = "<group>"; };
 		30E479251817961200DB2124 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 		308CFA1718198D3B002C18B7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				30CC00D7181B1CF2008771F9 /* Default-568h@2x.png */,
+				30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */,
 				30219B97181B2C9F00C996EC /* badge.png */,
 				30219B98181B2C9F00C996EC /* badge@2x.png */,
 				308CFA1818198D3B002C18B7 /* WePay-Example-Info.plist */,
@@ -366,7 +366,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				309F0249181C2C0F005596DE /* WePay.strings in Resources */,
-				30CC00D8181B1CF2008771F9 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +378,7 @@
 				308CFA1B18198D3B002C18B7 /* InfoPlist.strings in Resources */,
 				309F0251181C2C81005596DE /* WePay.strings in Resources */,
 				308CFA2418198D3B002C18B7 /* Main.storyboard in Resources */,
+				30BDAB01181F2CAE0095EE78 /* Default-568h@2x.png in Resources */,
 				30219B99181B2C9F00C996EC /* badge.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
