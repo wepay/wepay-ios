@@ -25,6 +25,8 @@ Finally, you will need to pass this card descriptor object to the static method,
 We show you how to accomplish all of these steps in the sample code below.
 
 
+## Usage
+
 ### Configuration
 
 For all requests, you must initialize the SDK with your Client ID, into either Staging or Production mode. All API calls made against WePay's staging environment mirror production in functionality, but do not actually move money. This allows you to develop your application and test the checkout experience from the perspective of your customers without spending any money on payments. 
@@ -44,12 +46,12 @@ If you want to use our testing (stage.wepay) environment:
 	[WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
 
 
-### Usage
+### Tokenize a card
 
 	#import "WPCreditCard.h"
 
 
-#### Tokenize Card
+#### Code
 
 	// Pass in the customer's address to the address descriptor
 	// For US customers, WePay only requires you to send a zipcode
@@ -103,7 +105,7 @@ If you want to use our testing (stage.wepay) environment:
 	    NSLog(@"%@", error);    
 	}];
 
-### Handling Errors
+### Error Handling
 
 As shown in the example above, you call the **createCardWithDescriptor** static method with the following parameters: card descriptor, success callback function, and error callback function. *createCardWithDescriptor* validates the customer's input before sending to WePay. 
 
