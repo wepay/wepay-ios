@@ -2,13 +2,13 @@
 ===========================================================
 WePay's IOS SDK makes it easy for you to add payments to your mobile application. You don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
 
-### Requirements
+## Requirements
 - ARC
 
-### Installation
+## Installation
 You can install the IOS SDK by adding the **WePay** directory to your project. 
 
-### Structure
+## Structure
 
 Descriptor classes, located in the **WePay/Descriptors** folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then charge on your own servers.
 
