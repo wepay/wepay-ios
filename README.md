@@ -54,11 +54,15 @@ If you want to use our testing (stage.wepay) environment:
 #### Code
 
 	// Pass in the customer's address to the address descriptor
-	// For US customers, WePay only requires you to send a zipcode
+	// For US customers, WePay allows you to only send the zipcode
+	// as long as the "Enable Zip-only billing address" is checked 
+	// on the app configuration page
 	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZip: @"94085"];
 
 	/* 
-	You can also do:
+
+	If the customer has a non-US billing address, we require you to send their full billing address; however, if he/she has a US billing address, only the zipcode is required. If you only want to send the zipcode, you must make sure the "Enable ZIP-only billing address" option is checked on the app configuration page.
+
 	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] init];
 	addressDescriptor.address1 = @"Main Street";
 	addressDescriptor.city = @"Sunnyvale";
