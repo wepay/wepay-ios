@@ -10,7 +10,7 @@ You can install the IOS SDK by adding the **WePay** directory to your project.
 
 ## Structure
 
-Descriptor classes, located in the **WePay/Descriptors** folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then charge on your own servers.
+Descriptor classes, located in the [WePay/Descriptors](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/ "WePay/Descriptors") folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then charge on your own servers.
 
 To send a customer's credit card details to WePay and receive a token, you will first need to create and populate descriptor objects with the name, email, address, and credit card details of the customer:
 
@@ -73,7 +73,7 @@ If you want to use our testing (stage.wepay) environment:
 	addressDescriptor.state = @"CA";
 	addressDescriptor.country = @"US";
 	addressDescriptor.zip = @"94085";
-	
+
 	*/
 
 	// Pass in the customer's name, email, and address descriptor to the user descriptor
