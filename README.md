@@ -92,7 +92,7 @@ If you want to use our testing (stage.wepay) environment:
 
 	// Send the customer's card details to WePay and retrieve a token
 	[WPCreditCard createCardWithDescriptor: cardDescriptor success: ^(WPCreditCard * tokenizedCard) {
-	    
+
 	    NSString * token = tokenizedCard.creditCardId;
 
 	    // Card token from WePay.
