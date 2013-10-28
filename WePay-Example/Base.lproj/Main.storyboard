@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment version="1552" defaultVersion="1552" identifier="iOS"/>
         <development version="4600" identifier="xcode"/>
@@ -14,7 +14,7 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name on Card" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Ba-8S-eSc">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name on Card" minimumFontSize="17" id="9Ba-8S-eSc">
                                 <rect key="frame" x="13" y="106" width="295" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -23,7 +23,7 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="zoJ-Wo-Viw"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DZC-MF-Cmg">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" id="DZC-MF-Cmg">
                                 <rect key="frame" x="13" y="146" width="295" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -32,7 +32,7 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="1wD-1Y-4PC"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Credit Card Number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gda-JW-Vzq">
+                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Credit Card Number" minimumFontSize="17" id="Gda-JW-Vzq">
                                 <rect key="frame" x="13" y="186" width="295" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -41,7 +41,7 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="aS7-cr-LMF"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Zipcode" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bG1-i1-X5j">
+                            <textField opaque="NO" clipsSubviews="YES" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Zipcode" minimumFontSize="17" id="bG1-i1-X5j">
                                 <rect key="frame" x="13" y="266" width="295" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -50,49 +50,37 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="Ldj-Xe-M3s"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="MM" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c3a-qa-PKc">
+                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="MM" minimumFontSize="17" id="c3a-qa-PKc">
                                 <rect key="frame" x="13" y="226" width="62" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="62" id="GW9-vg-lHU"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="CCV-gu-mbv"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="YY" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3kz-3U-ACy">
+                            <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="YY" minimumFontSize="17" id="3kz-3U-ACy">
                                 <rect key="frame" x="94" y="226" width="62" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="62" id="c68-jl-kez"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="Lmq-aH-dv6"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Security Code" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="W1I-4R-Rfa">
+                            <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Security Code" minimumFontSize="17" id="W1I-4R-Rfa">
                                 <rect key="frame" x="176" y="226" width="132" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="132" id="29C-Rz-P07"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                 <connections>
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="kjO-a0-EWS"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QBy-Mf-7yX">
-                                <rect key="frame" x="13" y="312" width="295" height="39"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="QBy-Mf-7yX">
+                                <rect key="frame" x="13" y="316" width="295" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.46358366940000001" blue="0.77724924399999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="39" id="1li-hk-JKJ"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Submit">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -102,22 +90,18 @@
                                     <action selector="submit:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Zfa-Ko-cAo"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="badge.png" translatesAutoresizingMaskIntoConstraints="NO" id="ap8-v9-qnD">
-                                <rect key="frame" x="52" y="393" width="216" height="30"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="badge.png" id="ap8-v9-qnD">
+                                <rect key="frame" x="52" y="399" width="216" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay with credit card" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xns-7A-nmM">
-                                <rect key="frame" x="13" y="62" width="295" height="36"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay with credit card" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xns-7A-nmM">
+                                <rect key="frame" x="13" y="66" width="295" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="8AJ-7b-hGD"/>
-                                    <constraint firstAttribute="width" constant="295" id="hZg-jU-kgv"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NgX-H6-icl">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NgX-H6-icl">
                                 <rect key="frame" x="83" y="226" width="6" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -125,36 +109,6 @@
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="DZC-MF-Cmg" firstAttribute="trailing" secondItem="Gda-JW-Vzq" secondAttribute="trailing" type="default" id="0eq-Nu-Wob"/>
-                            <constraint firstItem="Gda-JW-Vzq" firstAttribute="leading" secondItem="c3a-qa-PKc" secondAttribute="leading" type="default" id="1aU-BN-kXE"/>
-                            <constraint firstItem="DZC-MF-Cmg" firstAttribute="leading" secondItem="Gda-JW-Vzq" secondAttribute="leading" type="default" id="1zM-JA-bcH"/>
-                            <constraint firstItem="Xns-7A-nmM" firstAttribute="leading" secondItem="9Ba-8S-eSc" secondAttribute="leading" type="default" id="2xP-go-tVX"/>
-                            <constraint firstItem="c3a-qa-PKc" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="226" id="3kk-ve-TAP"/>
-                            <constraint firstItem="QBy-Mf-7yX" firstAttribute="leading" secondItem="bG1-i1-X5j" secondAttribute="leading" type="default" id="4Io-0R-g2t"/>
-                            <constraint firstItem="DZC-MF-Cmg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="146" id="4zu-fc-wDb"/>
-                            <constraint firstItem="Xns-7A-nmM" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="62" id="7pi-sb-dRy"/>
-                            <constraint firstItem="NgX-H6-icl" firstAttribute="leading" secondItem="c3a-qa-PKc" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="9fI-WC-dGn"/>
-                            <constraint firstItem="Xns-7A-nmM" firstAttribute="trailing" secondItem="9Ba-8S-eSc" secondAttribute="trailing" type="default" id="HMB-tZ-ZnC"/>
-                            <constraint firstItem="c3a-qa-PKc" firstAttribute="leading" secondItem="bG1-i1-X5j" secondAttribute="leading" type="default" id="I2j-pz-JeO"/>
-                            <constraint firstItem="ap8-v9-qnD" firstAttribute="centerX" secondItem="QBy-Mf-7yX" secondAttribute="centerX" type="default" id="ItI-gk-nbs"/>
-                            <constraint firstAttribute="bottom" secondItem="ap8-v9-qnD" secondAttribute="bottom" constant="125" id="KyB-Qm-bdq"/>
-                            <constraint firstItem="3kz-3U-ACy" firstAttribute="bottom" secondItem="NgX-H6-icl" secondAttribute="bottom" type="default" id="TNc-rb-MM1"/>
-                            <constraint firstItem="3kz-3U-ACy" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="94" id="V0s-yB-WnW"/>
-                            <constraint firstItem="9Ba-8S-eSc" firstAttribute="top" secondItem="Xns-7A-nmM" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="XyG-XM-Qff"/>
-                            <constraint firstItem="W1I-4R-Rfa" firstAttribute="trailing" secondItem="bG1-i1-X5j" secondAttribute="trailing" type="default" id="bd4-Ow-wHb"/>
-                            <constraint firstItem="3kz-3U-ACy" firstAttribute="top" secondItem="NgX-H6-icl" secondAttribute="top" type="default" id="cuo-IX-dV3"/>
-                            <constraint firstItem="bG1-i1-X5j" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="266" id="dHS-Dd-edb"/>
-                            <constraint firstItem="bG1-i1-X5j" firstAttribute="trailing" secondItem="QBy-Mf-7yX" secondAttribute="trailing" type="default" id="flt-Sw-3GV"/>
-                            <constraint firstItem="9Ba-8S-eSc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" type="default" id="goc-fR-FR7"/>
-                            <constraint firstItem="3kz-3U-ACy" firstAttribute="baseline" secondItem="c3a-qa-PKc" secondAttribute="baseline" type="default" id="lYH-ER-pBt"/>
-                            <constraint firstAttribute="bottom" secondItem="QBy-Mf-7yX" secondAttribute="bottom" constant="197" id="mpH-oi-bGx"/>
-                            <constraint firstItem="W1I-4R-Rfa" firstAttribute="baseline" secondItem="3kz-3U-ACy" secondAttribute="baseline" type="default" id="r3x-dt-aiP"/>
-                            <constraint firstItem="Gda-JW-Vzq" firstAttribute="trailing" secondItem="W1I-4R-Rfa" secondAttribute="trailing" type="default" id="sso-rX-5Tc"/>
-                            <constraint firstItem="DZC-MF-Cmg" firstAttribute="trailing" secondItem="9Ba-8S-eSc" secondAttribute="trailing" type="default" id="v74-aE-eaY"/>
-                            <constraint firstItem="Gda-JW-Vzq" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="186" id="vQ9-o3-0X5"/>
-                            <constraint firstItem="9Ba-8S-eSc" firstAttribute="leading" secondItem="DZC-MF-Cmg" secondAttribute="leading" type="default" id="xVJ-AU-zYc"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="creditCardNumber" destination="Gda-JW-Vzq" id="ZE5-s2-RwL"/>
