@@ -18,7 +18,7 @@ To send a customer's credit card details to WePay and receive a token, you will 
 
 2) You will need to create and populate a [WPUserDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPUserDescriptor.m "WPUserDescriptor") object (“user descriptor) with the customer's name, email, and address descriptor. 
 
-3) You will then need to create and populate a [/WPCreditCardDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPCreditCardDescriptor.m "WPCreditCardDescriptor") object (“card descriptor”) with the customer's credit card details and user descriptor. 
+3) You will then need to create and populate a [WPCreditCardDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPCreditCardDescriptor.m "WPCreditCardDescriptor") object (“card descriptor”) with the customer's credit card details and user descriptor. 
 
 Finally, you will need to pass this card descriptor object to the static method, **createCardWithDescriptor**, in the WPCreditCard class that actually sends the card information to WePay and receives back a token. 
 
