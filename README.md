@@ -51,8 +51,11 @@ If you want to use our testing (stage.wepay) environment:
 
 ### Tokenize a card
 
-	#import "WPCreditCard.h"
+```objectivec
+#import "WPCreditCard.h"
+```
 
+### Code
 
 ```objectivec
 // Pass in the customer's address to the address descriptor
