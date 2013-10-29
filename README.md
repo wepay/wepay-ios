@@ -137,11 +137,13 @@ The SDK converts WePay API errors (https://www.wepay.com/developer/reference/err
 
 The SDK validates all user input before sending to WePay. Each descriptor class has several validation functions you can use to validate the input yourself. For example, in the WPCreditCardDescriptor class, you will find the following validation functions:
 
-	- (BOOL) validateNumber:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-	- (BOOL) validateSecurityCode:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-	- (BOOL) validateUser:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-	- (BOOL) validateExpirationMonth:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-	- (BOOL) validateExpirationYear:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+```objectivec
+- (BOOL) validateNumber:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+- (BOOL) validateSecurityCode:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+- (BOOL) validateUser:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+- (BOOL) validateExpirationMonth:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+- (BOOL) validateExpirationYear:(id *)ioValue error:(NSError * __autoreleasing *)outError;
+```
 
 These methods follow the validation method convention used by [key value validation](https://developer.apple.com/library/mac/documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html "Key Value Validation"). You can call the validation methods directly, or by invoking validateKey:forKey:error: and specifying the key. 
 
