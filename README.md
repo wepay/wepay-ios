@@ -55,7 +55,7 @@ If you want to use our testing (stage.wepay) environment:
 
 	// Pass in the customer's address to the address descriptor
 	// For US customers, WePay allows you to only send the zipcode
-	// as long as the "Enable Zip-only billing address" is checked 
+	// as long as the "Enable Zip-only billing address" option is checked 
 	// on the app configuration page
 	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZip: @"94085"];
 
@@ -124,7 +124,7 @@ It generates NSError objects for the following errors and sends these objects to
 2. WePay API errors (from WePay.com)
 3. Network Errors
 
-All network related errors are in the domain **NSURLDomain**. 1 and 2 type errors are in the **WPAPPDomain** domain. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/en.lproj/WePay.strings** file to change the error messages.
+All network related errors are in the domain **NSURLErrorDomain**. 1 and 2 type errors are in the **WPAPPDomain** domain. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/en.lproj/WePay.strings** file to change the error messages.
 
 #### WePay API Errors
 
@@ -144,7 +144,7 @@ These methods follow the validation method convention used by [key value validat
 
 #### (Advanced) How to differentiate between errors
 
-You can check the error domain to differentiate between **NSURLDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors).
+You can check the error domain to differentiate between **NSURLErrorDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors).
 
 You can check the value of an error object's **WPErrorCategoryKey** userInfo dictionary key to differentiate between **Client-Side Validation** and **WePay API** errors:
 
