@@ -68,7 +68,7 @@ WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZ
 
 If the customer has a non-US billing address, we require you to send their
 full billing address; however, if he/she has a US billing address, only
-the zipcode is required. If you only want to send the zipcode, you must
+their zipcode is required. If you only want to send the zipcode, you must
 make sure the "Enable ZIP-only billing address" option is checked on the 
 app configuration page.
 
@@ -152,7 +152,7 @@ These methods follow the validation method convention used by [key value validat
 
 #### (Advanced) How to differentiate between errors
 
-You can check the error domain to differentiate between **NSURLErrorDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors).
+You can check the error domain to differentiate between **NSURLErrorDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors are the only two types of errors in the WPAPPDomain domain).
 
 You can check the value of an error object's **WPErrorCategoryKey** userInfo dictionary key to differentiate between **Client-Side Validation** and **WePay API** errors:
 
