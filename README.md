@@ -39,12 +39,15 @@ After you have created an API application on either stage.wepay.com or wepay.com
 
 If you want to use our production (wepay.com) environment:
 
-	[WePay setProductionClientId: @"YOUR_CLIENT_ID"];
+```objectivec
+[WePay setProductionClientId: @"YOUR_CLIENT_ID"];
+```
 
 If you want to use our testing (stage.wepay) environment:
 
-	[WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
-
+```objectivec
+[WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
+```
 
 ### Tokenize a card
 
