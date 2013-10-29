@@ -104,7 +104,7 @@ If you want to use our testing (stage.wepay) environment:
 	    
 	    // Handle errors
 
-        if ([[error domain] isEqualToString: @"NSURLDomain"])  {
+        if ([[error domain] isEqualToString: @"NSURLErrorDomain"])  {
             // Handle network errors
         }
         else {
