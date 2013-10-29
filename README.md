@@ -55,7 +55,7 @@ If you want to use our testing (stage.wepay) environment:
 #import "WPCreditCard.h"
 ```
 
-### Code
+#### Code
 
 ```objectivec
 // Pass in the customer's address to the address descriptor
