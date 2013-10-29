@@ -154,7 +154,7 @@ These methods follow the validation method convention used by [key value validat
 
 You can check the error domain to differentiate between **NSURLErrorDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors are the only two types of errors in the WPAPPDomain domain).
 
-You can check the value of an error object's **WPErrorCategoryKey** userInfo dictionary key to differentiate between **Client-Side Validation** and **WePay API** errors:
+You can check the value of an error object's **WPErrorCategoryKey** userInfo dictionary key to differentiate between **Client-Side Validation** and **WePay API** errors. 
 
 Each WePay API error object has one of the following values for the **WPErrorCategoryKey** userInfo dictionary key that is the same as the **error** category mentioned on [WePay API Errors page](https://www.wepay.com/developer/reference/errors "WePay API errors"):
 - invalid_request
