@@ -40,6 +40,9 @@
 
 @end
 
+/*
+ All of the descriptors inherit from WPDescriptor.
+ */
 @interface WPDescriptor : NSObject <WPDescriptor>
 
 /*

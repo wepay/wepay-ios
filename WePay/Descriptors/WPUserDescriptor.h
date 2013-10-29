@@ -8,6 +8,9 @@
 
 #import "WPAddressDescriptor.h"
 
+/*
+ WPUserDescriptor is a descriptor class used to pass in and validate user name, email, and address.
+ */
 @interface WPUserDescriptor : WPDescriptor 
 
 @property (nonatomic, strong) NSString * email;
