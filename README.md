@@ -51,68 +51,68 @@ If you want to use our testing (stage.wepay) environment:
 	#import "WPCreditCard.h"
 
 
-#### Code
+```objectivec
+// Pass in the customer's address to the address descriptor
+// For US customers, WePay allows you to only send the zipcode
+// as long as the "Enable Zip-only billing address" option is checked 
+// on the app configuration page
+WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZip: @"94085"];
 
-	// Pass in the customer's address to the address descriptor
-	// For US customers, WePay allows you to only send the zipcode
-	// as long as the "Enable Zip-only billing address" option is checked 
-	// on the app configuration page
-	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZip: @"94085"];
+/* 
 
-	/* 
+If the customer has a non-US billing address, we require you to send their
+full billing address; however, if he/she has a US billing address, only
+the zipcode is required. If you only want to send the zipcode, you must
+make sure the "Enable ZIP-only billing address" option is checked on the 
+app configuration page.
 
-	If the customer has a non-US billing address, we require you to send their
-	full billing address; however, if he/she has a US billing address, only
-	the zipcode is required. If you only want to send the zipcode, you must
-	make sure the "Enable ZIP-only billing address" option is checked on the 
-	app configuration page.
+WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] init];
+addressDescriptor.address1 = @"Main Street";
+addressDescriptor.city = @"Sunnyvale";
+addressDescriptor.state = @"CA";
+addressDescriptor.country = @"US";
+addressDescriptor.zip = @"94085";
 
-	WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] init];
-	addressDescriptor.address1 = @"Main Street";
-	addressDescriptor.city = @"Sunnyvale";
-	addressDescriptor.state = @"CA";
-	addressDescriptor.country = @"US";
-	addressDescriptor.zip = @"94085";
+*/
 
-	*/
+// Pass in the customer's name, email, and address descriptor to the user descriptor
+WPUserDescriptor * userDescriptor = [[WPUserDescriptor alloc] init];
+userDescriptor.name = @"Bill Clerico";
+userDescriptor.email = @"test@wepay.com";
+userDescriptor.address = addressDescriptor;
 
-	// Pass in the customer's name, email, and address descriptor to the user descriptor
-	WPUserDescriptor * userDescriptor = [[WPUserDescriptor alloc] init];
-	userDescriptor.name = @"Bill Clerico";
-	userDescriptor.email = @"test@wepay.com";
-	userDescriptor.address = addressDescriptor;
+// Pass in the customer's credit card details to the card descriptor
+WPCreditCardDescriptor * cardDescriptor = [[WPCreditCardDescriptor alloc] init];
+cardDescriptor.number = @"4242424242424242";
+cardDescriptor.expirationMonth = 2;
+cardDescriptor.expirationYear = 2020;
+cardDescriptor.securityCode = @"313";
+cardDescriptor.user = userDescriptor;
 
-	// Pass in the customer's credit card details to the card descriptor
-	WPCreditCardDescriptor * cardDescriptor = [[WPCreditCardDescriptor alloc] init];
-	cardDescriptor.number = @"4242424242424242";
-	cardDescriptor.expirationMonth = 2;
-	cardDescriptor.expirationYear = 2020;
-	cardDescriptor.securityCode = @"313";
-	cardDescriptor.user = userDescriptor;
+// Send the customer's card details to WePay and retrieve a token
+[WPCreditCard createCardWithDescriptor: cardDescriptor success: ^(WPCreditCard * tokenizedCard) {
 
-	// Send the customer's card details to WePay and retrieve a token
-	[WPCreditCard createCardWithDescriptor: cardDescriptor success: ^(WPCreditCard * tokenizedCard) {
+    NSString * token = tokenizedCard.creditCardId;
 
-	    NSString * token = tokenizedCard.creditCardId;
+    // Card token from WePay.
+    NSLog(@"Token: %@", token);
+  
+    // Add code here to send token to your servers
+    
+} failure:^(NSError * error) {
+    
+    // Handle errors
 
-	    // Card token from WePay.
-	    NSLog(@"Token: %@", token);
-	  
-	    // Add code here to send token to your servers
-	    
-	} failure:^(NSError * error) {
-	    
-	    // Handle errors
+    if ([[error domain] isEqualToString: @"NSURLErrorDomain"])  {
+        // Handle network errors
+    }
+    else {
+        // Handle WePay API and Client Side Validation errors
+    }
 
-        if ([[error domain] isEqualToString: @"NSURLErrorDomain"])  {
-            // Handle network errors
-        }
-        else {
-            // Handle WePay API and Client Side Validation errors
-        }
-
-	    NSLog(@"%@", error);    
-	}];
+    NSLog(@"%@", error);    
+}];
+```
 
 ### Error Handling
 
