@@ -43,7 +43,7 @@ If you want to use our production (wepay.com) environment:
 [WePay setProductionClientId: @"YOUR_CLIENT_ID"];
 ```
 
-If you want to use our testing (stage.wepay) environment:
+If you want to use our testing (stage.wepay.com) environment:
 
 ```objectivec
 [WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
