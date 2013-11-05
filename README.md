@@ -130,7 +130,7 @@ It generates NSError objects for the following errors and sends these objects to
 2. WePay API errors (from WePay.com)
 3. Network Errors
 
-All network related errors are in the domain `NSURLErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/en.lproj/WePay.strings** file to change the error messages.
+All network related errors are in the domain `NSURLErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/Base.lproj/WePay.strings** file to change the error messages.
 
 #### WePay API Errors
 
