@@ -107,7 +107,6 @@
 		3091E1071814B46F002856DB /* WePaySDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WePaySDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30991789181B09F600192B11 /* WPResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPResource.h; sourceTree = "<group>"; };
 		309F024A181C2C0F005596DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/WePay.strings; sourceTree = "<group>"; };
-		309F024C181C2C22005596DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/WePay.strings; sourceTree = "<group>"; };
 		30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		30E4791D1817961200DB2124 /* WePayTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WePayTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30E479231817961200DB2124 /* WePayTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WePayTests-Info.plist"; sourceTree = "<group>"; };
@@ -491,7 +490,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				309F024A181C2C0F005596DE /* Base */,
-				309F024C181C2C22005596DE /* en */,
 			);
 			name = WePay.strings;
 			sourceTree = "<group>";

@@ -1,6 +1,6 @@
 ![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
 ===========================================================
-WePay's IOS SDK makes it easy for you to add payments to your mobile application. You don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
+WePay's IOS SDK makes it easy for you to accept payments to your mobile application. You don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
 
 ## Requirements
 - ARC
@@ -20,7 +20,7 @@ To send a customer's credit card details to WePay and receive a token, you will 
 
 3) You will then need to create and populate a [WPCreditCardDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPCreditCardDescriptor.m "WPCreditCardDescriptor") object (“card descriptor”) with the customer's credit card details and user descriptor. 
 
-Finally, you will need to pass this card descriptor object to the static method, **createCardWithDescriptor**, in the WPCreditCard class that actually sends the card information to WePay and receives back a token. 
+Finally, you will need to pass this card descriptor object to the static method, `createCardWithDescriptor`, in the WPCreditCard class that actually sends the card information to WePay and receives back a token. 
 
 We show you how to accomplish all of these steps in the sample code below.
 
@@ -35,7 +35,7 @@ For all requests, you must initialize the SDK with your Client ID, into either S
 
 Use of our IOS SDK will require you to apply for tokenization approval. Please apply for approval on your application's dashboard.
 
-After you have created an API application on either stage.wepay.com or wepay.com, add the following to the **- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions** in your APPDelegate file:
+After you have created an API application on either stage.wepay.com or wepay.com, add the following to the `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions` in your APPDelegate file:
 
 If you want to use our production (wepay.com) environment:
 
@@ -122,7 +122,7 @@ cardDescriptor.user = userDescriptor;
 
 ### Error Handling
 
-As shown in the example above, you call the **createCardWithDescriptor** static method with the following parameters: card descriptor, success callback function, and error callback function. *createCardWithDescriptor* validates the customer's input before sending to WePay. 
+As shown in the example above, you call the `createCardWithDescriptor` static method with the following parameters: card descriptor, success callback function, and error callback function. *createCardWithDescriptor* validates the customer's input before sending to WePay. 
 
 It generates NSError objects for the following errors and sends these objects to the error callback function.
 
@@ -130,11 +130,11 @@ It generates NSError objects for the following errors and sends these objects to
 2. WePay API errors (from WePay.com)
 3. Network Errors
 
-All network related errors are in the domain **NSURLErrorDomain**. 1 and 2 type errors are in the **WPAPPDomain** domain. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/en.lproj/WePay.strings** file to change the error messages.
+All network related errors are in the domain `NSURLErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. All errors have a localizable user-facing error message that can be retrieved by calling [error localizedDescription]. You can edit the **WePay/Resources/en.lproj/WePay.strings** file to change the error messages.
 
 #### WePay API Errors
 
-The SDK converts WePay API errors (https://www.wepay.com/developer/reference/errors) into NSError objects with the same error codes and descriptions. The userInfo dictionary **WPErrorCategoryKey** key value is the same as the **error** category sent by WePay.
+The SDK converts WePay API errors (https://www.wepay.com/developer/reference/errors) into NSError objects with the same error codes and descriptions. The userInfo dictionary `WPErrorCategoryKey` key value is the same as the **error** category sent by WePay.
 
 #### Validation
 
@@ -152,18 +152,17 @@ These methods follow the validation method convention used by [key value validat
 
 #### (Advanced) How to differentiate between errors
 
-You can check the error domain to differentiate between **NSURLErrorDomain** and **WPAPPDomain** errors (WePay API and Client-side validation errors are the only two types of errors in the WPAPPDomain domain).
+You can check the error domain to differentiate between `NSURLErrorDomain`, WePay API, and Client-side validation errors. WePay API errors are in the `
+WePayAPIDomain`. Client Side validation errors are in the `WePaySDKDomain`.
 
-You can check the value of an error object's **WPErrorCategoryKey** userInfo dictionary key to differentiate between **Client-Side Validation** and **WePay API** errors. 
-
-Each WePay API error object has one of the following values for the **WPErrorCategoryKey** userInfo dictionary key that is the same as the **error** category mentioned on [WePay API Errors page](https://www.wepay.com/developer/reference/errors "WePay API errors"):
+Each WePay API error object has one of the following values for the `WPErrorCategoryKey` userInfo dictionary key that is the same as the **error** category from the [WePay API Errors page](https://www.wepay.com/developer/reference/errors "WePay API errors"):
 - invalid_request
 - access_denied
 - invalid_scope
 - invalid_client
 - processing_error
 
-Each client side validation error object has one of the following values for the **WPErrorCategoryKey** userInfo dictionary key:
+Each client side validation error object has one of the following values for the `WPErrorCategoryKey` userInfo dictionary key that corresponds to the descriptor class that generated the error object:
 - WPErrorCategoryCardValidation (for WPCreditCardDescriptor validation errors)
 - WPErrorCategoryUserValidation (for WPUserDescriptor validation errors)
 - WPErrorCategoryAddressValidation (for WPAddressDescriptor validation errors)

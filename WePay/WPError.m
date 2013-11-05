@@ -8,7 +8,8 @@
 
 #import "WPError.h"
 
-NSString * const WPAPPErrorDomain = @"WPAPPDomain";
+NSString * const WePayAPIDomain = @"com.wepay.app";
+NSString * const WePaySDKDomain = @"com.wepay.sdk";
 NSString * const WPErrorCategoryKey = @"WPErrorCategoryKey";
 NSString * const WPErrorCategoryNone = @"WPErrorCategoryNone";
 NSString * const WPErrorCategoryCardValidation = @"WPCardValidation";

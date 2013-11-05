@@ -9,7 +9,7 @@
 #import "WPDescriptor.h"
 
 /*
- WPAddressDescriptor is a descriptor class used to pass in and validate user address.
+ WPAddressDescriptor is a descriptor class used to pass in and validate the customer's address.
 */
 @interface WPAddressDescriptor : WPDescriptor 
 
@@ -23,13 +23,15 @@
 @property (nonatomic, strong) NSString * postcode;
 
 /*
- Initialize address.
+ Function to create and initialize address descriptor.
  */
 - (id) initWithAddress1: (NSString *) userAddress1 address2:  (NSString *) userAddress2 city:  (NSString *) userCity state: (NSString *) userState country: (NSString *) userCountry zip: (NSString *) userZip;
 
 /*
  You can use this constructor for US customers only. 
  For US only, you do not have to send the customer's full address, but you do have to send their zipcode.
+ If you are using this function, make sure the the Enable ZIP-only billing address option 
+ is enabled for your application (To set this option, please see your application's configure page).
  */
 - (id) initWithZip: (NSString *) zipCode;
 

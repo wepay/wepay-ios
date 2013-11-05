@@ -88,7 +88,7 @@ static NSString * const version = @"v2";
     [details setValue: errorText forKey: NSLocalizedDescriptionKey];
     [details setValue: errorCategory forKey: WPErrorCategoryKey];
     
-    return [NSError errorWithDomain: WPAPPErrorDomain code: errorCode userInfo: details];
+    return [NSError errorWithDomain: WePayAPIDomain code: errorCode userInfo: details];
 }
 
 

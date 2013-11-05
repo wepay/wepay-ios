@@ -34,7 +34,10 @@
 @optional
 
 /*
- This validates a fully populated descriptor class to check for all errors. For example, if you want to determine whether a card descriptor object is valid (whether a customer's credit card information is valid), call this function on the credit card descriptor object.
+ This validates a fully populated descriptor class to check for all errors. 
+ For example, if you want to determine whether a card descriptor object is valid 
+ (whether a customer's credit card information is valid), call this function on 
+ the credit card descriptor object.
 */
 - (BOOL) validateReturningError: (NSError * __autoreleasing *) outError;
 
@@ -51,7 +54,10 @@
 - (BOOL) handleNoValueCheckForKey: (WPErrorCode) code ioValue: (id *) ioValue error: (NSError * __autoreleasing *)outError;
 
 /*
- The validation functions in each descriptor class call this method to actually set an NSError object. For example, if there is an invalid card number, the validateNumber function in the WPCreditCardDescriptor class calls this method to populate the outError parameter with an NSError object.
+ The validation functions in each descriptor class call this method to 
+ actually set an NSError object. For example, if there is an invalid card number, 
+ the validateNumber function in the WPCreditCardDescriptor class 
+ calls this method to populate the outError parameter with an NSError object.
  */
 - (BOOL) processValidationErrorForKey: (WPErrorCode) code error: (NSError * __autoreleasing *)outError;
 

@@ -65,7 +65,7 @@
         NSDictionary * userInfoDict = [NSDictionary dictionaryWithObjectsAndKeys: errorString, NSLocalizedDescriptionKey, [self errorCategory], WPErrorCategoryKey, nil];
         
         // Validation NSError Object
-        *outError = [[NSError alloc] initWithDomain: WPAPPErrorDomain code: code userInfo: userInfoDict];
+        *outError = [[NSError alloc] initWithDomain: WePaySDKDomain code: code userInfo: userInfoDict];
     }
     
     return NO;
