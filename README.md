@@ -1,6 +1,6 @@
 ![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
 ===========================================================
-WePay's IOS SDK makes it easy for you to accept payments to your mobile application. You don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
+WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Using our SDK, you don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
 
 ## Requirements
 - ARC
@@ -152,7 +152,7 @@ These methods follow the validation method convention used by [key value validat
 
 #### (Advanced) How to differentiate between errors
 
-You can check the error domain to differentiate between `NSURLErrorDomain`, WePay API, and Client-side validation errors. WePay API errors are in the `
+You can check the error domain to differentiate between Network, WePay API, and Client-side validation errors. Network and NSUrlConnection errors are in the `NSURLErrorDomain`. WePay API errors are in the `
 WePayAPIDomain`. Client Side validation errors are in the `WePaySDKDomain`.
 
 Each WePay API error object has one of the following values for the `WPErrorCategoryKey` userInfo dictionary key that is the same as the **error** category from the [WePay API Errors page](https://www.wepay.com/developer/reference/errors "WePay API errors"):
@@ -167,7 +167,7 @@ Each client side validation error object has one of the following values for the
 - WPErrorCategoryUserValidation (for WPUserDescriptor validation errors)
 - WPErrorCategoryAddressValidation (for WPAddressDescriptor validation errors)
 
-Please see the file WePay/WPError.h for more information.
+Please see the file **WePay/WPError.h** for more information.
 
 ### iOS Example
 Run the WePay-Example target. This sample application shows you how to accept payments in your mobile app.
