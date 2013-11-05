@@ -130,7 +130,7 @@ It generates NSError objects for the following errors and sends these objects to
 2. WePay API errors (from WePay.com)
 3. Network Errors
 
-All network related errors are in the domain `NSURLErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. All errors have a localizable user-facing error message that can be retrieved by calling `[error localizedDescription]`. You can edit the **WePay/Resources/Base.lproj/WePay.strings** file to change the error messages.
+All network related errors are in the `NSURLErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. All errors have a localizable user-facing error message that can be retrieved by calling `[error localizedDescription]`. You can edit the **WePay/Resources/Base.lproj/WePay.strings** file to change the client-side validation error messages.
 
 #### WePay API Errors
 
@@ -138,7 +138,7 @@ The SDK converts WePay API errors (https://www.wepay.com/developer/reference/err
 
 #### Validation
 
-The SDK validates all user input before sending to WePay. Each descriptor class has several validation functions you can use to validate the input yourself. For example, in the `WPCreditCardDescriptor` class, you will find the following validation functions:
+The SDK validates all user input before sending to WePay. Each descriptor class has several validation functions you can use to validate the input yourself. Please check the header files for a list of all of these validation functions. For example, in the `WPCreditCardDescriptor` class, you will find the following validation functions:
 
 ```objectivec
 - (BOOL) validateNumber:(id *)ioValue error:(NSError * __autoreleasing *)outError;
