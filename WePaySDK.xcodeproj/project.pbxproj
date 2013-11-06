@@ -56,6 +56,8 @@
 		309F024E181C2C5A005596DE /* WPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3028868A1811E65600278D6C /* WPError.m */; };
 		309F024F181C2C5B005596DE /* WPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3028868A1811E65600278D6C /* WPError.m */; };
 		309F0251181C2C81005596DE /* WePay.strings in Resources */ = {isa = PBXBuildFile; fileRef = 309F024B181C2C0F005596DE /* WePay.strings */; };
+		30AD6BBE182ADC1100EC13F9 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30AD6BBD182ADC1100EC13F9 /* AdSupport.framework */; };
+		30AD6BC1182ADC2F00EC13F9 /* WPUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AD6BC0182ADC2F00EC13F9 /* WPUtilities.m */; };
 		30BDAB01181F2CAE0095EE78 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */; };
 		30E4791E1817961200DB2124 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30543B21180DB44C0089B7BB /* SenTestingKit.framework */; };
 		30E4791F1817961200DB2124 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30543AFD180DB44C0089B7BB /* UIKit.framework */; };
@@ -107,6 +109,9 @@
 		3091E1071814B46F002856DB /* WePaySDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WePaySDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30991789181B09F600192B11 /* WPResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPResource.h; sourceTree = "<group>"; };
 		309F024A181C2C0F005596DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/WePay.strings; sourceTree = "<group>"; };
+		30AD6BBD182ADC1100EC13F9 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		30AD6BBF182ADC2F00EC13F9 /* WPUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPUtilities.h; sourceTree = "<group>"; };
+		30AD6BC0182ADC2F00EC13F9 /* WPUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPUtilities.m; sourceTree = "<group>"; };
 		30BDAB00181F2CAE0095EE78 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		30E4791D1817961200DB2124 /* WePayTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WePayTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30E479231817961200DB2124 /* WePayTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WePayTests-Info.plist"; sourceTree = "<group>"; };
@@ -131,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30AD6BBE182ADC1100EC13F9 /* AdSupport.framework in Frameworks */,
 				308CFA1418198D3B002C18B7 /* CoreGraphics.framework in Frameworks */,
 				308CFA1518198D3B002C18B7 /* UIKit.framework in Frameworks */,
 				308CFA1318198D3B002C18B7 /* Foundation.framework in Frameworks */,
@@ -163,6 +169,8 @@
 				3028868A1811E65600278D6C /* WPError.m */,
 				30991789181B09F600192B11 /* WPResource.h */,
 				302886DE1814274900278D6C /* WPResource.m */,
+				30AD6BBF182ADC2F00EC13F9 /* WPUtilities.h */,
+				30AD6BC0182ADC2F00EC13F9 /* WPUtilities.m */,
 			);
 			path = WePay;
 			sourceTree = "<group>";
@@ -198,6 +206,7 @@
 		30543AFC180DB44C0089B7BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30AD6BBD182ADC1100EC13F9 /* AdSupport.framework */,
 				30543AFD180DB44C0089B7BB /* UIKit.framework */,
 				30543AFF180DB44C0089B7BB /* Foundation.framework */,
 				30543B01180DB44C0089B7BB /* CoreGraphics.framework */,
@@ -421,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				308CFA4318198E4B002C18B7 /* WPAddressDescriptor.h in Sources */,
+				30AD6BC1182ADC2F00EC13F9 /* WPUtilities.m in Sources */,
 				308CFA4418198E4B002C18B7 /* WPAddressDescriptor.m in Sources */,
 				308CFA4518198E4B002C18B7 /* WPCreditCardDescriptor.h in Sources */,
 				308CFA4618198E4B002C18B7 /* WPCreditCardDescriptor.m in Sources */,

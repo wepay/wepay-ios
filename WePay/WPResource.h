@@ -9,6 +9,7 @@
 #import "WePay.h"
 #import "WPError.h"
 
+
 typedef void (^WPSuccessBlock)(NSDictionary * data);
 typedef void (^WPErrorBlock)(NSError * error);
 

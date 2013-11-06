@@ -4,6 +4,7 @@ WePay's IOS SDK makes it easy for you to accept payments in your mobile applicat
 
 ## Requirements
 - ARC
+- AdSupport.framework
 
 ## Installation
 You can install the IOS SDK by adding the **WePay** directory to your project. 
@@ -173,3 +174,19 @@ Please see the file **WePay/WPError.h** for more information.
 
 ### iOS Example
 Run the WePay-Example target. This sample application shows you how to accept payments in your mobile app.
+
+### Notes
+
+To help us prevent fraud, WePay IOS SDK automatically sends the user's IP and [Advertiser Identifier](https://developer.apple.com/library/IOs/documentation/AdSupport/Reference/ASIdentifierManager_Ref/ASIdentifierManager.html "Advertiser Identifier") when they make a payment. If you want to disable the collection of these two pieces of information, you can use the functions below instead when setting your application cliend Id:
+
+Testing:
+```objectivec
++ (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
+```
+
+Production:
+```objectivec
++ (void) setProductionClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
+```
+
+If you disable the sending of ip and device id, you don't need to add the `AdSupport.framework` to your application.

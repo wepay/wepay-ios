@@ -7,6 +7,7 @@
 //
 
 #import "WPCreditCard.h"
+#import "WPUtilities.h"
 
 @implementation WPCreditCard
 
@@ -33,6 +34,13 @@
 
         NSMutableDictionary * newParams = [[descriptor dictionary] mutableCopy];
         [newParams setObject: [WePay clientId] forKey: @"client_id"];
+        
+        if ([WePay sendIpAndDeviceId])
+        {
+            // This information is not required, but WePay uses this to help prevent fraud.
+            [newParams setObject: [WPUtilities ipAddress] forKey: @"original_ip"];
+            [newParams setObject: [WPUtilities deviceIdentifier] forKey: @"original_device"];
+        }
         
         [super makeRequestToEndPoint: @"/credit_card/create"
                               values: newParams

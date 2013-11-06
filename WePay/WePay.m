@@ -22,6 +22,8 @@ static BOOL onProduction;
 // Client id to make API calls.
 static NSString * clientId;
 
+static BOOL sendIPandDeviceId = YES;
+
 + (id)alloc
 {
     [NSException raise:@"CannotInstantiateStaticClass" format:@"WePay is a static class and cannot be instantiated."];
@@ -40,11 +42,32 @@ static NSString * clientId;
 
 
 /*
+ Use production environment. Set application client ID. Specify whether to send user's device id and IP when they make a payment
+ */
++ (void) setProductionClientId:(NSString *) key sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
+    clientId = key;
+    onProduction = YES;
+    sendIPandDeviceId = sendIPandDeviceIdflag;
+}
+
+
+/*
  Use stage environment. Set application client ID.
  */
-+ (void) setStageClientId:(NSString *) key {
++ (void) setStageClientId:(NSString *) key  {
     clientId = key;
     onProduction = NO;
+}
+
+
+/*
+ Use stage environment. Set application client ID. Specify whether to send user's device id and IP when they make a payment
+ */
++ (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag
+{
+    clientId = key;
+    onProduction = NO;
+    sendIPandDeviceId = sendIPandDeviceIdflag;
 }
 
 
@@ -63,6 +86,12 @@ static NSString * clientId;
 
 + (BOOL) isProduction {
     return onProduction;
+}
+
+
++ (BOOL) sendIpAndDeviceId
+{
+    return sendIPandDeviceId;
 }
 
 
