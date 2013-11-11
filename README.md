@@ -177,7 +177,7 @@ Run the WePay-Example target. This sample application shows you how to accept pa
 
 ### Notes
 
-To help us prevent fraud, WePay IOS SDK automatically sends the user's IP and [Advertiser Identifier](https://developer.apple.com/library/IOs/documentation/AdSupport/Reference/ASIdentifierManager_Ref/ASIdentifierManager.html "Advertiser Identifier") when they make a payment. If you want to disable the collection of these two pieces of information, you can use the functions below instead when setting your application cliend Id:
+To help us prevent fraud, WePay IOS SDK automatically sends the user's IP and [Advertiser Identifier](https://developer.apple.com/library/IOs/documentation/AdSupport/Reference/ASIdentifierManager_Ref/ASIdentifierManager.html "Advertiser Identifier") when they make a payment. If you want to disable the collection of these two pieces of information, you can use the functions below instead when setting your application client Id:
 
 Testing:
 ```objectivec
@@ -189,4 +189,4 @@ Production:
 + (void) setProductionClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
 ```
 
-If you disable the sending of ip and device id, you don't need to add the `AdSupport.framework` to your application.
+If you disable the sending of ip and device id, you don't have to add the `AdSupport.framework` to your application.
