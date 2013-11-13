@@ -8,12 +8,6 @@
 
 #import <ifaddrs.h>
 #import <arpa/inet.h>
-#import <sys/socket.h>
-#import <sys/sysctl.h>
-#import <net/if.h>
-#import <net/if_dl.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#import <CoreTelephony/CTCarrier.h>
 #import <AdSupport/AdSupport.h>
 #import "WPUtilities.h"
 

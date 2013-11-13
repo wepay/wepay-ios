@@ -35,7 +35,7 @@
         NSMutableDictionary * newParams = [[descriptor dictionary] mutableCopy];
         [newParams setObject: [WePay clientId] forKey: @"client_id"];
         
-        if ([WePay sendIpAndDeviceId])
+        if ([WePay sendDeviceData])
         {
             // This information is not required, but WePay uses this to help prevent fraud.
             [newParams setObject: [WPUtilities ipAddress] forKey: @"original_ip"];

@@ -49,6 +49,6 @@
 /*
  Whether to send the user's IP and device id
  */
-+ (BOOL) sendIpAndDeviceId;
++ (BOOL) sendDeviceData;
 
 @end

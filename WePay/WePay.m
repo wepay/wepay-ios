@@ -89,7 +89,7 @@ static BOOL sendIPandDeviceId = YES;
 }
 
 
-+ (BOOL) sendIpAndDeviceId
++ (BOOL) sendDeviceData
 {
     return sendIPandDeviceId;
 }
