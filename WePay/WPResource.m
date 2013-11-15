@@ -24,7 +24,6 @@
 @implementation WPResource
 
 // URL roots to make API calls.
-
 // prod
 static NSString * const prodApiUrlRoot = @"https://wepayapi.com/v2/";
 
