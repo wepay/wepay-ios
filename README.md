@@ -107,17 +107,8 @@ cardDescriptor.user = userDescriptor;
     // Add code here to send token to your servers
     
 } failure:^(NSError * error) {
-    
-    // Handle errors
 
-    if ([[error domain] isEqualToString: @"NSURLErrorDomain"])  {
-        // Handle network errors
-    }
-    else {
-        // Handle WePay API and Client Side Validation errors
-    }
-
-    NSLog(@"%@", error);    
+    NSLog(@"Error trying to create token: %@", [error localizedDescription]);    
 }];
 ```
 
