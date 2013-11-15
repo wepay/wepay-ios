@@ -19,16 +19,8 @@ typedef void (^WPErrorBlock)(NSError * error);
 @interface WPResource : NSObject
 
 /*
- Get API root domain.
- */
-+ (NSString *) apiRootUrl;
-
-/*
  You call this method to make the actual /credit_card/create API call.
  */
 + (void) makeRequestToEndPoint:(NSString *) endpoint values:(NSDictionary *) params accessToken: (NSString *) accessToken successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler;
-
-// Helper for makeRequestToEndPoint to process API call request response
-+ (void) processResponse: (NSURLResponse *) response data: (NSData *) data error: (NSError *)error successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler;
 
 @end

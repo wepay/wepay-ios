@@ -42,7 +42,7 @@
             [newParams setObject: [WPUtilities deviceIdentifier] forKey: @"original_device"];
         }
         
-        [super makeRequestToEndPoint: @"/credit_card/create"
+        [super makeRequestToEndPoint: @"credit_card/create"
                               values: newParams
                          accessToken: nil
                         successBlock: ^(NSDictionary * returnData) {

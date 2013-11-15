@@ -10,22 +10,32 @@
 
 @interface WPResource()
 
+// get api request url
++ (NSURL *) apiUrlWithEndpoint: (NSString *) endpoint;
+
+// convert data from WePay to error object
 + (NSError *) handleErrorFromResponse: (NSDictionary *) dictionary;
+
+// Helper for makeRequestToEndPoint to process API call request response
++ (void) processResponse: (NSURLResponse *) response data: (NSData *) data error: (NSError *)error successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler;
 
 @end
 
 @implementation WPResource
 
 // URL roots to make API calls.
-static NSString * const prodApiUrlRoot = @"https://wepayapi.com/";
-static NSString * const stageApiUrlRoot = @"https://stage.wepayapi.com/";
+
+// prod
+static NSString * const prodApiUrlRoot = @"https://wepayapi.com/v2/";
+
+// stage
+static NSString * const stageApiUrlRoot = @"https://stage.wepayapi.com/v2/";
 
 // Version number to be appended to URL root.
 static NSString * const version = @"v2";
 
 
-// Get right domain to make API calls
-+ (NSString *) apiRootUrl {
++ (NSURL *) apiUrlWithEndpoint: (NSString *) endpoint {
     
     [WePay validateCredentials];
     
@@ -38,12 +48,11 @@ static NSString * const version = @"v2";
         rootUrl = stageApiUrlRoot;
     }
     
-    return [NSString stringWithFormat: @"%@%@", rootUrl, version];
+    return [[NSURL URLWithString: [NSString stringWithFormat: @"%@", rootUrl]] URLByAppendingPathComponent: endpoint];
 }
 
 
 # pragma mark API Requests and Handling
-
 
 /*
  Handle Wepay Error. Create NSError object with returned error code, category, and description.
@@ -101,8 +110,8 @@ static NSString * const version = @"v2";
     NSDictionary * dictionary = nil;
     NSString * errorCode = nil;
     
-    if([data length] >= 1) {
-        
+    if([data length] >= 1)
+    {
         dictionary = [NSJSONSerialization JSONObjectWithData: data options: kNilOptions error: nil];
         
         if(dictionary != nil && [dictionary objectForKey: @"error_code"] != (id)[NSNull null]) {
@@ -110,7 +119,8 @@ static NSString * const version = @"v2";
         }
     }
     
-    if(dictionary != nil && error == nil) {
+    if(dictionary != nil && error == nil)
+    {
         NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
         
         if(statusCode == 200) {
@@ -134,7 +144,7 @@ static NSString * const version = @"v2";
  */
 + (void) makeRequestToEndPoint: (NSString *) endpoint values: (NSDictionary *) params accessToken: (NSString *) accessToken successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler {
     
-    NSURL * callUrl = [[NSURL URLWithString: [self apiRootUrl]] URLByAppendingPathComponent: endpoint];
+    NSURL * callUrl = [self apiUrlWithEndpoint: endpoint];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: callUrl];
     
     [request setHTTPMethod: @"POST"];
