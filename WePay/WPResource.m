@@ -14,7 +14,7 @@
 + (NSURL *) apiUrlWithEndpoint: (NSString *) endpoint;
 
 // convert data from WePay to error object
-+ (NSError *) handleErrorFromResponse: (NSDictionary *) dictionary;
++ (NSError *) errorFromResponse: (NSDictionary *) dictionary;
 
 // Helper for makeRequestToEndPoint to process API call request response
 + (void) processResponse: (NSURLResponse *) response data: (NSData *) data error: (NSError *)error successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler;
@@ -56,7 +56,7 @@ static NSString * const version = @"v2";
 /*
  Handle Wepay Error. Create NSError object with returned error code, category, and description.
  */
-+ (NSError *) handleErrorFromResponse: (NSDictionary *) dictionary {
++ (NSError *) errorFromResponse: (NSDictionary *) dictionary {
     NSMutableDictionary * details = [NSMutableDictionary dictionary];
     
     NSInteger errorCode;
@@ -126,11 +126,11 @@ static NSString * const version = @"v2";
             successHandler(dictionary);
         }
         else {
-            errorHandler([self handleErrorFromResponse: dictionary]);
+            errorHandler([self errorFromResponse: dictionary]);
         }
     }
     else if(dictionary == nil && error == nil) {
-        errorHandler([self handleErrorFromResponse: dictionary]);
+        errorHandler([self errorFromResponse: dictionary]);
     }
     else if (error != nil) {
         errorHandler(error);
