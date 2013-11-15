@@ -108,7 +108,8 @@ cardDescriptor.user = userDescriptor;
     
 } failure:^(NSError * error) {
 
-    NSLog(@"Error trying to create token: %@", [error localizedDescription]);    
+    NSLog(@"Error trying to create token: %@", [error localizedDescription]);
+
 }];
 ```
 
