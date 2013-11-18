@@ -1,6 +1,6 @@
 ![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
 ===========================================================
-WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Using our SDK, you don't have to worry about PCI compliance because your servers never touch actual credit card data. User card details are sent to WePay, which sends back a token that your app can send off to your own servers for charge. 
+WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Because WePay stores the user's credit card details for you and sends your server a token to charge the card, if you use our SDK, your PCI compliance scope is greatly reduced compared to the case when your servers were handling the card details directly. 
 
 ## Requirements
 - ARC
@@ -8,6 +8,7 @@ WePay's IOS SDK makes it easy for you to accept payments in your mobile applicat
 
 ## Installation
 You can install the IOS SDK by adding the **WePay** directory to your project. 
+You will need to add the AdSupport.Framework to your application. Please see the Notes section (at the end of this Readme) for information about why you need to add this framework.
 
 ## Structure
 

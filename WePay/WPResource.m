@@ -23,7 +23,8 @@
 
 @implementation WPResource
 
-// URL roots to make API calls.
+/* URL roots to make API calls. */
+
 // prod
 static NSString * const prodApiUrlRoot = @"https://wepayapi.com/v2/";
 
@@ -34,6 +35,7 @@ static NSString * const stageApiUrlRoot = @"https://stage.wepayapi.com/v2/";
 static NSString * const version = @"v2";
 
 
+// Returns an NSURL for API Call Endpoint
 + (NSURL *) apiUrlWithEndpoint: (NSString *) endpoint {
     
     [WePay validateCredentials];
@@ -53,9 +55,8 @@ static NSString * const version = @"v2";
 
 # pragma mark API Requests and Handling
 
-/*
- Handle Wepay Error. Create NSError object with returned error code, category, and description.
- */
+
+// Converts API Call Error into NSError Object
 + (NSError *) errorFromResponse: (NSDictionary *) dictionary {
     NSMutableDictionary * details = [NSMutableDictionary dictionary];
     
@@ -100,22 +101,13 @@ static NSString * const version = @"v2";
 }
 
 
-/*
- Handle API call response.
- Calls successHandler with returned dictionary.
- Calls errorhandler with NSError.
- */
+// Processes Request Response
 + (void) processResponse: (NSURLResponse *) response data: (NSData *) data error: (NSError *) error successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler {
     NSDictionary * dictionary = nil;
-    NSString * errorCode = nil;
     
     if([data length] >= 1)
     {
         dictionary = [NSJSONSerialization JSONObjectWithData: data options: kNilOptions error: nil];
-        
-        if(dictionary != nil && [dictionary objectForKey: @"error_code"] != (id)[NSNull null]) {
-            errorCode = [dictionary objectForKey: @"error_code"];
-        }
     }
     
     if(dictionary != nil && error == nil)
@@ -138,9 +130,7 @@ static NSString * const version = @"v2";
 }
 
 
-/*
- Make API calls.
- */
+// Makes API Call Request
 + (void) makeRequestToEndPoint: (NSString *) endpoint values: (NSDictionary *) params accessToken: (NSString *) accessToken successBlock: (WPSuccessBlock) successHandler errorHandler: (WPErrorBlock) errorHandler {
     
     NSURL * callUrl = [self apiUrlWithEndpoint: endpoint];

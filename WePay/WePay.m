@@ -30,7 +30,7 @@ static BOOL sendIPandDeviceId = YES;
     return nil;
 }
 
-# pragma mark Set Credentials
+# pragma mark Set Settings
 
 /*
  Use production environment. Set application client ID.
@@ -63,8 +63,7 @@ static BOOL sendIPandDeviceId = YES;
 /*
  Use stage environment. Set application client ID. Specify whether to send user's device id and IP when they make a payment
  */
-+ (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag
-{
++ (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
     clientId = key;
     onProduction = NO;
     sendIPandDeviceId = sendIPandDeviceIdflag;
@@ -76,12 +75,14 @@ static BOOL sendIPandDeviceId = YES;
 /*
  Throws an Exception if developer does not set his client id.
  */
-+ (void) validateCredentials
-{
++ (void) validateCredentials {
     if(clientId == nil || [clientId length] == 0) {
         [NSException raise:@"InvalidCredentials" format:@"Please make sure you add a client ID."];
     }
 }
+
+
+# pragma mark Settings Getters
 
 
 + (BOOL) isProduction {
@@ -89,8 +90,7 @@ static BOOL sendIPandDeviceId = YES;
 }
 
 
-+ (BOOL) sendDeviceData
-{
++ (BOOL) sendDeviceData {
     return sendIPandDeviceId;
 }
 
