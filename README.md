@@ -8,7 +8,7 @@ WePay's IOS SDK makes it easy for you to accept payments in your mobile applicat
 
 ## Installation
 You can install the IOS SDK by adding the **WePay** directory to your project. 
-You will need to add the AdSupport.Framework to your application. Please see the Notes section (at the end of this Readme) for information about why you need to add this framework.
+You will need to add the AdSupport.framework to your application. Please see the Notes section (at the end of this Readme) for information about why you need to add this framework.
 
 ## Structure
 
