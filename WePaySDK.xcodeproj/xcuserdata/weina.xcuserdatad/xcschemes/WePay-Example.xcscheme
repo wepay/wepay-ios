@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3028863C1811E55100278D6C"
+               BlueprintIdentifier = "308CFA1118198D3B002C18B7"
                BuildableName = "WePay-Example.app"
                BlueprintName = "WePay-Example"
                ReferencedContainer = "container:WePaySDK.xcodeproj">
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3028863C1811E55100278D6C"
+            BlueprintIdentifier = "308CFA1118198D3B002C18B7"
             BuildableName = "WePay-Example.app"
             BlueprintName = "WePay-Example"
             ReferencedContainer = "container:WePaySDK.xcodeproj">
@@ -61,7 +61,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3028863C1811E55100278D6C"
+            BlueprintIdentifier = "308CFA1118198D3B002C18B7"
             BuildableName = "WePay-Example.app"
             BlueprintName = "WePay-Example"
             ReferencedContainer = "container:WePaySDK.xcodeproj">
@@ -79,7 +79,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3028863C1811E55100278D6C"
+            BlueprintIdentifier = "308CFA1118198D3B002C18B7"
             BuildableName = "WePay-Example.app"
             BlueprintName = "WePay-Example"
             ReferencedContainer = "container:WePaySDK.xcodeproj">

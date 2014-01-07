@@ -22,6 +22,10 @@ static BOOL onProduction;
 // Client id to make API calls.
 static NSString * clientId;
 
+// API Version
+static NSString * apiVersion;
+
+// Whether to send the user's IP and device id
 static BOOL sendIPandDeviceId = YES;
 
 + (id)alloc
@@ -32,18 +36,28 @@ static BOOL sendIPandDeviceId = YES;
 
 # pragma mark Set Settings
 
-/*
- Use production environment. Set application client ID.
- */
+
 + (void) setProductionClientId:(NSString *) key {
     clientId = key;
     onProduction = YES;
 }
 
 
-/*
- Use production environment. Set application client ID. Specify whether to send user's device id and IP when they make a payment
- */
++ (void) setProductionClientId:(NSString *) key apiVersion: (NSString *) aVersion {
+    clientId = key;
+    onProduction = YES;
+    apiVersion = aVersion;
+}
+
+
++ (void) setProductionClientId:(NSString *) key apiVersion:(NSString *)aVersion sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
+    clientId = key;
+    onProduction = YES;
+    apiVersion = aVersion;
+    sendIPandDeviceId = sendIPandDeviceIdflag;
+}
+
+
 + (void) setProductionClientId:(NSString *) key sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
     clientId = key;
     onProduction = YES;
@@ -51,18 +65,27 @@ static BOOL sendIPandDeviceId = YES;
 }
 
 
-/*
- Use stage environment. Set application client ID.
- */
 + (void) setStageClientId:(NSString *) key  {
     clientId = key;
     onProduction = NO;
 }
 
 
-/*
- Use stage environment. Set application client ID. Specify whether to send user's device id and IP when they make a payment
- */
++ (void) setStageClientId:(NSString *) key  apiVersion: (NSString *) aVersion {
+    clientId = key;
+    onProduction = NO;
+    apiVersion = aVersion;
+}
+
+
++ (void) setStageClientId:(NSString *) key  apiVersion: (NSString *) aVersion sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
+    clientId = key;
+    onProduction = NO;
+    sendIPandDeviceId = sendIPandDeviceIdflag;
+    apiVersion = aVersion;
+}
+
+
 + (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag {
     clientId = key;
     onProduction = NO;
@@ -72,9 +95,6 @@ static BOOL sendIPandDeviceId = YES;
 
 # pragma mark Validate Credentials
 
-/*
- Throws an Exception if developer does not set his client id.
- */
 + (void) validateCredentials {
     if(clientId == nil || [clientId length] == 0) {
         [NSException raise:@"InvalidCredentials" format:@"Please make sure you add a client ID."];
@@ -97,6 +117,10 @@ static BOOL sendIPandDeviceId = YES;
 
 + (NSString *) clientId {
     return clientId;
+}
+
++ (NSString *) apiVersion {
+    return apiVersion;
 }
 
 @end

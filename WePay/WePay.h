@@ -11,25 +11,44 @@
 @interface WePay : NSObject
 
 /*
- Set Stage client id.
- */
-+ (void) setStageClientId:(NSString *) key;
-
-/*
  Set Production client id.
  */
 + (void) setProductionClientId:(NSString *) key;
 
 /*
- Set stage client Id and specify whether to collect user's ip and device id.
- WePay uses the user's IP and device id to help prevent fraud.
+ Set production environment with client id and api version.
+ */
++ (void) setProductionClientId:(NSString *) key apiVersion: (NSString *) aVersion;
+
+/*
+ Set production environment with client id, api version, and whether to collect user's ip and device id.
+ */
++ (void) setProductionClientId:(NSString *) key apiVersion:(NSString *)aVersion sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
+
+/*
+ Set production environment with client id and whether to collect user's ip and device id.
+ */
++ (void) setProductionClientId:(NSString *) key sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
+
+/*
+ Set Stage environment with client id.
+ */
++ (void) setStageClientId:(NSString *) key;
+
+/*
+ Set stage environment with client id and whether to collect user's ip and device id.
  */
 + (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
 
 /*
- Set Production client Id and specify whether to collect user's ip and device id.
+ Set stage environment with client id and api version.
  */
-+ (void) setProductionClientId:(NSString *) key sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
++ (void) setStageClientId:(NSString *) key  apiVersion: (NSString *) aVersion;
+
+/*
+ Set stage environment with client id, api version, and whether to collect user's ip and device id.
+ */
++ (void) setStageClientId:(NSString *) key  apiVersion: (NSString *) aVersion sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
 
 /*
  Is client id set or throw error?
@@ -50,5 +69,11 @@
  Whether to send the user's IP and device id
  */
 + (BOOL) sendDeviceData;
+
+/*
+ Api Version.
+ Please see https://www.wepay.com/developer/reference/versioning
+ */
++ (NSString *) apiVersion;
 
 @end

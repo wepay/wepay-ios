@@ -1,6 +1,6 @@
 ![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
 ===========================================================
-WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Because WePay stores the user's credit card details for you and sends your server a token to charge the card, if you use our SDK, your PCI compliance scope is greatly reduced compared to the case when your servers were handling the card details directly. 
+WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Using our SDK instead of handling the card details directly on your server greatly reduces your PCI compliance scope because WePay stores the user's credit card details for you and sends your server a token to charge the card.
 
 ## Requirements
 - ARC
@@ -12,20 +12,11 @@ You will need to add the AdSupport.framework to your application. Please see the
 
 ## Structure
 
-Descriptor classes, located in the [WePay/Descriptors](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/ "WePay/Descriptors") folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then charge on your own servers.
+Descriptor classes, located in the [WePay/Descriptors](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/ "WePay/Descriptors") folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. 
 
-To send a customer's credit card details to WePay and receive a token, you will first need to create and populate descriptor objects with the name, email, address, and credit card details of the customer:
+Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then charge on your own servers.
 
-1) You will need to create and populate a [WPAddressDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPAddressDescriptor.m "WPAddressDescriptor") object (“address descriptor”) with either the customer's zipcode (for US customers, WePay only requires you to send the zipcode) or full address. 
-
-2) You will need to create and populate a [WPUserDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPUserDescriptor.m "WPUserDescriptor") object (“user descriptor) with the customer's name, email, and address descriptor. 
-
-3) You will then need to create and populate a [WPCreditCardDescriptor](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/WPCreditCardDescriptor.m "WPCreditCardDescriptor") object (“card descriptor”) with the customer's credit card details and user descriptor. 
-
-Finally, you will need to pass this card descriptor object to the static method, `createCardWithDescriptor`, in the WPCreditCard class that actually sends the card information to WePay and receives back a token. 
-
-We show you how to accomplish all of these steps in the sample code below.
-
+Please see sample code below.
 
 ## Usage
 
@@ -49,6 +40,18 @@ If you want to use our testing (stage.wepay.com) environment:
 
 ```objectivec
 [WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
+```
+
+To set an [API-Version](https://www.wepay.com/developer/reference/versioning) for your call request, use:
+
+for Production:
+```objectivec
+[WePay setProductionClientId: @"YOUR_CLIENT_ID" apiVersion: @"API_VERSION"];
+```
+
+for Stage:
+```objectivec
+[WePay setStageClientId: @"YOUR_CLIENT_ID" apiVersion: @"API_VERSION"];
 ```
 
 ### Tokenize a card
@@ -125,7 +128,6 @@ It generates NSError objects for the following errors and sends these objects to
 3. Network Errors
 
 Network and NSUrlConnection errors are in the `NSUrlErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. 
-
 
 All errors have a localizable user-facing error message that can be retrieved by calling `[error localizedDescription]`. You can edit the **WePay/Resources/Base.lproj/WePay.strings** file to change the client-side validation error messages.
 

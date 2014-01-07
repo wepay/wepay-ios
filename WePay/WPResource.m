@@ -147,6 +147,11 @@ static NSString * const version = @"v2";
         [request setValue: [NSString stringWithFormat: @"Bearer: %@", accessToken] forHTTPHeaderField:@"Authorization"];
     }
     
+    // Set Api Version
+    if([WePay apiVersion]) {
+        [request setValue: [NSString stringWithFormat: @"%@", [WePay apiVersion]] forHTTPHeaderField:@"Api-Version"];
+    }
+    
     NSError *parseError = nil;
     
     // Get json from nsdictionary parameter
