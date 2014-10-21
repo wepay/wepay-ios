@@ -1,0 +1,556 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		570693BC1A02FF3800182EA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 570693BA1A02FF3800182EA2 /* Main.storyboard */; };
+		570693BE1A02FF3800182EA2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 570693BD1A02FF3800182EA2 /* Images.xcassets */; };
+		570693C11A02FF3800182EA2 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 570693BF1A02FF3800182EA2 /* LaunchScreen.xib */; };
+		570693CD1A02FF3800182EA2 /* WePayExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 570693CC1A02FF3800182EA2 /* WePayExampleTests.m */; };
+		570F9FDE1B437168008C96BF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 570F9FDA1B437168008C96BF /* ViewController.m */; };
+		570F9FDF1B437168008C96BF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 570F9FDD1B437168008C96BF /* AppDelegate.m */; };
+		570F9FE11B437185008C96BF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 570F9FE01B437185008C96BF /* main.m */; };
+		570F9FE31B437190008C96BF /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 570F9FE21B437190008C96BF /* Settings.bundle */; };
+		570F9FE71B43719B008C96BF /* signature.png in Resources */ = {isa = PBXBuildFile; fileRef = 570F9FE41B43719B008C96BF /* signature.png */; };
+		570F9FE81B43719B008C96BF /* swiper_stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 570F9FE51B43719B008C96BF /* swiper_stop.png */; };
+		570F9FE91B43719B008C96BF /* dd_signature.png in Resources */ = {isa = PBXBuildFile; fileRef = 570F9FE61B43719B008C96BF /* dd_signature.png */; };
+		574173E91A37F39700B73D95 /* manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E41A37F39700B73D95 /* manual.png */; };
+		574173EA1A37F39700B73D95 /* swipe info.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E51A37F39700B73D95 /* swipe info.png */; };
+		574173EB1A37F39700B73D95 /* swipe tokenize.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E61A37F39700B73D95 /* swipe tokenize.png */; };
+		574173F61A39181300B73D95 /* RPx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173F31A39181300B73D95 /* RPx.framework */; };
+		574173FB1A3929C700B73D95 /* RUA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173FA1A3929C600B73D95 /* RUA.framework */; };
+		574174091A410D8700B73D95 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574174081A410D8700B73D95 /* WePay.framework */; };
+		57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */; };
+		57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC61A1AE9060092B3AA /* AVFoundation.framework */; };
+		57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */; };
+		57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */; };
+		57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */; };
+		57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */; };
+		57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD01A1AEB050092B3AA /* UIKit.framework */; };
+		57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */; };
+		57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */; };
+		57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */; };
+		57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */; };
+		57E33F1E1ADF50ED000B7C65 /* G4XSwiper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173F21A39181300B73D95 /* G4XSwiper.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		570693C71A02FF3800182EA2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 570693A51A02FF3800182EA2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 570693AC1A02FF3800182EA2;
+			remoteInfo = WePayExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		570693AD1A02FF3800182EA2 /* WePayExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WePayExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		570693B11A02FF3800182EA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		570693BB1A02FF3800182EA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		570693BD1A02FF3800182EA2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		570693C01A02FF3800182EA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		570693C61A02FF3800182EA2 /* WePayExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WePayExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		570693CB1A02FF3800182EA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		570693CC1A02FF3800182EA2 /* WePayExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WePayExampleTests.m; sourceTree = "<group>"; };
+		570F9FDA1B437168008C96BF /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = Src/ViewController.m; sourceTree = "<group>"; };
+		570F9FDB1B437168008C96BF /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = Src/ViewController.h; sourceTree = "<group>"; };
+		570F9FDC1B437168008C96BF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Src/AppDelegate.h; sourceTree = "<group>"; };
+		570F9FDD1B437168008C96BF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Src/AppDelegate.m; sourceTree = "<group>"; };
+		570F9FE01B437185008C96BF /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Src/main.m; sourceTree = "<group>"; };
+		570F9FE21B437190008C96BF /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
+		570F9FE41B43719B008C96BF /* signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = signature.png; path = Resources/signature.png; sourceTree = "<group>"; };
+		570F9FE51B43719B008C96BF /* swiper_stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = swiper_stop.png; path = Resources/swiper_stop.png; sourceTree = "<group>"; };
+		570F9FE61B43719B008C96BF /* dd_signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dd_signature.png; path = Resources/dd_signature.png; sourceTree = "<group>"; };
+		574173E41A37F39700B73D95 /* manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = manual.png; path = Resources/manual.png; sourceTree = "<group>"; };
+		574173E51A37F39700B73D95 /* swipe info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swipe info.png"; path = "Resources/swipe info.png"; sourceTree = "<group>"; };
+		574173E61A37F39700B73D95 /* swipe tokenize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swipe tokenize.png"; path = "Resources/swipe tokenize.png"; sourceTree = "<group>"; };
+		574173F21A39181300B73D95 /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = G4XSwiper.framework; sourceTree = "<group>"; };
+		574173F31A39181300B73D95 /* RPx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx.framework; sourceTree = "<group>"; };
+		574173FA1A3929C600B73D95 /* RUA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA.framework; sourceTree = "<group>"; };
+		574174081A410D8700B73D95 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WePay.framework; sourceTree = "<group>"; };
+		57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		57664BC61A1AE9060092B3AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
+		57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		57664BD01A1AEB050092B3AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
+		57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		570693AA1A02FF3800182EA2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57E33F1E1ADF50ED000B7C65 /* G4XSwiper.framework in Frameworks */,
+				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
+				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
+				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
+				574173FB1A3929C700B73D95 /* RUA.framework in Frameworks */,
+				57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */,
+				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
+				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
+				574173F61A39181300B73D95 /* RPx.framework in Frameworks */,
+				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
+				57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */,
+				574174091A410D8700B73D95 /* WePay.framework in Frameworks */,
+				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
+				57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */,
+				57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		570693C31A02FF3800182EA2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		570693A41A02FF3800182EA2 = {
+			isa = PBXGroup;
+			children = (
+				570693AF1A02FF3800182EA2 /* WePayExample */,
+				570693C91A02FF3800182EA2 /* WePayExampleTests */,
+				570693AE1A02FF3800182EA2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		570693AE1A02FF3800182EA2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				570693AD1A02FF3800182EA2 /* WePayExample.app */,
+				570693C61A02FF3800182EA2 /* WePayExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		570693AF1A02FF3800182EA2 /* WePayExample */ = {
+			isa = PBXGroup;
+			children = (
+				570F9FDA1B437168008C96BF /* ViewController.m */,
+				570F9FDB1B437168008C96BF /* ViewController.h */,
+				570F9FDC1B437168008C96BF /* AppDelegate.h */,
+				570F9FDD1B437168008C96BF /* AppDelegate.m */,
+				574173E11A37F36700B73D95 /* Resources */,
+				570693D81A0300AA00182EA2 /* Libs */,
+				570693BA1A02FF3800182EA2 /* Main.storyboard */,
+				570693BD1A02FF3800182EA2 /* Images.xcassets */,
+				570693BF1A02FF3800182EA2 /* LaunchScreen.xib */,
+				570693B01A02FF3800182EA2 /* Supporting Files */,
+			);
+			path = WePayExample;
+			sourceTree = "<group>";
+		};
+		570693B01A02FF3800182EA2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				570F9FE21B437190008C96BF /* Settings.bundle */,
+				570F9FE01B437185008C96BF /* main.m */,
+				570693B11A02FF3800182EA2 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		570693C91A02FF3800182EA2 /* WePayExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				570693CC1A02FF3800182EA2 /* WePayExampleTests.m */,
+				570693CA1A02FF3800182EA2 /* Supporting Files */,
+			);
+			path = WePayExampleTests;
+			sourceTree = "<group>";
+		};
+		570693CA1A02FF3800182EA2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				570693CB1A02FF3800182EA2 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		570693D81A0300AA00182EA2 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */,
+				57664BC61A1AE9060092B3AA /* AVFoundation.framework */,
+				57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */,
+				57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */,
+				57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */,
+				57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */,
+				574173F21A39181300B73D95 /* G4XSwiper.framework */,
+				57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */,
+				57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */,
+				574173F31A39181300B73D95 /* RPx.framework */,
+				574173FA1A3929C600B73D95 /* RUA.framework */,
+				57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */,
+				57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */,
+				57664BD01A1AEB050092B3AA /* UIKit.framework */,
+				574174081A410D8700B73D95 /* WePay.framework */,
+			);
+			path = Libs;
+			sourceTree = "<group>";
+		};
+		574173E11A37F36700B73D95 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				574173E51A37F39700B73D95 /* swipe info.png */,
+				574173E61A37F39700B73D95 /* swipe tokenize.png */,
+				570F9FE51B43719B008C96BF /* swiper_stop.png */,
+				574173E41A37F39700B73D95 /* manual.png */,
+				570F9FE41B43719B008C96BF /* signature.png */,
+				570F9FE61B43719B008C96BF /* dd_signature.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		570693AC1A02FF3800182EA2 /* WePayExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 570693D01A02FF3800182EA2 /* Build configuration list for PBXNativeTarget "WePayExample" */;
+			buildPhases = (
+				570693A91A02FF3800182EA2 /* Sources */,
+				570693AA1A02FF3800182EA2 /* Frameworks */,
+				570693AB1A02FF3800182EA2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WePayExample;
+			productName = WePayExample;
+			productReference = 570693AD1A02FF3800182EA2 /* WePayExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		570693C51A02FF3800182EA2 /* WePayExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 570693D31A02FF3800182EA2 /* Build configuration list for PBXNativeTarget "WePayExampleTests" */;
+			buildPhases = (
+				570693C21A02FF3800182EA2 /* Sources */,
+				570693C31A02FF3800182EA2 /* Frameworks */,
+				570693C41A02FF3800182EA2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				570693C81A02FF3800182EA2 /* PBXTargetDependency */,
+			);
+			name = WePayExampleTests;
+			productName = WePayExampleTests;
+			productReference = 570693C61A02FF3800182EA2 /* WePayExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		570693A51A02FF3800182EA2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = WePay;
+				TargetAttributes = {
+					570693AC1A02FF3800182EA2 = {
+						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = 9B753KSY2J;
+					};
+					570693C51A02FF3800182EA2 = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = 570693AC1A02FF3800182EA2;
+					};
+				};
+			};
+			buildConfigurationList = 570693A81A02FF3800182EA2 /* Build configuration list for PBXProject "WePayExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 570693A41A02FF3800182EA2;
+			productRefGroup = 570693AE1A02FF3800182EA2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				570693AC1A02FF3800182EA2 /* WePayExample */,
+				570693C51A02FF3800182EA2 /* WePayExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		570693AB1A02FF3800182EA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				570F9FE91B43719B008C96BF /* dd_signature.png in Resources */,
+				570693BC1A02FF3800182EA2 /* Main.storyboard in Resources */,
+				570693C11A02FF3800182EA2 /* LaunchScreen.xib in Resources */,
+				570F9FE71B43719B008C96BF /* signature.png in Resources */,
+				570F9FE31B437190008C96BF /* Settings.bundle in Resources */,
+				574173EA1A37F39700B73D95 /* swipe info.png in Resources */,
+				570F9FE81B43719B008C96BF /* swiper_stop.png in Resources */,
+				570693BE1A02FF3800182EA2 /* Images.xcassets in Resources */,
+				574173EB1A37F39700B73D95 /* swipe tokenize.png in Resources */,
+				574173E91A37F39700B73D95 /* manual.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		570693C41A02FF3800182EA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		570693A91A02FF3800182EA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				570F9FDE1B437168008C96BF /* ViewController.m in Sources */,
+				570F9FE11B437185008C96BF /* main.m in Sources */,
+				570F9FDF1B437168008C96BF /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		570693C21A02FF3800182EA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				570693CD1A02FF3800182EA2 /* WePayExampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		570693C81A02FF3800182EA2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 570693AC1A02FF3800182EA2 /* WePayExample */;
+			targetProxy = 570693C71A02FF3800182EA2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		570693BA1A02FF3800182EA2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				570693BB1A02FF3800182EA2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		570693BF1A02FF3800182EA2 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				570693C01A02FF3800182EA2 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		570693CE1A02FF3800182EA2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		570693CF1A02FF3800182EA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		570693D11A02FF3800182EA2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/chaitanyabagaria/sandbox/wepay-ios-priv/Build",
+					"$(PROJECT_DIR)/WePayExample/Libs",
+				);
+				INFOPLIST_FILE = WePayExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "$(ARCHS)";
+			};
+			name = Debug;
+		};
+		570693D21A02FF3800182EA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/chaitanyabagaria/sandbox/wepay-ios-priv/Build",
+					"$(PROJECT_DIR)/WePayExample/Libs",
+				);
+				INFOPLIST_FILE = WePayExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "$(ARCHS)";
+			};
+			name = Release;
+		};
+		570693D41A02FF3800182EA2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WePayExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WePayExample.app/WePayExample";
+			};
+			name = Debug;
+		};
+		570693D51A02FF3800182EA2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = WePayExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WePayExample.app/WePayExample";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		570693A81A02FF3800182EA2 /* Build configuration list for PBXProject "WePayExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				570693CE1A02FF3800182EA2 /* Debug */,
+				570693CF1A02FF3800182EA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		570693D01A02FF3800182EA2 /* Build configuration list for PBXNativeTarget "WePayExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				570693D11A02FF3800182EA2 /* Debug */,
+				570693D21A02FF3800182EA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		570693D31A02FF3800182EA2 /* Build configuration list for PBXNativeTarget "WePayExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				570693D41A02FF3800182EA2 /* Debug */,
+				570693D51A02FF3800182EA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 570693A51A02FF3800182EA2 /* Project object */;
+}

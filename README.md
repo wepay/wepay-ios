@@ -1,193 +1,260 @@
-# Deprecation Notice
-This beta version (1.x.x) of the WePay iOS SDK is now deprecated. A new 2.0.0 version will be released soon. The new version will *NOT* be backwards compatible with this older version. 
+# Getting Started                         {#mainpage}
 
-The old version will continue to be available for use via [master-v1-deprecated](http://github.com/wepay/wepay-ios/tree/master-v1-deprecated) but will have limited support for existing functionality. All new functionality will only be added to the new SDK moving forward.
+## Introduction
+This iOS SDK enables collection of payments via various payment methods(described below).
 
-![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
-===========================================================
-WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Using our SDK instead of handling the card details directly on your server greatly reduces your PCI compliance scope because WePay stores the user's credit card details for you and sends your server a token to charge the card.
+It is meant for consumption by WePay partners who are developing their own iOS apps aimed at merchants and/or consumers.
 
-## Requirements
-- ARC
-- AdSupport.framework
+Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server API call to complete the transaction.
+
+## Payment methods
+There are two types of payment methods:
++ Consumer payment methods - to be used in apps where consumers directly pay and/or make donations
++ Merchant payment methods - to be used in apps where merchants collect payments from their customers
+ 
+The WePay iOS SDK supports the following payment methods
+ - Card Swiper (Merchant)
+    Using a Card Swiper, a merchant can accept in-person payments by swiping a consumer's card. 
+ - Manual Entry (Consumer/Merchant)
+    The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
 
 ## Installation
-You can install the IOS SDK by adding the **WePay** directory to your project. 
-You will need to add the AdSupport.framework to your application. Please see the Notes section (at the end of this Readme) for information about why you need to add this framework.
++ In Xcode, go to your app's target settings. On the Build Phases tab, expand the Link Binary With Libraries section.
++ Include the following iOS frameworks:
+    - AudioToolbox.framework
+    - AVFoundation.framework
+    - CoreBluetooth.framework
+    - CoreTelephony.framework
+    - MediaPlayer.framework
+    - SystemConfiguration.framework
+    - libstdc++.6.0.9.dylib
++ Also include the following frameworks provided with this SDK:
+    - G4XSwiper.framework
+    - RPx.framework
+    - RUA.framework
+    - TrustDefenderMobile.framework
+    - WePay.framework
++ Done!
 
-## Structure
+## SDK Organization
 
-Descriptor classes, located in the [WePay/Descriptors](https://github.com/wepay/wepay-ios/blob/master/WePay/Descriptors/ "WePay/Descriptors") folder, facilitate the passing of parameters to API call classes. API calls through the IOS SDK generally take three arguments: a descriptor object argument, a success callback (a function executed if the API call is successful) argument, and an error callback (a function executed when an error occurs) argument. 
+### WePay.h
+WePay.h is the starting point for consuming the SDK, and contains the primary class you will interact with.
+It exposes all the methods you can call to accept payments via the supported payment methods.
+Detailed reference documentation is available on the reference page for the WePay class.
 
-Currently, this SDK only supports one API call, the [/credit_card/create](https://www.wepay.com/developer/reference/credit_card#create "Credit Card Create API call") API call, that allows you to pass a customer's credit card details to WePay and receive back a credit_card_id (card token) that you can then send to your servers for charge.
+### Delegate protocols
+The SDK uses delegate protocols to respond to API calls. You must adopt the relevant protocols to receive responses to the API calls you make.
+Detailed reference documentation is available on the reference page for each protocol:
+- WPCardReaderDelegate
+- WPCheckoutDelegate
+- WPTokenizationDelegate
 
-Please see sample code below.
 
-## Usage
+### Data Models
+All other classes in the SDK are data models that are used to exchange data between your app and the SDK. 
+Detailed reference documentation is available on the reference page for each class.
 
-### Configuration
+## Next Steps
+Head over to the WePay class reference to see all the API methods available.
+When you are ready, look at the samples below to learn how to interact with the SDK.
 
-For all requests, you must initialize the SDK with your Client ID, into either Staging or Production mode. All API calls made against WePay's staging environment mirror production in functionality, but do not actually move money. This allows you to develop your application and test the checkout experience from the perspective of your customers without spending any money on payments. 
 
-**Note:** Staging and Production are two completely independent environments and share NO data with each other. This means that in order to use staging, you must register at stage.wepay.com and get a set of API keys for your Staging application, and must do the same on Production when you are ready to go live. API keys and access tokens granted on stage can not be used on Production, and vice-versa.
+## Error Handling
+WPError.h serves as documentation for all errors surfaced by the WePay iOS SDK.
 
-Use of our IOS SDK will require you to apply for tokenization approval. Please apply for approval on your application's dashboard.
+## Samples
 
-After you have created an API application on either stage.wepay.com or wepay.com, add the following to the `- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions` in your APPDelegate file:
+### See the WePayExample app for a working implementation of all API methods.
 
-If you want to use our production (wepay.com) environment:
+### Initializing the SDK
 
-```objectivec
-[WePay setProductionClientId: @"YOUR_CLIENT_ID"];
-```
++ Complete the installation steps (above).
++ Include WePay.h
+~~~{.m}
+#import <WePay/WePay.h>
+~~~
++ Define a property to store the WePay object
+~~~{.m}
+\@property (nonatomic, strong) WePay *wepay;
+~~~
++ Create a WPConfig object
+~~~{.m}
+WPConfig *config = [[WPConfig alloc] initWithClientId:@"your_client_id" environment:kWPEnvironmentStage];
+~~~
++ Initialize the WePay object and assign it to the property
+~~~{.m}
+self.wepay = [[WePay alloc] initWithConfig:config];
+~~~
 
-If you want to use our testing (stage.wepay.com) environment:
+#####(optional) Providing permission to use location services for fraud detection
 
-```objectivec
-[WePay setStageClientId: @"YOUR_CLIENT_ID"]; 
-```
++ In Xcode, go to your projects settings. On the Build Phases tab, expand the Link Binary With Libraries section and include the CoreLocation.framework iOS framework.
 
-To set an [API-Version](https://www.wepay.com/developer/reference/versioning) for your call request, use:
++ Open your app's Info.plist file and add entries for NSLocationUsageDescription and NSLocationWhenInUseUsageDescription.
+~~~{.xml}
+<key>NSLocationUsageDescription</key>
+<string>Location information is used for fraud prevention</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Location information is used for fraud prevention</string>
+~~~
++ Set the option on the config object, before initializing the WePay object
+~~~{.m}
+config.useLocation = YES;
+~~~
 
-for Production:
-```objectivec
-[WePay setProductionClientId: @"YOUR_CLIENT_ID" apiVersion: @"API_VERSION"];
-```
+### Integrating the Swipe payment method
 
-for Stage:
-```objectivec
-[WePay setStageClientId: @"YOUR_CLIENT_ID" apiVersion: @"API_VERSION"];
-```
++ Adopt the WPCardReaderDelegate and WPTokenizationDelegate protocols
+~~~{.m}
+\@interface MyWePayDelegate : NSObject <WPCardReaderDelegate, WPTokenizationDelegate>
+~~~
++ Implement the WPCardReaderDelegate protocol methods
+~~~{.m}
+- (void) cardReaderDidChangeStatus:(id) status
+{
+    if (status == kWPCardReaderStatusNotConnected) {
+        // show UI that prompts the user to connect the Card Reader
+        self.statusLabel.text = @"Connect Card Reader";
+    } else if (status == kWPCardReaderStatusWaitingForSwipe) {
+        // show UI that prompts the user to swipe
+        self.statusLabel.text = @"Swipe Card";
+    } else if (status == kWPCardReaderStatusSwipeDetected) {
+        // provide feedback to the user that a swipe was detected
+        self.statusLabel.text = @"Swipe Detected...";
+    } else if (status == kWPCardReaderStatusTokenizing) {
+        // provide feedback to the user that the card info is being tokenized/verified
+        self.statusLabel.text = @"Tokenizing...";
+    }  else if (status == kWPCardReaderStatusStopped) {
+        // provide feedback to the user that the swiper has stopped
+        self.statusLabel.text = @"Card Reader Stopped";
+    }
+}  
 
-### Tokenize a card
+- (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo 
+{
+    // use the payment info (for display/recordkeeping)
+    // wait for tokenization response
+}
 
-```objectivec
-#import "WPCreditCard.h"
-```
+- (void) didFailToReadPaymentInfoWithError:(NSError *)error   
+{
+    // Handle the error
+}
+~~~
++ Implement the WPTokenizationDelegate protocol methods
+~~~{.m}
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+{
+    // Send the tokenId (paymentToken.tokenId) to your server
+    // Your server would use the tokenId to make a /checkout/create call to complete the transaction
+}
 
-#### Code
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
+{
+	// Handle the error
+}
+~~~
++ Make the WePay API call, passing in the instance(s) of the class(es) that implemented the delegate protocols
+~~~{.m}
+[self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self tokenizationDelegate:self];
+// Show UI asking the user to insert the card reader and wait for it to be ready
+~~~
++ Thats it! The following sequence of events will occur:
+    1. The user inserts the card reader (or it is already inserted)
+    2. The SDK tries to detect the card reader and initialize it.
+        - If the card reader is not detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
+        - If the card reader is successfully detected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
+        - Next, if the card reader is successfully initialized, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForSwipe`
+        - Otherwise, `didFailToReadPaymentInfoWithError:` will be called with the appropriate error, and processing will stop (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusStopped`)
+    3. If the card reader successfully initialized, it will wait for the user to swipe a card
+    4. If a recoverable error occurs during swiping, the `didFailToReadPaymentInfoWithError:` method will be called. After a few seconds, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForSwipe` and the card reader will again wait for the user to swipe a card
+    5. If an unrecoverable error occurs during swiping, or the user does not swipe, the `didFailToReadPaymentInfoWithError:` method will be called, and processing will stop
+    6. Otherwise, the user swiped successfully, and the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSwipeDetected` followed by the `didReadPaymentInfo:` method
+    7. Next, the SDK will automatically send the obtained card info to WePay's servers for tokenization (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusTokenizing`)
+    8. If the tokenization succeeds, the `paymentInfo:didTokenize:` method will be called
+    9. Otherwise, if the tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error
 
-```objectivec
-// Pass in the customer's address to the address descriptor
-// For US customers, WePay allows you to only send the zipcode
-// as long as the "Enable Zip-only billing address" option is checked 
-// on the app configuration page
-WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] initWithZip: @"94085"];
+### Integrating the Manual payment method
 
-/* 
++ Adopt the WPTokenizationDelegate protocol
+~~~{.h}
+\@interface MyWePayDelegate : NSObject <WPTokenizationDelegate>
+~~~
++ Implement the WPTokenizationDelegate protocol methods
+~~~{.m}
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+{
+    // Send the tokenId (paymentToken.tokenId) to your server
+    // Your server can use the tokenId to make a /checkout/create call to complete the transaction
+}
 
-If the customer has a non-US billing address, we require you to send their
-full billing address; however, if he/she has a US billing address, only
-their zipcode is required. If you only want to send the zipcode, you must
-make sure the "Enable ZIP-only billing address" option is checked on the 
-app configuration page.
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
+{
+    // Handle error
+}
+~~~
++ Instantiate a WPPaymentInfo object using the user's credit card and address data
+~~~{.m}
+WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
+                                                                 lastName:@"Example"
+                                                                    email:@"wp.ios.example@wepay.com"
+                                                           billingAddress:[[WPAddress alloc] initWithZip:@"94306"]
+                                                          shippingAddress:nil
+                                                               cardNumber:@"5496198584584769"
+                                                                      cvv:@"123"
+                                                                 expMonth:@"04"
+                                                                  expYear:@"2020"
+                                                          virtualTerminal:YES];
+// Note: the virtualTerminal parameter above should be set to YES if a merchant is collecting payments manually using your app. It should be set to NO if a payer is making a manual payment using your app.
+~~~
++ Make the WePay API call, passing in the instance of the class that implemented the WPTokenizationDelegate protocol
+~~~{.m}
+[self.wepay tokenizeManualPaymentInfo:paymentInfo tokenizationDelegate:self];
+~~~
++ Thats it! The following sequence of events will occur:
+    1. The SDK will send the obtained payment info to WePay's servers for tokenization
+    2. If the tokenization succeeds, the `paymentInfo:didTokenize:` method will be called
+    3. Otherwise, if the tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error
 
-WPAddressDescriptor * addressDescriptor = [[WPAddressDescriptor alloc] init];
-addressDescriptor.address1 = @"Main Street";
-addressDescriptor.city = @"Sunnyvale";
-addressDescriptor.state = @"CA";
-addressDescriptor.country = @"US";
-addressDescriptor.zip = @"94085";
 
-*/
+### Integrating the Store Signature API
 
-// Pass in the customer's name, email, and address descriptor to the user descriptor
-WPUserDescriptor * userDescriptor = [[WPUserDescriptor alloc] init];
-userDescriptor.name = @"Bill Clerico";
-userDescriptor.email = @"test@wepay.com";
-userDescriptor.address = addressDescriptor;
++ Adopt the WPCheckoutDelegate protocol
+~~~{.h}
+\@interface MyWePayDelegate : NSObject <WPCheckoutDelegate>
+~~~
++ Implement the WPCheckoutDelegate protocol methods
+~~~{.m}
+- (void) didStoreSignature:(NSString *)signatureUrl
+             forCheckoutId:(NSString *)checkoutId
+{
+    // success! nothing to do here
+}
 
-// Pass in the customer's credit card details to the card descriptor
-WPCreditCardDescriptor * cardDescriptor = [[WPCreditCardDescriptor alloc] init];
-cardDescriptor.number = @"4242424242424242";
-cardDescriptor.expirationMonth = 2;
-cardDescriptor.expirationYear = 2020;
-cardDescriptor.securityCode = @"313";
-cardDescriptor.user = userDescriptor;
+- (void) didFailToStoreSignatureImage:(UIImage *)image
+                        forCheckoutId:(NSString *)checkoutId
+                            withError:(NSError *)error
+{
+    // handle the error
+}
 
-// Send the customer's card details to WePay and retrieve a token
-[WPCreditCard createCardWithDescriptor: cardDescriptor success: ^(WPCreditCard * tokenizedCard) {
-
-    NSString * token = tokenizedCard.creditCardId;
-
-    // Card token from WePay.
-    NSLog(@"Token: %@", token);
-  
-    // Add code here to send token to your servers
-    
-} failure:^(NSError * error) {
-
-    NSLog(@"Error trying to create token: %@", [error localizedDescription]);
-
-}];
-```
-
-### Error Handling
-
-As shown in the example above, you call the `createCardWithDescriptor` static method with the following parameters: card descriptor, success callback function, and error callback function. *createCardWithDescriptor* validates the customer's input before sending to WePay. 
-
-It generates NSError objects for the following errors and sends these objects to the error callback function.
-
-1. Client Side Validation Errors (i.e. invalid card number, invalid security code, etc)
-2. WePay API errors (from WePay.com)
-3. Network Errors
-
-Network and NSUrlConnection errors are in the `NSUrlErrorDomain`. Client-side validation errors are in the `WePaySDKDomain`. WePay API errors are in the `WePayAPIDomain`. 
-
-All errors have a localizable user-facing error message that can be retrieved by calling `[error localizedDescription]`. You can edit the **WePay/Resources/Base.lproj/WePay.strings** file to change the client-side validation error messages.
-
-#### WePay API Errors
-
-The SDK converts WePay API errors (https://www.wepay.com/developer/reference/errors) into NSError objects with the same error codes and descriptions. The userInfo dictionary `WPErrorCategoryKey` key value is the same as the **error** category sent by WePay.
-
-#### Validation
-
-The SDK validates all user input before sending to WePay. Each descriptor class has several validation functions you can use to validate the input yourself. Please check the header files for a list of all of these validation functions. For example, in the `WPCreditCardDescriptor` class, you will find the following validation functions:
-
-```objectivec
-- (BOOL) validateNumber:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-- (BOOL) validateSecurityCode:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-- (BOOL) validateUser:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-- (BOOL) validateExpirationMonth:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-- (BOOL) validateExpirationYear:(id *)ioValue error:(NSError * __autoreleasing *)outError;
-```
-
-These methods follow the validation method convention used by [key value validation](https://developer.apple.com/library/mac/documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html "Key Value Validation"). You can call the validation methods directly, or by invoking validateKey:forKey:error: and specifying the key. 
-
-#### (Advanced) How to differentiate between errors
-
-You can check the error domain to differentiate between Network, WePay API, and Client-side validation errors. Network and NSUrlConnection errors are in the `NSURLErrorDomain`. WePay API errors are in the `
-WePayAPIDomain`. Client Side validation errors are in the `WePaySDKDomain`.
-
-Each WePay API error object has one of the following values for the `WPErrorCategoryKey` userInfo dictionary key that is the same as the **error** category from the [WePay API Errors page](https://www.wepay.com/developer/reference/errors "WePay API errors"):
-- invalid_request
-- access_denied
-- invalid_scope
-- invalid_client
-- processing_error
-
-Each client side validation error object has one of the following values for the `WPErrorCategoryKey` userInfo dictionary key that corresponds to the descriptor class that generated the error object:
-- WPErrorCategoryCardValidation (for WPCreditCardDescriptor validation errors)
-- WPErrorCategoryUserValidation (for WPUserDescriptor validation errors)
-- WPErrorCategoryAddressValidation (for WPAddressDescriptor validation errors)
-
-Please see the file **WePay/WPError.h** for more information.
-
-### iOS Example
-Run the WePay-Example target. This sample application shows you how to accept payments in your mobile app.
-
-### Notes
-
-To help us prevent fraud, WePay IOS SDK automatically sends the user's IP and [Advertiser Identifier](https://developer.apple.com/library/IOs/documentation/AdSupport/Reference/ASIdentifierManager_Ref/ASIdentifierManager.html "Advertiser Identifier") when they make a payment. If you want to disable the collection of these two pieces of information, you can use the functions below instead when setting your application client Id:
-
-Testing:
-```objectivec
-+ (void) setStageClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
-```
-
-Production:
-```objectivec
-+ (void) setProductionClientId:(NSString *) key  sendIPandDeviceId: (BOOL) sendIPandDeviceIdflag;
-```
-
-If you disable the sending of ip and device id, you don't have to add the `AdSupport.framework` to your application.
+~~~
++ Obtain the checkout_id associated with this signature from your server
+~~~{.m}
+NSString *checkoutId = [self obtainCheckoutId];
+~~~
++ Instantiate a UIImage containing the user's signature
+~~~{.m}
+UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
+~~~
++ Make the WePay API call, passing in the instance of the class that implemented the WPCheckoutDelegate protocol
+~~~{.m}
+[self.wepay storeSignatureImage:signature 
+                  forCheckoutId:checkoutId
+               checkoutDelegate:self];
+~~~
++ Thats it! The following sequence of events will occur:
+    1. The SDK will send the obtained signature to WePay's servers
+    2. If the operation succeeds, the `didStoreSignature:forCheckoutId:` method will be called
+    3. Otherwise, if the operation fails, the `didFailToStoreSignatureImage:forCheckoutId:withError:` method will be called with the appropriate error
