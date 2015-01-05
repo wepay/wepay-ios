@@ -81,16 +81,27 @@
 
 
 - (NSInteger) currentYear {
+#ifdef __IPHONE_8_0
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
+#else
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [gregorian components:NSYearCalendarUnit fromDate:[NSDate date]];
+#endif
+                      
     return [components year];
 }
 
-
 - (NSInteger) currentMonth {
+#ifdef __IPHONE_8_0
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitMonth fromDate:[NSDate date]];
+#else
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [gregorian components:NSYearCalendarUnit fromDate:[NSDate date]];
-    return [components month];
+    NSDateComponents *components = [gregorian components:NSMonthCalendarUnit fromDate:[NSDate date]];
+#endif
+                      
+  return [components month];
 }
 
 
