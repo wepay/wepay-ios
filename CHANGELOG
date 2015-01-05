@@ -1,2 +1,6 @@
+2015-01-05
+* Fixed ipAddress utility method
+* Fixed credit card expiration month validation 
+
 2013-10-30
 * Launch of beta SDK
