@@ -1,3 +1,8 @@
+# Deprecation Notice
+This beta version (1.x.x) of the WePay iOS SDK is now deprecated. A new 2.0.0 version will be released soon. The new version will *NOT* be backwards compatible with this older version. 
+
+The old version will continue to be available for use via [master-v1-deprecated](http://github.com/wepay/wepay-ios/tree/master-v1-deprecated) but will have limited support for existing functionality. All new functionality will only be added to the new SDK moving forward.
+
 ![alt text](https://static.wepay.com/img/logos/wepay.png "WePay")
 ===========================================================
 WePay's IOS SDK makes it easy for you to accept payments in your mobile application. Using our SDK instead of handling the card details directly on your server greatly reduces your PCI compliance scope because WePay stores the user's credit card details for you and sends your server a token to charge the card.
