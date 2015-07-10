@@ -1,11 +1,13 @@
 # Getting Started                         {#mainpage}
 
+![WePay logo](https://www.wepay.com/img/redesign/logos/wepay-color.png "WePay")
+
 ## Introduction
-This iOS SDK enables collection of payments via various payment methods(described below).
+The WePay iOS SDK enables collection of payments via various payment methods(described below).
 
-It is meant for consumption by WePay partners who are developing their own iOS apps aimed at merchants and/or consumers.
+It is meant for consumption by [WePay](http://www.wepay.com) partners who are developing their own iOS apps aimed at merchants and/or consumers.
 
-Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server API call to complete the transaction.
+Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server [API](http://www.wepay.com/developer) call to complete the transaction.
 
 ## Payment methods
 There are two types of payment methods:
@@ -19,7 +21,16 @@ The WePay iOS SDK supports the following payment methods
     The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
 
 ## Installation
-+ In Xcode, go to your app's target settings. On the Build Phases tab, expand the Link Binary With Libraries section.
+
+#### Using [cocoapods](https://cocoapods.org/) (recommended)
++ Add `pod "WePay"` to your podfile
++ Run `pod install`
++ Done!
+
+#### Using library binaries
++ Download the latest zip file from our [releases page](https://github.com/wepay/wepay-ios/releases/latest)
++ Unzip the file and copy the contents anywhere inside your project directory
++ In Xcode, go to your app's target settings. On the `Build Phases` tab, expand the `Link Binary With Libraries` section.
 + Include the following iOS frameworks:
     - AudioToolbox.framework
     - AVFoundation.framework
@@ -28,7 +39,7 @@ The WePay iOS SDK supports the following payment methods
     - MediaPlayer.framework
     - SystemConfiguration.framework
     - libstdc++.6.0.9.dylib
-+ Also include the following frameworks provided with this SDK:
++ Also include the framework files you copied:
     - G4XSwiper.framework
     - RPx.framework
     - RUA.framework
@@ -36,19 +47,24 @@ The WePay iOS SDK supports the following payment methods
     - WePay.framework
 + Done!
 
+## Documentation
+HTML documentation is hosted on our [Github Pages Site](http://wepay.github.io/wepay-ios/).
+
+Pdf documentation is available on the [releases page](https://github.com/wepay/wepay-ios/releases/latest) or as a direct [download](https://github.com/wepay/wepay-ios/raw/master/documentation/wepay-ios.pdf).
+
 ## SDK Organization
 
 ### WePay.h
-WePay.h is the starting point for consuming the SDK, and contains the primary class you will interact with.
+`WePay.h` is the starting point for consuming the SDK, and contains the primary class you will interact with.
 It exposes all the methods you can call to accept payments via the supported payment methods.
-Detailed reference documentation is available on the reference page for the WePay class.
+Detailed reference documentation is available on the reference page for the `WePay` class.
 
 ### Delegate protocols
 The SDK uses delegate protocols to respond to API calls. You must adopt the relevant protocols to receive responses to the API calls you make.
 Detailed reference documentation is available on the reference page for each protocol:
-- WPCardReaderDelegate
-- WPCheckoutDelegate
-- WPTokenizationDelegate
+- `WPCardReaderDelegate`
+- `WPCheckoutDelegate`
+- `WPTokenizationDelegate`
 
 
 ### Data Models
@@ -56,16 +72,16 @@ All other classes in the SDK are data models that are used to exchange data betw
 Detailed reference documentation is available on the reference page for each class.
 
 ## Next Steps
-Head over to the WePay class reference to see all the API methods available.
+Head over to the [documentation](http://wepay.github.io/wepay-ios/) to see all the API methods available.
 When you are ready, look at the samples below to learn how to interact with the SDK.
 
 
 ## Error Handling
-WPError.h serves as documentation for all errors surfaced by the WePay iOS SDK.
+`WPError.h` serves as documentation for all errors surfaced by the WePay iOS SDK.
 
 ## Samples
 
-### See the WePayExample app for a working implementation of all API methods.
+ See the [WePayExample app](https://github.com/wepay/wepay-ios/tree/master/WePayExample) for a working implementation of all API methods.
 
 ### Initializing the SDK
 

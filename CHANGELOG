@@ -1,2 +1,7 @@
+2015-07-10
+* Added cocoapods support
+* Added version selector to html doc
+* Replaced debug binaries with release versions 
+
 2015-07-06
 * Release version 2.0.0
