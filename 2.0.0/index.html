@@ -99,10 +99,13 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">WePay iOS SDK Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Introduction</h2>
-<p>This iOS SDK enables collection of payments via various payment methods(described below).</p>
-<p>It is meant for consumption by <a class="el" href="interface_we_pay.html">WePay</a> partners who are developing their own iOS apps aimed at merchants and/or consumers.</p>
-<p>Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server API call to complete the transaction.</p>
+<div class="textblock"><div class="image">
+<img src="https://www.wepay.com/img/redesign/logos/wepay-color.png"  alt="WePay logo" title="WePay"/>
+</div>
+<h2>Introduction</h2>
+<p>The <a class="el" href="interface_we_pay.html">WePay</a> iOS SDK enables collection of payments via various payment methods(described below).</p>
+<p>It is meant for consumption by <a href="http://www.wepay.com">WePay</a> partners who are developing their own iOS apps aimed at merchants and/or consumers.</p>
+<p>Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server <a href="http://www.wepay.com/developer">API</a> call to complete the transaction.</p>
 <h2>Payment methods</h2>
 <p>There are two types of payment methods:</p><ul>
 <li>Consumer payment methods - to be used in apps where consumers directly pay and/or make donations</li>
@@ -113,8 +116,17 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>Manual Entry (Consumer/Merchant) The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.</li>
 </ul>
 <h2>Installation</h2>
+<h4>Using <a href="https://cocoapods.org/">cocoapods</a> (recommended)</h4>
 <ul>
-<li>In Xcode, go to your app's target settings. On the Build Phases tab, expand the Link Binary With Libraries section.</li>
+<li>Add <code>pod "WePay"</code> to your podfile</li>
+<li>Run <code>pod install</code></li>
+<li>Done!</li>
+</ul>
+<h4>Using library binaries</h4>
+<ul>
+<li>Download the latest zip file from our <a href="https://github.com/wepay/wepay-ios/releases/latest">releases page</a></li>
+<li>Unzip the file and copy the contents anywhere inside your project directory</li>
+<li>In Xcode, go to your app's target settings. On the <code>Build Phases</code> tab, expand the <code>Link Binary With Libraries</code> section.</li>
 <li>Include the following iOS frameworks:<ul>
 <li>AudioToolbox.framework</li>
 <li>AVFoundation.framework</li>
@@ -125,7 +137,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>libstdc++.6.0.9.dylib</li>
 </ul>
 </li>
-<li>Also include the following frameworks provided with this SDK:<ul>
+<li>Also include the framework files you copied:<ul>
 <li>G4XSwiper.framework</li>
 <li>RPx.framework</li>
 <li>RUA.framework</li>
@@ -135,23 +147,26 @@ $(document).ready(function(){initNavTree('index.html','');});
 </li>
 <li>Done!</li>
 </ul>
+<h2>Documentation</h2>
+<p>HTML documentation is hosted on our <a href="http://wepay.github.io/wepay-ios/">Github Pages Site</a>.</p>
+<p>Pdf documentation is available on the <a href="https://github.com/wepay/wepay-ios/releases/latest">releases page</a> or as a direct <a href="https://github.com/wepay/wepay-ios/raw/master/documentation/wepay-ios.pdf">download</a>.</p>
 <h2>SDK Organization</h2>
 <h3><a class="el" href="_we_pay_8h_source.html">WePay.h</a></h3>
-<p><a class="el" href="_we_pay_8h_source.html">WePay.h</a> is the starting point for consuming the SDK, and contains the primary class you will interact with. It exposes all the methods you can call to accept payments via the supported payment methods. Detailed reference documentation is available on the reference page for the <a class="el" href="interface_we_pay.html">WePay</a> class.</p>
+<p><code><a class="el" href="_we_pay_8h_source.html">WePay.h</a></code> is the starting point for consuming the SDK, and contains the primary class you will interact with. It exposes all the methods you can call to accept payments via the supported payment methods. Detailed reference documentation is available on the reference page for the <code><a class="el" href="interface_we_pay.html">WePay</a></code> class.</p>
 <h3>Delegate protocols</h3>
 <p>The SDK uses delegate protocols to respond to API calls. You must adopt the relevant protocols to receive responses to the API calls you make. Detailed reference documentation is available on the reference page for each protocol:</p><ul>
-<li><a class="el" href="protocol_w_p_card_reader_delegate-p.html">WPCardReaderDelegate</a></li>
-<li><a class="el" href="protocol_w_p_checkout_delegate-p.html">WPCheckoutDelegate</a></li>
-<li><a class="el" href="protocol_w_p_tokenization_delegate-p.html">WPTokenizationDelegate</a></li>
+<li><code><a class="el" href="protocol_w_p_card_reader_delegate-p.html">WPCardReaderDelegate</a></code></li>
+<li><code><a class="el" href="protocol_w_p_checkout_delegate-p.html">WPCheckoutDelegate</a></code></li>
+<li><code><a class="el" href="protocol_w_p_tokenization_delegate-p.html">WPTokenizationDelegate</a></code></li>
 </ul>
 <h3>Data Models</h3>
 <p>All other classes in the SDK are data models that are used to exchange data between your app and the SDK. Detailed reference documentation is available on the reference page for each class.</p>
 <h2>Next Steps</h2>
-<p>Head over to the <a class="el" href="interface_we_pay.html">WePay</a> class reference to see all the API methods available. When you are ready, look at the samples below to learn how to interact with the SDK.</p>
+<p>Head over to the <a href="http://wepay.github.io/wepay-ios/">documentation</a> to see all the API methods available. When you are ready, look at the samples below to learn how to interact with the SDK.</p>
 <h2>Error Handling</h2>
-<p><a class="el" href="_w_p_error_8h.html" title="WPError.h serves as documentation for all errors surfaced by the WePay iOS SDK. ">WPError.h</a> serves as documentation for all errors surfaced by the <a class="el" href="interface_we_pay.html">WePay</a> iOS SDK.</p>
+<p><code><a class="el" href="_w_p_error_8h.html" title="WPError.h serves as documentation for all errors surfaced by the WePay iOS SDK. ">WPError.h</a></code> serves as documentation for all errors surfaced by the <a class="el" href="interface_we_pay.html">WePay</a> iOS SDK.</p>
 <h2>Samples</h2>
-<h3>See the WePayExample app for a working implementation of all API methods.</h3>
+<p>See the <a href="https://github.com/wepay/wepay-ios/tree/master/WePayExample">WePayExample app</a> for a working implementation of all API methods.</p>
 <h3>Initializing the SDK</h3>
 <ul>
 <li>Complete the installation steps (above).</li>
@@ -316,7 +331,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jul 6 2015 18:58:04 for WePay iOS SDK by
+    <li class="footer">Generated on Thu Jul 9 2015 20:35:56 for WePay iOS SDK by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
