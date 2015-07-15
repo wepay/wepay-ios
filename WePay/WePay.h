@@ -29,12 +29,14 @@ extern NSString * const kWPPaymentMethodSwipe;
 extern NSString * const kWPPaymentMethodManual;
 
 // Card Reader status
-extern NSString * const kWPCardReaderStatusNotConnected;
-extern NSString * const kWPCardReaderStatusConnected;
-extern NSString * const kWPCardReaderStatusWaitingForSwipe;
-extern NSString * const kWPCardReaderStatusSwipeDetected;
-extern NSString * const kWPCardReaderStatusTokenizing;
-extern NSString * const kWPCardReaderStatusStopped;
+typedef NS_ENUM(NSInteger, WPCardReaderStatus) {
+    WPCardReaderStatusNotConnected,
+    WPCardReaderStatusConnected,
+    WPCardReaderStatusWaitingForSwipe,
+    WPCardReaderStatusSwipeDetected,
+    WPCardReaderStatusTokenizing,
+    WPCardReaderStatusStopped
+};
 
 
 /** \protocol WPTokenizationDelegate
@@ -85,9 +87,9 @@ extern NSString * const kWPCardReaderStatusStopped;
 /**
  *  Called when the card reader changes status.
  *
- *  @param status Current status of the card reader, one of (kWPCardReaderStatusNotConnected, kWPCardReaderStatusConnected, kWPCardReaderStatusWaitingForSwipe, kWPCardReaderStatusSwipeDetected, kWPCardReaderStatusTokenizing, kWPCardReaderStatusStopped).
+ *  @param status Current status of the card reader, one of (WPCardReaderStatusNotConnected, WPCardReaderStatusConnected, WPCardReaderStatusWaitingForSwipe, WPCardReaderStatusSwipeDetected, WPCardReaderStatusTokenizing, WPCardReaderStatusStopped).
  */
-- (void) cardReaderDidChangeStatus:(id)status;
+- (void) cardReaderDidChangeStatus:(enum WPCardReaderStatus)status;
 
 
 @end

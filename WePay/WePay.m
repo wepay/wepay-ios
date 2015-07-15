@@ -27,14 +27,6 @@ NSString * const kWPEnvironmentProduction = @"production";
 NSString * const kWPPaymentMethodSwipe = @"Swipe";
 NSString * const kWPPaymentMethodManual = @"Manual";
 
-// Card Reader status
-NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
-NSString * const kWPCardReaderStatusConnected = @"card reader connected";
-NSString * const kWPCardReaderStatusWaitingForSwipe = @"waiting for swipe";
-NSString * const kWPCardReaderStatusSwipeDetected = @"swipe detected";
-NSString * const kWPCardReaderStatusTokenizing = @"tokenizing";
-NSString * const kWPCardReaderStatusStopped = @"stopped";
-
 @interface WePay ()
 
 @property(nonatomic, strong) WePay_CardReader *wePayCardReader;
