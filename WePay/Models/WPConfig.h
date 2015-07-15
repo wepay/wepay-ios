@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, WPEnvironment) {
  *  The designated initializer
  *
  *  @param clientId                             Your WePay clientId.
- *  @param environment                          The environment to be used, one of (WPEnvironmentStage, kWPEnvironmentProduction).
+ *  @param environment                          The environment to be used, one of (WPEnvironmentStage, WPEnvironmentProduction, WPEnvironmentCustom).
  *  @param customEnvironmentUrl                 The url to use when environment is set to WPEnvironmentCustom
  *  @param useLocation                          Flag to determine if we should use location services.
  *  @param restartCardReaderAfterSuccess        Flag to determine if the card reader should automatically restart after a successful read.
