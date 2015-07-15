@@ -53,7 +53,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
     if (self = [super init]) {
         self.config = config;
     }
-
+    
     return self;
 }
 
@@ -65,7 +65,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
         if (!self.wePayManual) {
             self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
         }
-
+        
         [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
@@ -73,7 +73,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
-
+        
         [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
@@ -92,7 +92,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
     if (!self.wePayCardReader) {
         self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
     }
-
+    
     [self.wePayCardReader startCardReaderForReadingWithCardReaderDelegate:cardReaderDelegate];
 }
 
@@ -102,7 +102,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
     if (!self.wePayCardReader) {
         self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
     }
-
+    
     [self.wePayCardReader startCardReaderForTokenizingWithCardReaderDelegate:cardReaderDelegate
                                                     tokenizationDelegate:tokenizationDelegate
                                                                sessionId:[self getSessionId]];
@@ -128,7 +128,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
     if (!self.wePayCheckout) {
         self.wePayCheckout = [[WePay_Checkout alloc] initWithConfig:self.config];
     }
-
+    
     [self.wePayCheckout storeSignatureImage:image
                             forCheckoutId:checkoutId
                          checkoutDelegate:checkoutDelegate];
@@ -143,7 +143,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
     if (!self.riskHelper) {
         self.riskHelper = [[WPRiskHelper alloc] initWithConfig:self.config];
     }
-
+    
     return [self.riskHelper sessionId];
 }
 
