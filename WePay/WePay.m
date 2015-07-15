@@ -18,6 +18,23 @@
 #import "WePay_Checkout.h"
 #import "WPRiskHelper.h"
 
+
+// Environments
+NSString * const kWPEnvironmentStage = @"stage";
+NSString * const kWPEnvironmentProduction = @"production";
+
+// Payment Methods
+NSString * const kWPPaymentMethodSwipe = @"Swipe";
+NSString * const kWPPaymentMethodManual = @"Manual";
+
+// Card Reader status
+NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
+NSString * const kWPCardReaderStatusConnected = @"card reader connected";
+NSString * const kWPCardReaderStatusWaitingForSwipe = @"waiting for swipe";
+NSString * const kWPCardReaderStatusSwipeDetected = @"swipe detected";
+NSString * const kWPCardReaderStatusTokenizing = @"tokenizing";
+NSString * const kWPCardReaderStatusStopped = @"stopped";
+
 @interface WePay ()
 
 @property(nonatomic, strong) WePay_CardReader *wePayCardReader;
@@ -48,7 +65,7 @@
         if (!self.wePayManual) {
             self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
         }
-
+        
         [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
@@ -56,7 +73,7 @@
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
-
+        
         [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
@@ -111,7 +128,7 @@
     if (!self.wePayCheckout) {
         self.wePayCheckout = [[WePay_Checkout alloc] initWithConfig:self.config];
     }
-
+    
     [self.wePayCheckout storeSignatureImage:image
                             forCheckoutId:checkoutId
                          checkoutDelegate:checkoutDelegate];
@@ -126,7 +143,7 @@
     if (!self.riskHelper) {
         self.riskHelper = [[WPRiskHelper alloc] initWithConfig:self.config];
     }
-
+    
     return [self.riskHelper sessionId];
 }
 
