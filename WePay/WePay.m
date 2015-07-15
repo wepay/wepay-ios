@@ -18,6 +18,23 @@
 #import "WePay_Checkout.h"
 #import "WPRiskHelper.h"
 
+
+// Environments
+NSString * const kWPEnvironmentStage = @"stage";
+NSString * const kWPEnvironmentProduction = @"production";
+
+// Payment Methods
+NSString * const kWPPaymentMethodSwipe = @"Swipe";
+NSString * const kWPPaymentMethodManual = @"Manual";
+
+// Card Reader status
+NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
+NSString * const kWPCardReaderStatusConnected = @"card reader connected";
+NSString * const kWPCardReaderStatusWaitingForSwipe = @"waiting for swipe";
+NSString * const kWPCardReaderStatusSwipeDetected = @"swipe detected";
+NSString * const kWPCardReaderStatusTokenizing = @"tokenizing";
+NSString * const kWPCardReaderStatusStopped = @"stopped";
+
 @interface WePay ()
 
 @property(nonatomic, strong) WePay_CardReader *wePayCardReader;
@@ -36,7 +53,7 @@
     if (self = [super init]) {
         self.config = config;
     }
-    
+
     return self;
 }
 
@@ -75,7 +92,7 @@
     if (!self.wePayCardReader) {
         self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
     }
-    
+
     [self.wePayCardReader startCardReaderForReadingWithCardReaderDelegate:cardReaderDelegate];
 }
 
@@ -85,7 +102,7 @@
     if (!self.wePayCardReader) {
         self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
     }
-    
+
     [self.wePayCardReader startCardReaderForTokenizingWithCardReaderDelegate:cardReaderDelegate
                                                     tokenizationDelegate:tokenizationDelegate
                                                                sessionId:[self getSessionId]];
