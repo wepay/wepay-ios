@@ -9,6 +9,15 @@
 #import "WPPaymentInfo.h"
 #import "WePay.h"
 
+extern NSString * NSStringFromWPPaymentMethod(WPPaymentMethod paymentMethod) {
+    switch (paymentMethod) {
+        case WPPaymentMethodManual:
+            return @"Manual";
+        case WPPaymentMethodSwipe:
+            return @"Swipe";
+    }
+}
+
 @interface WPPaymentInfo ()
 
 @property (nonatomic, strong, readwrite) NSString *firstName;
@@ -16,7 +25,7 @@
 @property (nonatomic, strong, readwrite) NSString *email;
 @property (nonatomic, strong, readwrite) NSString *paymentDescription;
 @property (nonatomic, readwrite) BOOL isVirtualTerminal;
-@property (nonatomic, strong, readwrite) id paymentMethod;
+@property (nonatomic, assign, readwrite) enum WPPaymentMethod paymentMethod;
 @property (nonatomic, strong, readwrite) WPAddress *billingAddress;
 @property (nonatomic, strong, readwrite) WPAddress *shippingAddress;
 @property (nonatomic, strong, readwrite) id swiperInfo;
@@ -35,7 +44,7 @@
         self.lastName = (NSString *)[info objectForKey:@"lastName"];
         self.paymentDescription = (NSString *)[info objectForKey:@"paymentDescription"];
         self.swiperInfo = [info objectForKey:@"swiperInfo"];
-        self.paymentMethod = kWPPaymentMethodSwipe;
+        self.paymentMethod = WPPaymentMethodSwipe;
     }
     
     return self;
@@ -57,7 +66,7 @@
         self.lastName = lastName;
         self.email = email;
         self.paymentDescription = nil;
-        self.paymentMethod = kWPPaymentMethodManual;
+        self.paymentMethod = WPPaymentMethodManual;
         self.isVirtualTerminal = virtualTerminal;
 
         self.billingAddress = billingAddress;
@@ -91,6 +100,8 @@
 
 - (NSDictionary *) toDict
 {
+    NSString *paymentMethodString = NSStringFromWPPaymentMethod(self.paymentMethod);
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     
     [dict setValue:self.firstName           ? self.firstName            : [NSNull null] forKey:@"firstName"];
@@ -98,7 +109,7 @@
     [dict setValue:self.email               ? self.email                : [NSNull null] forKey:@"email"];
 
     [dict setValue:self.paymentDescription  ? self.paymentDescription   : [NSNull null] forKey:@"paymentDescription"];
-    [dict setValue:self.paymentMethod       ? self.paymentMethod        : [NSNull null] forKey:@"paymentMethod"];
+    [dict setValue:self.paymentMethod       ? paymentMethodString       : [NSNull null] forKey:@"paymentMethod"];
 
     [dict setValue:self.billingAddress      ? [self.billingAddress toDict]  : [NSNull null] forKey:@"billingAddress"];
     [dict setValue:self.shippingAddress     ? [self.shippingAddress toDict] : [NSNull null] forKey:@"shippingAddress"];

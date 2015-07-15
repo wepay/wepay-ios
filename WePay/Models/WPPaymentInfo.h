@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "WPAddress.h"
+
+// Payment Methods
+typedef NS_ENUM(NSInteger, WPPaymentMethod) {
+    WPPaymentMethodSwipe,
+    WPPaymentMethodManual
+};
+
+extern NSString * NSStringFromWPPaymentMethod(WPPaymentMethod paymentMethod);
+
 /** 
  *  An instance of this class represents the payment information obtained from the user via any of the supported payment methods. It is used as input for tokenization operations.
  */
@@ -49,9 +58,9 @@
 @property (nonatomic, strong, readonly) WPAddress *shippingAddress;
 
 /**
- *  The payment method used, one of (kWPPaymentMethodManual, kWPPaymentMethodSwipe).
+ *  The payment method used, one of (WPPaymentMethodManual, WPPaymentMethodSwipe).
  */
-@property (nonatomic, strong, readonly) id paymentMethod;
+@property (nonatomic, assign, readonly) enum WPPaymentMethod paymentMethod;
 
 /**
  *  Additional info obtained by using the Swipe payment method.

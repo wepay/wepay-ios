@@ -20,10 +20,6 @@
 @class WPPaymentInfo;
 @class WPPaymentToken;
 
-// Payment Methods
-extern NSString * const kWPPaymentMethodSwipe;
-extern NSString * const kWPPaymentMethodManual;
-
 // Card Reader status
 typedef NS_ENUM(NSInteger, WPCardReaderStatus) {
     WPCardReaderStatusNotConnected,

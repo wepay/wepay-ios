@@ -18,11 +18,6 @@
 #import "WePay_Checkout.h"
 #import "WPRiskHelper.h"
 
-
-// Payment Methods
-NSString * const kWPPaymentMethodSwipe = @"Swipe";
-NSString * const kWPPaymentMethodManual = @"Manual";
-
 @interface WePay ()
 
 @property(nonatomic, strong) WePay_CardReader *wePayCardReader;
@@ -49,7 +44,7 @@ NSString * const kWPPaymentMethodManual = @"Manual";
 - (void) tokenizePaymentInfo:(WPPaymentInfo *)paymentInfo
         tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
 {
-    if ([kWPPaymentMethodManual isEqualToString:paymentInfo.paymentMethod]) {
+    if (paymentInfo.paymentMethod == WPPaymentMethodManual) {
         if (!self.wePayManual) {
             self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
         }
@@ -57,7 +52,7 @@ NSString * const kWPPaymentMethodManual = @"Manual";
         [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
-    } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
+    } else if (paymentInfo.paymentMethod == WPPaymentMethodSwipe) {
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
