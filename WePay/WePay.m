@@ -19,10 +19,6 @@
 #import "WPRiskHelper.h"
 
 
-// Environments
-NSString * const kWPEnvironmentStage = @"stage";
-NSString * const kWPEnvironmentProduction = @"production";
-
 // Payment Methods
 NSString * const kWPPaymentMethodSwipe = @"Swipe";
 NSString * const kWPPaymentMethodManual = @"Manual";

@@ -25,7 +25,7 @@
     [super setUp];
 
     // set up wepay
-    WPConfig *config = [[WPConfig alloc] initWithClientId:@"171482" environment:kWPEnvironmentStage];
+    WPConfig *config = [[WPConfig alloc] initWithClientId:@"171482" environment:WPEnvironmentStage];
     self.wepay = [[WePay alloc] initWithConfig:config];
 
     // reset booleans

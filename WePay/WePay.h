@@ -20,10 +20,6 @@
 @class WPPaymentInfo;
 @class WPPaymentToken;
 
-// Environments
-extern NSString * const kWPEnvironmentStage;
-extern NSString * const kWPEnvironmentProduction;
-
 // Payment Methods
 extern NSString * const kWPPaymentMethodSwipe;
 extern NSString * const kWPPaymentMethodManual;
