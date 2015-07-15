@@ -13,7 +13,7 @@
 
 @implementation WPClient
 
-static NSString * const SDK_VERSION = @"v2.0.0";
+static NSString * const SDK_VERSION = @"v2.0.1";
 static NSString * const WEPAY_API_VERSION = @"2014-01-08";
 
 #pragma mark config class property

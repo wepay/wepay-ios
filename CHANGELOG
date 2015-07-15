@@ -1,4 +1,8 @@
 2015-07-10
+* Release version 2.0.1
+* Use extern string definitions in WePay.h
+
+2015-07-10
 * Added cocoapods support
 * Added version selector to html doc
 * Replaced debug binaries with release versions 
