@@ -82,7 +82,7 @@ extern NSString * NSStringFromWPPaymentMethod(WPPaymentMethod paymentMethod);
 - (instancetype) initWithSwipedInfo:(id)swipedInfo;
 
 /**
- *  Initializes a WPPaymentInfo instance of type \ref kWPPaymentMethodManual.
+ *  Initializes a WPPaymentInfo instance of type \ref WPPaymentMethodManual.
  *
  *  @param firstName       First name of the payer.
  *  @param lastName        Last name of the payer.
