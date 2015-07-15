@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, WPEnvironment) {
 /**
  *  The URL of the environment to use when environment is set to WPEnvironmentCustom.
  */
-@property (nonatomic, assign, readonly) NSString *customEnvironmentUrl;
+@property (nonatomic, strong, readonly) NSString *customEnvironmentUrl;
 
 /**
  *  Determines if we should use location services. Defaults to NO.
