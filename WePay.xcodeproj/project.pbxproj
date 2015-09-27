@@ -39,7 +39,7 @@
 		574173FF1A3F8A4C00B73D95 /* WePay_Manual.m in Sources */ = {isa = PBXBuildFile; fileRef = 574173FD1A3F8A4B00B73D95 /* WePay_Manual.m */; };
 		574174021A3F8C5400B73D95 /* WPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 574174001A3F8C5400B73D95 /* WPClient.h */; };
 		574174031A3F8C5400B73D95 /* WPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 574174011A3F8C5400B73D95 /* WPClient.m */; };
-		574174121A4A5DE900B73D95 /* WPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 574174101A4A5DE900B73D95 /* WPError.h */; };
+		574174121A4A5DE900B73D95 /* WPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 574174101A4A5DE900B73D95 /* WPError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		574174181A4A604C00B73D95 /* WPError+internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 574174161A4A604C00B73D95 /* WPError+internal.h */; };
 		574174191A4A604C00B73D95 /* WPError+internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 574174171A4A604C00B73D95 /* WPError+internal.m */; };
 		57C754BE1B44DE9C007E5650 /* WePay_Checkout.h in Headers */ = {isa = PBXBuildFile; fileRef = 57C754BC1B44DE9C007E5650 /* WePay_Checkout.h */; };
