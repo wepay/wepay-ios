@@ -22,6 +22,7 @@
 #define DOWNLOAD_ERROR_DOWNLOAD_PARAM_ERROR                 (109)        // 下载时参数错误
 #define DOWNLOAD_ERROR_ROUTINE_START_FAILED                 (110)        // 启动事务失败
 #define DOWNLOAD_ERROR_USER_CANCEL                          (111)           // 用户取消流程
+#define DOWNLOAD_ERROR_FILE_FILTER_FAILED                   (112)        // 抽取分文件失败
 
 #define DOWNLOAD_ERROR_UNKNOWN                              (199)       // 未知错误
 

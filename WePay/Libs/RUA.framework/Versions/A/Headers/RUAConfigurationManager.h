@@ -222,7 +222,7 @@
  @param progress OnProgress block
  */
 - (void) setUserInterfaceOptions:(int) cardInsertionTimeout
-         withDefaultLanguageCode:(LanguageCode)languageCode
+         withDefaultLanguageCode:(RUALanguageCode)languageCode
                withPinPadOptions:(Byte) pinPadOptions
             withBackLightControl:(Byte) backlightControl
                         progress:(OnProgress)progress
@@ -262,7 +262,7 @@
  @param progress OnProgress block
  */
 - (void) setUserInterfaceOptions:(int) cardInsertionTimeout
-         withDefaultLanguageCode:(LanguageCode)languageCode
+         withDefaultLanguageCode:(RUALanguageCode)languageCode
    withCardHolderLanguageSupport:(BOOL) cardHolderLanguageSupport
       withSupportedLanguageCodes:(NSArray *) supportedLanguageCodes
                withPinPadOptions:(Byte) pinPadOptions
@@ -424,4 +424,21 @@
 									  enableMSD: (BOOL) enableMSD
 				  contactlessOutcomeDisplayTime: (int) contactlessOutcomeDisplayTime
 									   response: (OnResponse) response;
+
+/**
+ * This is an Asynchronous method that sets the energy saver mode timer
+ * @param seconds
+ * @param response OnResponse block
+ */
+
+- (void)setEnergySaverModeTime:(int)seconds res:(OnResponse)response;
+
+/**
+ * This is an Asynchronous method that sets the shut down mode timer
+ * @param seconds
+ * @param response OnResponse block
+ */
+
+
+- (void)setShutDownModeTime:(int)seconds res:(OnResponse)response;
 @end

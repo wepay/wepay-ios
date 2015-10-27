@@ -26,12 +26,21 @@
  * Exponent of Public Key
  * */
 @property NSString *exponentOfPublicKey;
-
+/**
+ * Checksum of Public key
+ * */
+@property NSString *checksum;
 
 - (id)          initWithRID:(NSString *)rid
        withCAPublicKeyIndex:(NSString *)CAPublicKeyIndex
               withPublicKey:(NSString *)PublicKey
     withExponentOfPublicKey:(NSString *)ExponentOfPublicKey;
+
+- (id)          initWithRID:(NSString *)rid
+       withCAPublicKeyIndex:(NSString *)CAPublicKeyIndex
+              withPublicKey:(NSString *)PublicKey
+    withExponentOfPublicKey:(NSString *)ExponentOfPublicKey
+               withChecksum:(NSString *)checksum;
 
 - (NSString *)getFormattedString;
 

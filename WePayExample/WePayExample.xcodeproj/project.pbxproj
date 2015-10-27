@@ -265,7 +265,7 @@
 				TargetAttributes = {
 					570693AC1A02FF3800182EA2 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 9B753KSY2J;
+						DevelopmentTeam = 465TZFQ6HR;
 					};
 					570693C51A02FF3800182EA2 = {
 						CreatedOnToolsVersion = 6.1;
@@ -452,9 +452,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/chaitanyabagaria/sandbox/wepay-ios-priv/Build",
 					"$(PROJECT_DIR)/WePayExample/Libs",
 				);
 				INFOPLIST_FILE = WePayExample/Info.plist;
@@ -473,9 +473,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/chaitanyabagaria/sandbox/wepay-ios-priv/Build",
 					"$(PROJECT_DIR)/WePayExample/Libs",
 				);
 				INFOPLIST_FILE = WePayExample/Info.plist;

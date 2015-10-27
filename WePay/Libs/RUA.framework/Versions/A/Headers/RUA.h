@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RUADeviceManager.h"
+#import "RUAReaderVersionInfo.h"
 
 #define RUA_DEBUG 1
 
@@ -46,6 +47,15 @@
 + (NSArray *)getSupportedDevices;
 
 /**
+ Returns an instance of the device manager for the connected device and this auto detection works with the readers that have audio jack interface.
+ @param RUADeviceType roam reader type enumeration
+ @return RUADeviceManager device manager for the device type specified
+ @see RUADeviceType
+ */
++ (id <RUADeviceManager> )getDeviceManager:(RUADeviceType)type;
+
+
+/**
  Returns an instance of the device manager for the device type specified.
  <p>
  Usage: <br>
@@ -57,13 +67,39 @@
  @return RUADeviceManager device manager for the device type specified
  @see RUADeviceType
  */
-+ (id <RUADeviceManager> )getDeviceManager:(RUADeviceType)type;
+
++ (id <RUADeviceManager> )getAutoDetectDeviceManager:(NSArray*)type;
 
 /**
  Returns an version of ROAMReaderUnifiedAPI (RUA)
  @return RUADeviceManager device manager for the device type specified
  */
 + (NSString *) versionString;
+
++ (BOOL)isUpdateRequired:(NSString*)filePath readerInfo:(RUAReaderVersionInfo*)readerVersionInfo;
+
+/**
+ * Returns a boolean to indicate if the UNS files need to be loaded onto the terminal.
+ *
+ * @return boolean to indicate if the UNS files need to be loaded onto the terminal
+ * @see RUAReaderVersionInfo, RUAFileVersionInfo
+ *
+ */
+
++ (BOOL)isUpdateRequired:(NSArray*)UNSFiles readerVersionInfo:(RUAReaderVersionInfo*)readerVersionInfo;;
+
+/**
+ * Returns a list of file version descriptions for each file
+ * contained within the specified UNS file.
+ * @see RUAFileVersionInfo
+ *
+ */
+
++ (NSArray*)getUnsFileVersionInfo:(NSString*)filePath;
+
++ (void)getDeviceManagerIfavailable:(id <RUADeviceStatusHandler> )statusHandler deviceList:(NSArray*)list;
+
+
 
 
 @end

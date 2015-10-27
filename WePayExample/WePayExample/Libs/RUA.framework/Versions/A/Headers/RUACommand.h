@@ -189,6 +189,10 @@ typedef NS_ENUM (NSInteger, RUACommand) {
 	RUACommandEnableFirmwareUpdateMode = 35,
 
 	RUACommandConfigureContactlessTransaction = 36,
+    
+    RUACommandEnergySaverModeTime = 37,
+    
+    RUACommandShutDownModeTime = 38,
 
 	RUACommandUnknown = 99
 };

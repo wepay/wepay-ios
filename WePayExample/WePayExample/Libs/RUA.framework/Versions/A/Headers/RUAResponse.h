@@ -211,10 +211,10 @@ typedef  enum {
 	/** 8F0C Master or session kcv doesnot match. */
 	RUAErrorCodeMasterOrSessionKCVDoesnotMatch = 68,
     
-	/** 8F0D SH a1 checksum doesnot match. */
+	/** 8F0D SHA1 checksum doesnot match. */
 	RUAErrorCodeSHA1ChecksumDoesnotMatch = 69,
     
-	/** 8F0E SH a1 calculation failed. */
+	/** 8F0E SHA1 calculation failed. */
 	RUAErrorCodeSHA1CalculationFailed = 70,
     
 	/** 8F10 PAN decryption failed. */
@@ -240,7 +240,14 @@ typedef  enum {
 	RUAErrorCodeDownloadErrorUnsFileCrcError = 85,
 	RUAErrorCodeDownloadErrorSuspendOk = 86,
 	RUAErrorCodeDownloadErrorSuspendFailed = 87,
-	RUAErrorCodeDownloadErrorUnknownError = 88
+	RUAErrorCodeDownloadErrorUnknownError = 88,
+
+	/** Transaction cancelled after allowed number of insertion attempts exceeded **/
+	RUAErrorCodeExceededAllowedCardInsertions = 89,
+
+	/** Non Certified EMV configuration check 9F33 9F40 9F35 & 9C Values.
+	 * Transaction can be completed even if InvalidEMVConfiguration error is returned. **/
+	RUAErrorCodeNonCertifiedEMVKernelConfiguration = 90
 
 
 } RUAErrorCode;

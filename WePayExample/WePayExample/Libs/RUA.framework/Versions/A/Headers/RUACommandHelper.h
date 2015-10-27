@@ -62,6 +62,10 @@ typedef struct TLV {
                         withCheckValue: (NSString *) checkValue
                                 withId: (NSString *) ID;
 
++ (NSData *)getEnergySaverTimeCommand:(int)seconds;
+
++ (NSData *)getShutDownModeTimeCommand:(int)seconds;
+
 + (RUAErrorCode)getRUAErrorCode:(NSString *)readerError;
 
 /**

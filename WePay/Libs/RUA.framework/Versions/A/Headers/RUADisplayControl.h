@@ -11,10 +11,10 @@
 typedef enum {
     
 	/** 0: EMVL1 Ingenico Proprietary character defined in Appendix A Section 11.1. */
-	DisplayTextCharsetEMVL1,
+	RUADisplayTextCharsetEMVL1,
 	/** 1: EMVL2 Character Set (ISO 8859_1 + Euro Symbol) defined in Appendix A Section 11.2 */
-	DisplayTextCharsetEMVL2
-} DisplayTextCharset;
+	RUADisplayTextCharsetEMVL2
+} RUADisplayTextCharset;
 
 /**
  * DisplayControl provides interface to control the display of ROAM device.<br>
@@ -77,11 +77,11 @@ typedef enum {
  * @param row
  * @param column
  * @param charset
- *            DisplayTextCharset.EMVL1 or DisplayTextCharset.EMVL2
+ *            RUADisplayTextCharset.EMVL1 or DisplayTextCharset.EMVL2
  * @param text
  * @param handler
  */
-- (void)writeText:(int)row column:(int)column charset:(DisplayTextCharset)charset test:(NSString *)text response:(OnResponse)response;
+- (void)writeText:(int)row column:(int)column charset:(RUADisplayTextCharset)charset test:(NSString *)text response:(OnResponse)response;
 
 
 @end

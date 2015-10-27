@@ -19,6 +19,14 @@ typedef enum _enumDeviceCommunicationMode{
     DUPLEX,
 }DeviceCommunicationMode;
 
+@interface PlatformFilter : NSObject
+
+@property (strong, nonatomic) NSString* Platform;
+@property (strong, nonatomic) NSString* SubPlatform;
+@property (strong, nonatomic) NSString* FileType;
+
+@end
+
 @interface CommunicationManagerBase : NSObject
 
 +(CommunicationManagerBase*)sharedInstance:(DeviceCommunicationChannel)channel;
@@ -37,6 +45,7 @@ typedef enum _enumDeviceCommunicationMode{
 -(void)closeResource;
 -(BOOL)isConnected;
 +(void)download:(RDeviceInfo*)di path:(NSString*)filePath callback:(id<CommDownloadCallback>)cb;
++(void)download:(RDeviceInfo*)di path:(NSString*)filePath filter:(PlatformFilter*)pf callback:(id<CommDownloadCallback>)cb;
 //+(void)TMSDownload:(RDeviceInfo*)di path:(NSString*)filePath callback:(id<CommDownloadCallback>)cb;
 +(TMSDownloadCtrl*)getTMSDownloadCtrl;
 

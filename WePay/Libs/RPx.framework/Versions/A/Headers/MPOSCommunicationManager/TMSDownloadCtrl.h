@@ -10,6 +10,7 @@
 #import "CommunicationManagerBase.h"
 #import "LDTmsFileVersionInfo.h"
 #import "LDTmsCmdVersionInfo.h"
+#import "LDTmsCmdCrtVersionInfo.h"
 
 
 
@@ -20,9 +21,11 @@
 -(void)cancelDownload;
 
 // Version info
+-(BOOL)CheckIsValid:(NSString*)filePath;
 -(NSUInteger)GetFileCount:(NSString*)filePath;
 -(LDTmsFileVersionInfo*)GetFileVersionInfo:(NSString*)filePath targetFile:(NSUInteger)index;
 -(LDTmsCmdVersionInfo*)GetCmdVersionInfo:(NSData*)cmd;
+-(LDTmsCmdCrtVersionInfo*)GetCmdCrtVersionInfo:(NSData*)cmd;
 -(NSArray*)GetFileVersionInfoSet:(NSString*)filePath;
 
 @end

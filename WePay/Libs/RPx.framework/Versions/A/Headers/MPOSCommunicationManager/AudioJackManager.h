@@ -32,11 +32,14 @@
  *  update audio system sdk api to support arm64
  *  version 1.2.3.0916
  *  fix bug about setVolume method,update system volume every time.
+ *  version 1.3.1.0609
+ *  Add half-dunplex support.
  ****************************************************************************/
 
 
 #import "CommunicationCallBack.h"
 #import "CommunicationManagerBase.h"
+
 
 @interface AudioJackManager : CommunicationManagerBase
 
@@ -52,6 +55,13 @@
 -(int)cancelExchange;
 -(BOOL)isConnected;
 + (BOOL)hasHeadset;
+
+// invalid methods
+-(int)openDevice:(NSString *)identifier cb:(id<CommunicationCallBack>) cb mode:(DeviceCommunicationMode)mode;
+-(int)openDevice:(NSString *)identifier cb:(id<CommunicationCallBack>)cb mode:(DeviceCommunicationMode)mode timeout:(long)timeout;
+
+-(int)exchangeData:(NSData *)data timeout:(long)timeout;
+
 
 @end
 

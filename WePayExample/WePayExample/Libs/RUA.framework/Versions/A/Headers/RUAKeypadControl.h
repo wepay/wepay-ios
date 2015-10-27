@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-	LanguageCodeENGLISH = 0,
-	LanguageCodeFRENCH = 1
-}LanguageCode;
+	RUALanguageCodeENGLISH = 0,
+	RUALanguageCodeFRENCH = 1
+}RUALanguageCode;
 /**
  * KeyPadControl provides interface to control the keypad of ROAM device.<br>
  * @author rkondaveti
@@ -44,7 +44,7 @@ typedef enum {
  * @param interDigitTimeout
  * @param handler
  */
-- (void)promptPinTDESBlockWithEncryptedPAN:(LanguageCode)languageCode pinBlockFormat:(NSString *)pinBlockFormat keyLocator:(NSString *)keyLocator
+- (void)promptPinTDESBlockWithEncryptedPAN:(RUALanguageCode)languageCode pinBlockFormat:(NSString *)pinBlockFormat keyLocator:(NSString *)keyLocator
                            cardLast4Digits:(NSString *)cardLast4Digits macData:(NSString *)macData clearOnlyLastDigitEntered:(BOOL)clearOnlyLastDigitEntered
                          interDigitTimeout:(int)interDigitTimeout response:(OnResponse)response;
 
@@ -66,7 +66,7 @@ typedef enum {
  * @param interDigitTimeout
  * @param handler
  */
-- (void)promptPinMasterSessionKeyWithEncryptedPAN:(LanguageCode)languageCode pinBlockFormat:(NSString *)pinBlockFormat keyLocator:(NSString *)keyLocator
+- (void)promptPinMasterSessionKeyWithEncryptedPAN:(RUALanguageCode)languageCode pinBlockFormat:(NSString *)pinBlockFormat keyLocator:(NSString *)keyLocator
                                   cardLast4Digits:(NSString *)cardLast4Digits clearOnlyLastDigitEntered:(BOOL)clearOnlyLastDigitEntered
                                 interDigitTimeout:(int)interDigitTimeout response:(OnResponse)response;
 @end

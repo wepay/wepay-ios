@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, RUAProgressMessage) {
     RUAProgressMessageRetrytPinEntryPrompt,
     RUAProgressMessageSwipeErrorReswipeMagStripe,
 	RUAProgressMessageUpdatingFirmware,
+    RUAProgressMessageTapDetected,
 };
 
 

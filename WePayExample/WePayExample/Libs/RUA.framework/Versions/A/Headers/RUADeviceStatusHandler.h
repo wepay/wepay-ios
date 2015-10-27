@@ -27,6 +27,11 @@
  * */
 - (void)onError:(NSString *)message;
 
+@optional
+
+- (void)onPlugged;
+
+
 @end
 
 #endif

@@ -1,6 +1,6 @@
 //
 //  SwiperController.h
-//  SwiperAPI-4.7.2
+//  SwiperAPI-4.8.2
 //
 //  Created by TeresaWong on 8/6/10.
 //  Copyright 2011 BBPOS LTD. All rights reserved.

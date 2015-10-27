@@ -1293,6 +1293,9 @@ typedef NS_ENUM(NSInteger, RUAParameter) {
 	 9F6E : Pay pass third party data
 	 * */
 	RUAParameterPayPassThirdPartyData = 521,
+    
+    
+    RUAParameterEMVTLVData = 998,
 
 
 	RUAParameterUnknown= 999,

@@ -171,6 +171,19 @@
  */
 - (void)sendCommand:(RUACommand)command withParameters:(NSDictionary *)parameters progress:(OnProgress)progress response:(OnResponse)response;
 
+/**
+ * Cancels any one of the previously issued commands,
+ * <ul>
+ * <li>EMVStartTransaction</li>
+ * <li>WaitForMagneticCardSwipe</li>
+ * <li>ReadKeypad</li>
+ * <li>KeyPadControl</li>
+ * </ul>
+ * Unlike other commands, this command will not receive a response,
+ * even if there is no outstanding command to be cancelled.
+ */
+- (void)cancelLastCommand;
+
 @end
 
 #endif /* ifndef RUATransactionManager_h */
