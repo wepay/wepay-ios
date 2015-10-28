@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name              = "WePay"
-  s.version           = "2.0.1"
+  s.version           = "2.0.2"
   s.summary           = "WePay binary for both simulator and iOS devices"
   s.description       = "A library that helps WePay partners develop their own iOS apps aimed at merchants and/or consumers for collection of payments via various payment methods"
   s.homepage          = "http://github.com/wepay/wepay-ios"
