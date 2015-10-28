@@ -1,0 +1,10 @@
+PODS:
+  - WePay (2.0.1)
+
+DEPENDENCIES:
+  - WePay
+
+SPEC CHECKSUMS:
+  WePay: bf20fbfd0f173c9dcc32c48085ead1d6a6341db6
+
+COCOAPODS: 0.39.0

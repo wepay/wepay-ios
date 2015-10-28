@@ -17,7 +17,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 .DS_Store
-*.xcworkspace
+project.xcworkspace
 
 /Documentation/html
 /Documentation/latex

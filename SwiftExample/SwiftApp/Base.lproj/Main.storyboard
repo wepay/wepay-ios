@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SwiftApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Console logs:" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="o6A-Uj-q1X">
+                                <rect key="frame" x="16" y="202" width="568" height="378"/>
+                                <color key="backgroundColor" red="0.18039215689999999" green="0.69411764710000001" blue="0.20784313730000001" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="378" id="Fvq-uZ-2W4"/>
+                                    <constraint firstAttribute="width" constant="568" id="rip-b9-8dL"/>
+                                    <constraint firstAttribute="height" constant="378" id="uOn-80-uIH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="uOn-80-uIH"/>
+                                    </mask>
+                                </variation>
+                            </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnn-Qd-1bk">
+                                <rect key="frame" x="16" y="20" width="568" height="174"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="amS-uC-jfK" userLabel="Swipe Info Btn">
+                                        <rect key="frame" x="13" y="8" width="75" height="75"/>
+                                        <state key="normal" title="Info" backgroundImage="swipe info">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="swipeInfoBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="saS-4X-q91"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fAC-Px-whH" userLabel="Stop Reader Btn">
+                                        <rect key="frame" x="96" y="8" width="75" height="75"/>
+                                        <state key="normal" title="Stop" backgroundImage="swiper_stop">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="stopCardReaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xjS-BQ-sE3"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jly-9p-Tjz" userLabel="Manual Entry Btn">
+                                        <rect key="frame" x="179" y="8" width="75" height="75"/>
+                                        <state key="normal" title="Manual" backgroundImage="manual">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="manualEntryButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xoG-VD-xSW"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqt-A3-6tl" userLabel="Submit Signature Btn">
+                                        <rect key="frame" x="262" y="8" width="75" height="75"/>
+                                        <state key="normal" title="Signature" backgroundImage="signature">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="storeSignatureButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ndp-1w-ci9"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="irw-cR-dzL" userLabel="Swipe Token Btn">
+                                        <rect key="frame" x="13" y="91" width="75" height="75"/>
+                                        <state key="normal" title="Token" backgroundImage="swipe tokenize">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="swipeTokenButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MFQ-IE-kHx"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LCz-72-qNx">
+                                        <rect key="frame" x="96" y="91" width="241" height="75"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="174" id="9cj-DW-lyU"/>
+                                    <constraint firstAttribute="width" constant="568" id="d08-fJ-JjL"/>
+                                    <constraint firstAttribute="height" constant="174" id="qdN-Jk-c82"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="9cj-DW-lyU"/>
+                                        <exclude reference="d08-fJ-JjL"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bnn-Qd-1bk" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="0To-Cb-KOE"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="o6A-Uj-q1X" secondAttribute="trailing" constant="-4" id="7xP-TW-rri"/>
+                            <constraint firstItem="o6A-Uj-q1X" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="bottom" constant="8" id="8mz-z6-gdl"/>
+                            <constraint firstItem="o6A-Uj-q1X" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="bottom" constant="8" symbolic="YES" id="Ene-JL-T6W"/>
+                            <constraint firstItem="bnn-Qd-1bk" firstAttribute="leading" secondItem="o6A-Uj-q1X" secondAttribute="leading" id="NVa-zj-JWh"/>
+                            <constraint firstAttribute="bottom" secondItem="o6A-Uj-q1X" secondAttribute="bottom" constant="20" symbolic="YES" id="YZx-sd-fzJ"/>
+                            <constraint firstItem="bnn-Qd-1bk" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="fsK-nl-4Zm"/>
+                            <constraint firstItem="o6A-Uj-q1X" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-4" id="gIW-fq-DPs"/>
+                            <constraint firstItem="bnn-Qd-1bk" firstAttribute="trailing" secondItem="o6A-Uj-q1X" secondAttribute="trailing" id="m2u-Vd-2iW"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="o6A-Uj-q1X" secondAttribute="bottom" constant="20" id="r7C-P3-XZ6"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="0To-Cb-KOE"/>
+                                <exclude reference="8mz-z6-gdl"/>
+                                <exclude reference="r7C-P3-XZ6"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="containerView" destination="bnn-Qd-1bk" id="UT7-g2-ryP"/>
+                        <outlet property="statusLabel" destination="LCz-72-qNx" id="5Tn-eG-gjc"/>
+                        <outlet property="textView" destination="o6A-Uj-q1X" id="ZUb-af-XFj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="445" y="474"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="manual" width="2133" height="2133"/>
+        <image name="signature" width="2133" height="2133"/>
+        <image name="swipe info" width="2133" height="2133"/>
+        <image name="swipe tokenize" width="2133" height="2133"/>
+        <image name="swiper_stop" width="2133" height="2133"/>
+    </resources>
+</document>

@@ -27,6 +27,8 @@ The WePay iOS SDK supports the following payment methods
 + Run `pod install`
 + Done!
 
+The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExample) also utilizes `cocoapods`.
+
 #### Using library binaries
 + Download the latest zip file from our [releases page](https://github.com/wepay/wepay-ios/releases/latest)
 + Unzip the file and copy the contents anywhere inside your project directory
@@ -82,6 +84,23 @@ When you are ready, look at the samples below to learn how to interact with the 
 ## Samples
 
  See the [WePayExample app](https://github.com/wepay/wepay-ios/tree/master/WePayExample) for a working implementation of all API methods.
+
+ See the [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExample) for a working implementation of all API methods in a Swift 2 application.
+ Note: make sure to open the project using `SwiftApp.xcworkspace` and not `SwiftApp.xcodeproj`.
+
+### Initializing a Bridging Header (for Swift apps)
+
++ For using Objective-C modules in a Swift application, you will need to create a bridging header.
++ Make sure you are working in `{app_name}.xcworkspace` file.
++ Under your target application folder, create a header file: `{app_name}-Bridging-Header.h`
++ In the Header file, import the modules you need:
+~~~{.m}
+#import <WePay/WePay.h>
+~~~
++ Click on the main application project to get to `Build Settings`.
++ Search for `bridging header` in your target application to find a setting called `Swift Compiler - Code Generation`.
++ Double click in the column next to `Objective-C Bridging Header` and add your Header file: `{app_name}/{app_name}-Bridging-Header.h`
++ There's no need to import the module in your code; you can use the module by calling it directly in your Swift application.
 
 ### Initializing the SDK
 

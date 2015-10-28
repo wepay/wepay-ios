@@ -1,0 +1,1 @@
+../../../../WePay/G4XSwiper.framework/Versions/B/Headers/SwiperController.h
