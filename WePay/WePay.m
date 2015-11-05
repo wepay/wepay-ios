@@ -18,23 +18,6 @@
 #import "WePay_Checkout.h"
 #import "WPRiskHelper.h"
 
-
-// Environments
-NSString * const kWPEnvironmentStage = @"stage";
-NSString * const kWPEnvironmentProduction = @"production";
-
-// Payment Methods
-NSString * const kWPPaymentMethodSwipe = @"Swipe";
-NSString * const kWPPaymentMethodManual = @"Manual";
-
-// Card Reader status
-NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
-NSString * const kWPCardReaderStatusConnected = @"card reader connected";
-NSString * const kWPCardReaderStatusWaitingForSwipe = @"waiting for swipe";
-NSString * const kWPCardReaderStatusSwipeDetected = @"swipe detected";
-NSString * const kWPCardReaderStatusTokenizing = @"tokenizing";
-NSString * const kWPCardReaderStatusStopped = @"stopped";
-
 @interface WePay ()
 
 @property(nonatomic, strong) WePay_CardReader *wePayCardReader;
@@ -61,7 +44,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 - (void) tokenizePaymentInfo:(WPPaymentInfo *)paymentInfo
         tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
 {
-    if ([kWPPaymentMethodManual isEqualToString:paymentInfo.paymentMethod]) {
+    if (paymentInfo.paymentMethod == WPPaymentMethodManual) {
         if (!self.wePayManual) {
             self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
         }
@@ -69,7 +52,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
         [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
-    } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
+    } else if (paymentInfo.paymentMethod == WPPaymentMethodSwipe) {
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }

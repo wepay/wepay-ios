@@ -20,21 +20,15 @@
 @class WPPaymentInfo;
 @class WPPaymentToken;
 
-// Environments
-extern NSString * const kWPEnvironmentStage;
-extern NSString * const kWPEnvironmentProduction;
-
-// Payment Methods
-extern NSString * const kWPPaymentMethodSwipe;
-extern NSString * const kWPPaymentMethodManual;
-
 // Card Reader status
-extern NSString * const kWPCardReaderStatusNotConnected;
-extern NSString * const kWPCardReaderStatusConnected;
-extern NSString * const kWPCardReaderStatusWaitingForSwipe;
-extern NSString * const kWPCardReaderStatusSwipeDetected;
-extern NSString * const kWPCardReaderStatusTokenizing;
-extern NSString * const kWPCardReaderStatusStopped;
+typedef NS_ENUM(NSInteger, WPCardReaderStatus) {
+    WPCardReaderStatusNotConnected,
+    WPCardReaderStatusConnected,
+    WPCardReaderStatusWaitingForSwipe,
+    WPCardReaderStatusSwipeDetected,
+    WPCardReaderStatusTokenizing,
+    WPCardReaderStatusStopped
+};
 
 
 /** \protocol WPTokenizationDelegate
@@ -85,9 +79,9 @@ extern NSString * const kWPCardReaderStatusStopped;
 /**
  *  Called when the card reader changes status.
  *
- *  @param status Current status of the card reader, one of (kWPCardReaderStatusNotConnected, kWPCardReaderStatusConnected, kWPCardReaderStatusWaitingForSwipe, kWPCardReaderStatusSwipeDetected, kWPCardReaderStatusTokenizing, kWPCardReaderStatusStopped).
+ *  @param status Current status of the card reader, one of (WPCardReaderStatusNotConnected, WPCardReaderStatusConnected, WPCardReaderStatusWaitingForSwipe, WPCardReaderStatusSwipeDetected, WPCardReaderStatusTokenizing, WPCardReaderStatusStopped).
  */
-- (void) cardReaderDidChangeStatus:(id)status;
+- (void) cardReaderDidChangeStatus:(enum WPCardReaderStatus)status;
 
 
 @end
@@ -183,7 +177,7 @@ extern NSString * const kWPCardReaderStatusStopped;
  *  - an unexpected error occurs
  *  - stopCardReader is called
  *
- *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusWaitingForSwipe, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
+ *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with WPCardReaderStatusWaitingForSwipe, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
  *
  *  WARNING: When this method is called, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use the card reader.
  *
@@ -199,7 +193,7 @@ extern NSString * const kWPCardReaderStatusStopped;
  *  - an unexpected error occurs
  *  - stopCardReader is called
  *
- *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusWaitingForSwipe, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
+ *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with WPCardReaderStatusWaitingForSwipe, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
  *
  *  WARNING: When this method is called, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use the card reader.
  *
@@ -210,7 +204,7 @@ extern NSString * const kWPCardReaderStatusStopped;
                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate;
 
 /**
- *  Stops the card reader. In response, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusStopped.
+ *  Stops the card reader. In response, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with WPCardReaderStatusStopped.
  *  Any tokenization in progress will not be stopped, and its result will be delivered to the WPTokenizationDelegate.
  */
 - (void) stopCardReader;

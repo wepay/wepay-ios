@@ -75,13 +75,13 @@ static WPConfig *config;
 {
     NSString *serverUrl = nil;
     // Use environment config to set the endpoint
-    if ([kWPEnvironmentStage compare:config.environment options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+    if (config.environment == WPEnvironmentStage) {
         serverUrl = @"https://stage.wepayapi.com/v2/";
-    } else if ([kWPEnvironmentProduction compare:config.environment options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+    } else if (config.environment == WPEnvironmentProduction) {
         serverUrl = @"https://wepayapi.com/v2/";
     } else {
         // Use @"https://vm.wepay.com/v2/" for vm
-        serverUrl = config.environment;
+        serverUrl = config.customEnvironmentUrl;
     }
 
 

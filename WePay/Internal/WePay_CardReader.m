@@ -124,7 +124,7 @@
     self.roamDeviceManager = nil;
 
     // inform delegate
-    [self informExternalCardReader:kWPCardReaderStatusStopped];
+    [self informExternalCardReader:WPCardReaderStatusStopped];
 }
 
 
@@ -185,7 +185,7 @@
         [self waitForSwipe];
     } else {
         // Wait a few seconds for the swiper to be detected, otherwise announce not connected
-        [self performSelector:@selector(informExternalCardReader:) withObject:kWPCardReaderStatusNotConnected afterDelay:3.5];
+        [self performSelector:@selector(informExternalCardReader:) withObject:WPCardReaderStatusNotConnected afterDelay:3.5];
     }
 }
 
@@ -200,10 +200,10 @@
     [tmgr waitForMagneticCardSwipe: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
                                         switch (messageType) {
                                             case RUAProgressMessageWaitingforCardSwipe:
-                                                [self informExternalCardReader:kWPCardReaderStatusWaitingForSwipe];
+                                                [self informExternalCardReader:WPCardReaderStatusWaitingForSwipe];
                                                 break;
                                             case RUAProgressMessageSwipeDetected:
-                                                [self informExternalCardReader:kWPCardReaderStatusSwipeDetected];
+                                                [self informExternalCardReader:WPCardReaderStatusSwipeDetected];
                                                 break;
                                             default:
                                                 // Do nothing on progress, react to the response when it comes
@@ -299,7 +299,7 @@
     // cancel any scheduled notifications - kWPSwiperStatusNotConnected
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(informExternalCardReader:)
-                                               object:kWPCardReaderStatusNotConnected];
+                                               object:WPCardReaderStatusNotConnected];
 
     
     // tell RUA to stop waiting for swipe
@@ -335,7 +335,7 @@
         // tokenize if requested
         if(self.swiperShouldTokenize && self.externalTokenizationDelegate) {
             // inform external
-            [self informExternalCardReader:kWPCardReaderStatusTokenizing];
+            [self informExternalCardReader:WPCardReaderStatusTokenizing];
 
             // tokenize
             [self tokenizeSwipedPaymentInfo:paymentInfo
@@ -432,12 +432,12 @@
     // Cancel any scheduled calls for swiper not connected
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(informExternalCardReader:)
-                                               object:kWPCardReaderStatusNotConnected];
+                                               object:WPCardReaderStatusNotConnected];
     
     // If we should wait for swipe
     if (self.swiperShouldWaitForSwipe) {
         // Inform external delegate
-        [self informExternalCardReader:kWPCardReaderStatusConnected];
+        [self informExternalCardReader:WPCardReaderStatusConnected];
 
         // Check and wait - the delay is to let the swiper get charged
         [self performSelector:@selector(checkAndWaitForSwipe) withObject:nil afterDelay:2.0];
@@ -450,7 +450,7 @@
     
     // Inform external delegate if we should wait for swipe
     if (self.swiperShouldWaitForSwipe) {
-        [self informExternalCardReader:kWPCardReaderStatusNotConnected];
+        [self informExternalCardReader:WPCardReaderStatusNotConnected];
     }
     
     // Stop waiting for swipe
@@ -472,7 +472,7 @@
 
 #pragma mark - inform external
 
-- (void) informExternalCardReader:(NSString *)status
+- (void) informExternalCardReader:(enum WPCardReaderStatus)status
 {
     // If the external delegate is listening for status updates, send it
     if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(cardReaderDidChangeStatus:)]) {

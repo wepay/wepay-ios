@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+// Environments
+typedef NS_ENUM(NSInteger, WPEnvironment) {
+    WPEnvironmentStage,
+    WPEnvironmentProduction,
+    WPEnvironmentCustom // Set customEnvironmentUrl when using this option
+};
+
 /**
  * The configuration object used for initializing a \ref WePay instance.
  */
@@ -19,9 +26,14 @@
 @property (nonatomic, strong, readonly) NSString *clientId;
 
 /**
- *  The environment to be used, one of (staging, production)
+ *  The environment to be used, one of (WPEnvironmentStage, WPEnvironmentProduction, WPEnvironmentCustom). You must set customEnvironmentUrl if using WPEnvironmentCustom.
  */
-@property (nonatomic, strong, readonly) NSString *environment;
+@property (nonatomic, assign, readonly) enum WPEnvironment environment;
+
+/**
+ *  The URL of the environment to use when environment is set to WPEnvironmentCustom.
+ */
+@property (nonatomic, strong, readonly) NSString *customEnvironmentUrl;
 
 /**
  *  Determines if we should use location services. Defaults to NO.
@@ -47,18 +59,19 @@
  *  A convenience initializer
  *
  *  @param clientId    Your WePay clientId.
- *  @param environment The environment to be used, one of (kWPEnvironmentStage, kWPEnvironmentProduction).
+ *  @param environment The environment to be used, one of (WPEnvironmentStage, WPEnvironmentProduction). You must use the designated initializer when delcaring WPEnvironmentCustom.
  *
  *  @return A \ref WPConfig instance which can be used to initialize a \ref WePay instance.
  */
 - (instancetype) initWithClientId:(NSString *)clientId
-                      environment:(NSString *)environment;
+                      environment:(enum WPEnvironment)environment;
 
 /**
  *  The designated initializer
  *
  *  @param clientId                             Your WePay clientId.
- *  @param environment                          The environment to be used, one of (kWPEnvironmentStage, kWPEnvironmentProduction).
+ *  @param environment                          The environment to be used, one of (WPEnvironmentStage, WPEnvironmentProduction, WPEnvironmentCustom).
+ *  @param customEnvironmentUrl                 The url to use when environment is set to WPEnvironmentCustom
  *  @param useLocation                          Flag to determine if we should use location services.
  *  @param restartCardReaderAfterSuccess        Flag to determine if the card reader should automatically restart after a successful read.
  *  @param restartCardReaderAfterGeneralError   Flag to determine if the card reader should automatically restart after a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError).
@@ -67,7 +80,8 @@
  *  @return A \ref WPConfig instance which can be used to initialize a \ref WePay instance.
  */
 - (instancetype) initWithClientId:(NSString *)clientId
-                      environment:(NSString *)environment
+                      environment:(enum WPEnvironment)environment
+             customEnvironmentUrl:(NSString *)customEnvironmentUrl
                       useLocation:(BOOL)useLocation
     restartCardReaderAfterSuccess:(BOOL)restartCardReaderAfterSuccess
 restartCardReaderAfterGeneralError:(BOOL)restartCardReaderAfterGeneralError
