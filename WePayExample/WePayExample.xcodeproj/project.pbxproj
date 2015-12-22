@@ -21,8 +21,6 @@
 		574173E91A37F39700B73D95 /* manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E41A37F39700B73D95 /* manual.png */; };
 		574173EA1A37F39700B73D95 /* swipe info.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E51A37F39700B73D95 /* swipe info.png */; };
 		574173EB1A37F39700B73D95 /* swipe tokenize.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E61A37F39700B73D95 /* swipe tokenize.png */; };
-		574173F61A39181300B73D95 /* RPx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173F31A39181300B73D95 /* RPx.framework */; };
-		574173FB1A3929C700B73D95 /* RUA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173FA1A3929C600B73D95 /* RUA.framework */; };
 		57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */; };
 		57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC61A1AE9060092B3AA /* AVFoundation.framework */; };
 		57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */; };
@@ -35,7 +33,6 @@
 		57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */; };
 		57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */; };
 		57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */; };
-		57E33F1E1ADF50ED000B7C65 /* G4XSwiper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 574173F21A39181300B73D95 /* G4XSwiper.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,9 +66,6 @@
 		574173E41A37F39700B73D95 /* manual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = manual.png; path = Resources/manual.png; sourceTree = "<group>"; };
 		574173E51A37F39700B73D95 /* swipe info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swipe info.png"; path = "Resources/swipe info.png"; sourceTree = "<group>"; };
 		574173E61A37F39700B73D95 /* swipe tokenize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swipe tokenize.png"; path = "Resources/swipe tokenize.png"; sourceTree = "<group>"; };
-		574173F21A39181300B73D95 /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = G4XSwiper.framework; sourceTree = "<group>"; };
-		574173F31A39181300B73D95 /* RPx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx.framework; sourceTree = "<group>"; };
-		574173FA1A3929C600B73D95 /* RUA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA.framework; sourceTree = "<group>"; };
 		57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		57664BC61A1AE9060092B3AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
@@ -91,15 +85,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E33F1E1ADF50ED000B7C65 /* G4XSwiper.framework in Frameworks */,
 				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
 				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
 				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
-				574173FB1A3929C700B73D95 /* RUA.framework in Frameworks */,
 				57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */,
 				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
 				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
-				574173F61A39181300B73D95 /* RPx.framework in Frameworks */,
 				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
 				57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */,
 				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
@@ -190,11 +181,8 @@
 				57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */,
 				57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */,
 				57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */,
-				574173F21A39181300B73D95 /* G4XSwiper.framework */,
 				57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */,
 				57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */,
-				574173F31A39181300B73D95 /* RPx.framework */,
-				574173FA1A3929C600B73D95 /* RUA.framework */,
 				57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */,
 				57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */,
 				57664BD01A1AEB050092B3AA /* UIKit.framework */,

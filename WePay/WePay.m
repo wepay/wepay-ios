@@ -70,6 +70,10 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
     } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
+
+#if defined(__has_include)
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
@@ -77,6 +81,12 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
         [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
                                tokenizationDelegate:tokenizationDelegate
                                           sessionId:[self getSessionId]];
+#else
+        NSLog(@"This functionality is not available");
+#endif // has_include
+#endif // defined
+
+
     }
 }
 
@@ -111,6 +121,24 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 - (void) stopCardReader
 {
     [self.wePayCardReader stopCardReader];
+}
+
+#else
+
+- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+{
+    NSLog(@"This functionality is not available");
+}
+
+- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+{
+    NSLog(@"This functionality is not available");
+}
+
+- (void) stopCardReader
+{
+    NSLog(@"This functionality is not available");
 }
 
 #endif // has_include
