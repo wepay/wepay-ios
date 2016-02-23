@@ -13,8 +13,8 @@
 
 @implementation WPClient
 
-static NSString * const SDK_VERSION = @"v3.0.0";
-static NSString * const WEPAY_API_VERSION = @"2014-01-08";
+static NSString * const SDK_VERSION = @"v4.0.0";
+static NSString * const WEPAY_API_VERSION = @"2015-11-18";
 
 #pragma mark config class property
 
@@ -55,6 +55,31 @@ static WPConfig *config;
                        errorHandler:errorHandler
      ];
 }
+
++ (void) creditCardCreateEMV:(NSDictionary *) params
+                  successBlock:(void (^)(NSDictionary * returnData)) successHandler
+                  errorHandler:(void (^)(NSError * error)) errorHandler
+{
+    [WPClient makeRequestToEndPoint:[WPClient apiUrlWithEndpoint:@"credit_card/create_emv"]
+                             values:params
+                        accessToken:nil
+                       successBlock:successHandler
+                       errorHandler:errorHandler
+     ];
+}
+
++ (void) creditCardAuthReverse:(NSDictionary *) params
+                successBlock:(void (^)(NSDictionary * returnData)) successHandler
+                errorHandler:(void (^)(NSError * error)) errorHandler
+{
+    [WPClient makeRequestToEndPoint:[WPClient apiUrlWithEndpoint:@"credit_card/auth_reverse"]
+                             values:params
+                        accessToken:nil
+                       successBlock:successHandler
+                       errorHandler:errorHandler
+     ];
+}
+
 
 + (void) checkoutSignatureCreate:(NSDictionary *) params
                     successBlock:(void (^)(NSDictionary * returnData)) successHandler
@@ -102,8 +127,8 @@ static WPConfig *config;
     [request setHTTPMethod: @"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"charset" forHTTPHeaderField:@"utf-8"];
-    [request setValue:@"Api-Version" forHTTPHeaderField:WEPAY_API_VERSION];
+    [request setValue:@"utf-8" forHTTPHeaderField:@"charset"];
+    [request setValue:WEPAY_API_VERSION forHTTPHeaderField:@"Api-Version"];
 
     [request setValue: [NSString stringWithFormat: @"WePay iOS SDK %@", SDK_VERSION] forHTTPHeaderField:@"User-Agent"];
     
@@ -115,8 +140,9 @@ static WPConfig *config;
     NSError *parseError = nil;
     
     // Get json from nsdictionary parameter
-    [request setHTTPBody: [NSJSONSerialization dataWithJSONObject: params options: kNilOptions error: &parseError]];
-    
+    NSData *requestData = [NSJSONSerialization dataWithJSONObject: params options: kNilOptions error: &parseError];
+    [request setHTTPBody: requestData];
+
     if (parseError) {
         errorHandler(parseError);
     } else {

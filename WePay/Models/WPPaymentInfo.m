@@ -21,6 +21,7 @@
 @property (nonatomic, strong, readwrite) WPAddress *shippingAddress;
 @property (nonatomic, strong, readwrite) id swiperInfo;
 @property (nonatomic, strong, readwrite) id manualInfo;
+@property (nonatomic, strong, readwrite) id emvInfo;
 
 @end
 
@@ -40,6 +41,22 @@
     
     return self;
 }
+
+- (instancetype) initWithEMVInfo:(id)emvInfo
+{
+    if (self = [super init]) {
+        NSDictionary *info = (NSDictionary *)emvInfo;
+
+        self.firstName = (NSString *)[info objectForKey:@"firstName"];
+        self.lastName = (NSString *)[info objectForKey:@"lastName"];
+        self.paymentDescription = (NSString *)[info objectForKey:@"paymentDescription"];
+        self.emvInfo = [info objectForKey:@"emvInfo"];
+        self.paymentMethod = kWPPaymentMethodDip;
+    }
+
+    return self;
+}
+
 
 - (instancetype) initWithFirstName:(NSString *)firstName
                           lastName:(NSString *)lastName

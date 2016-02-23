@@ -20,6 +20,14 @@
 			<key>Key</key>
 			<string>settingClientId</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Account Id</string>
+			<key>Key</key>
+			<string>settingAccountId</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

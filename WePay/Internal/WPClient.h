@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class WPAuthorizationInfo;
+
 @interface WPClient : NSObject
 
 + (void) setConfig:(WPConfig *)value;
@@ -34,6 +36,29 @@
  *  @param errorHandler   The error handler.
  */
 + (void) creditCardCreateSwipe:(NSDictionary *) params
+                  successBlock:(void (^)(NSDictionary * returnData)) successHandler
+                  errorHandler:(void (^)(NSError * error)) errorHandler;
+
+/**
+ *  Makes the /credit_card/create_emv api call.
+ *
+ *  @param params         The request params.
+ *  @param successHandler The success handler.
+ *  @param errorHandler   The error handler.
+ */
++ (void) creditCardCreateEMV:(NSDictionary *) params
+                  successBlock:(void (^)(NSDictionary * returnData)) successHandler
+                  errorHandler:(void (^)(NSError * error)) errorHandler;
+
+/**
+ *  Makes the /credit_card/auth_reverse api call.
+ *
+ *  @param params         The request params.
+ *  @param successHandler The success handler.
+ *  @param errorHandler   The error handler.
+ */
+
++ (void) creditCardAuthReverse:(NSDictionary *) params
                   successBlock:(void (^)(NSDictionary * returnData)) successHandler
                   errorHandler:(void (^)(NSError * error)) errorHandler;
 

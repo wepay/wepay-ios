@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WePay/WePay.h"
 
-@interface ViewController : UIViewController <WPCardReaderDelegate, WPTokenizationDelegate, WPCheckoutDelegate>
+@interface ViewController : UIViewController <WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate>
 
 
 @end

@@ -1,3 +1,17 @@
+2016-02-22
+* Released version 4.0.0
+* Added kWPPaymentMethodDip
+* Added kWPCurrencyCodeUSD
+* Added WPAuthorizationDelegate protocol
+* Added WPAuthorizationInfo
+* Added insertPayerEmailWithCompletion:, authorizeAmountWithCompletion: and shouldResetCardReaderWithCompletion: methods to WPCardReaderDelegate
+* Added new error codes in WPErrorCode enum
+* Added new card reader statuses
+* Modified startCardReaderForTokenizing... method by adding an authorizationDelegate parameter
+* Added magic numbers to simulate successful Dip
+* Added support for background threads via WPConfig.callDelegateMethodsOnMainThread
+* WPPaymentInfo.paymentDescription now masks everything except last 4
+
 2015-12-22
 * Released version 3.0.0
 * Card reader functionality is optional and not available by default
@@ -8,6 +22,10 @@
 2015-10-27
 * Release version 2.0.2
 * Add support for iPhone 6S and 6S Plus
+
+2015-07-14
+* Release version 2.0.1
+* Use extern string definitions in WePay.h
 
 2015-07-10
 * Release version 2.0.1

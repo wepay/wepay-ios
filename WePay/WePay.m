@@ -26,14 +26,26 @@ NSString * const kWPEnvironmentProduction = @"production";
 // Payment Methods
 NSString * const kWPPaymentMethodSwipe = @"Swipe";
 NSString * const kWPPaymentMethodManual = @"Manual";
+NSString * const kWPPaymentMethodDip = @"Dip";
 
 // Card Reader status
 NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
 NSString * const kWPCardReaderStatusConnected = @"card reader connected";
-NSString * const kWPCardReaderStatusWaitingForSwipe = @"waiting for swipe";
+NSString * const kWPCardReaderStatusCheckingReader = @"checking reader";
+NSString * const kWPCardReaderStatusConfiguringReader = @"configuring reader";
+NSString * const kWPCardReaderStatusWaitingForCard = @"waiting for card";
+NSString * const kWPCardReaderStatusShouldNotSwipeEMVCard = @"should not swipe EMV card";
+NSString * const kWPCardReaderStatusCheckCardOrientation = @"check card orientation";
+NSString * const kWPCardReaderStatusChipErrorSwipeCard = @"chip error, swipe card";
+NSString * const kWPCardReaderStatusSwipeErrorSwipeAgain = @"swipe error, swipe again";
 NSString * const kWPCardReaderStatusSwipeDetected = @"swipe detected";
+NSString * const kWPCardReaderStatusCardDipped = @"card dipped";
 NSString * const kWPCardReaderStatusTokenizing = @"tokenizing";
+NSString * const kWPCardReaderStatusAuthorizing = @"authorizing";
 NSString * const kWPCardReaderStatusStopped = @"stopped";
+
+// Currency Codes
+NSString * const kWPCurrencyCodeUSD = @"USD";
 
 @interface WePay ()
 
@@ -61,33 +73,35 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 - (void) tokenizePaymentInfo:(WPPaymentInfo *)paymentInfo
         tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
 {
-    if ([kWPPaymentMethodManual isEqualToString:paymentInfo.paymentMethod]) {
-        if (!self.wePayManual) {
-            self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
-        }
-        
-        [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
-                               tokenizationDelegate:tokenizationDelegate
-                                          sessionId:[self getSessionId]];
-    } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
-
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([kWPPaymentMethodManual isEqualToString:paymentInfo.paymentMethod]) {
+            if (!self.wePayManual) {
+                self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
+            }
+            
+            [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
+                                   tokenizationDelegate:tokenizationDelegate
+                                              sessionId:[self getSessionId]];
+        } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
+            
 #if defined(__has_include)
 #if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
-
-        if (!self.wePayCardReader) {
-            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
-        }
-        
-        [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
-                               tokenizationDelegate:tokenizationDelegate
-                                          sessionId:[self getSessionId]];
+            
+            if (!self.wePayCardReader) {
+                self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+            }
+            
+            [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
+                                       tokenizationDelegate:tokenizationDelegate
+                                                  sessionId:[self getSessionId]];
 #else
-        NSLog(@"This functionality is not available");
+            NSLog(@"This functionality is not available");
 #endif // has_include
 #endif // defined
-
-
-    }
+            
+            
+        }
+    });
 }
 
 
@@ -99,28 +113,36 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 
 - (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
-    if (!self.wePayCardReader) {
-        self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
-    }
-    
-    [self.wePayCardReader startCardReaderForReadingWithCardReaderDelegate:cardReaderDelegate];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!self.wePayCardReader) {
+            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        }
+
+        [self.wePayCardReader startCardReaderForReadingWithCardReaderDelegate:cardReaderDelegate];
+    });
 }
 
 - (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
-    if (!self.wePayCardReader) {
-        self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
-    }
-    
-    [self.wePayCardReader startCardReaderForTokenizingWithCardReaderDelegate:cardReaderDelegate
-                                                    tokenizationDelegate:tokenizationDelegate
-                                                               sessionId:[self getSessionId]];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!self.wePayCardReader) {
+            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        }
+
+        [self.wePayCardReader startCardReaderForTokenizingWithCardReaderDelegate:cardReaderDelegate
+                                                            tokenizationDelegate:tokenizationDelegate
+                                                           authorizationDelegate:authorizationDelegate
+                                                                       sessionId:[self getSessionId]];
+    });
 }
 
 - (void) stopCardReader
 {
-    [self.wePayCardReader stopCardReader];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.wePayCardReader stopCardReader];
+    });
 }
 
 #else
@@ -132,6 +154,7 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 
 - (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
     NSLog(@"This functionality is not available");
 }
@@ -153,13 +176,15 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
                forCheckoutId:(NSString *)checkoutId
             checkoutDelegate:(id<WPCheckoutDelegate>) checkoutDelegate
 {
-    if (!self.wePayCheckout) {
-        self.wePayCheckout = [[WePay_Checkout alloc] initWithConfig:self.config];
-    }
-    
-    [self.wePayCheckout storeSignatureImage:image
-                            forCheckoutId:checkoutId
-                         checkoutDelegate:checkoutDelegate];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!self.wePayCheckout) {
+            self.wePayCheckout = [[WePay_Checkout alloc] initWithConfig:self.config];
+        }
+
+        [self.wePayCheckout storeSignatureImage:image
+                                  forCheckoutId:checkoutId
+                               checkoutDelegate:checkoutDelegate];
+    });
 }
 
 

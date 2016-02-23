@@ -102,6 +102,56 @@ typedef enum WPErrorCode {
      */
     WPErrorNameNotFound         = -10021,
 
+    /**
+     *  -10022 Invalid card data.
+     */
+    WPErrorInvalidCardData = -10022,
+
+    /**
+     *  -10023 Card not supported.
+     */
+    WPErrorCardNotSupported = -10023,
+
+    /**
+     *  -10024 EMV transaction error.
+     */
+    WPErrorEMVTransactionError = -10024,
+
+    /**
+     *  -10025 Invalid application ID.
+     */
+    WPErrorInvalidApplicationId = -10025,
+
+    /**
+     *  -10026 Declined by card.
+     */
+    WPErrorDeclinedByCard = -10026,
+
+    /**
+     *  -10027 Card blocked.
+     */
+    WPErrorCardBlocked = -10027,
+
+    /**
+     *  -10028 Declined by issuer.
+     */
+    WPErrorDeclinedByIssuer = -10028,
+
+    /**
+     *  -10029 Issuer unreachable.
+     */
+    WPErrorIssuerUnreachable = -10029,
+    
+    /**
+     *  -10030 Invalid auth info.
+     */
+    WPErrorInvalidAuthInfo = -10030,
+    
+    /**
+     *  -10031 Auth info not provided.
+     */
+    WPErrorAuthInfoNotProvided = -10031,
+
 } WPErrorCode;
 
 #pragma mark - User facing messages.
@@ -140,3 +190,48 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorNameNotFound, that can be retrieved by calling [error localizedDescription].
  */
 #define WPNameNotFoundErrorMessage NSLocalizedStringFromTable(@"Name not found.", @"WePay",  @"Name not found.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidCardData, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPInvalidCardDataErrorMessage NSLocalizedStringFromTable(@"Invalid card data.", @"WePay",  @"Invalid card data.");
+
+/**
+ *  The localizable user facing message for WPErrorCardNotSupported, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPCardNotSupportedErrorMessage NSLocalizedStringFromTable(@"This card is not supported.", @"WePay",  @"This card is not supported.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidApplicationId, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPInvalidApplicationIdErrorMessage NSLocalizedStringFromTable(@"Invalid application ID selected.", @"WePay",  @"Invalid application ID selected.");
+
+/**
+ *  The localizable user facing message for WPErrorDeclinedByCard, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPDeclinedByCardErrorMessage NSLocalizedStringFromTable(@"The transaction was declined by the card.", @"WePay",  @"The transaction was declined by the card.");
+
+/**
+ *  The localizable user facing message for WPErrorCardBlocked, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPCardBlockedErrorMessage NSLocalizedStringFromTable(@"This card has been blocked.", @"WePay",  @"This card has been blocked.");
+
+/**
+ *  The localizable user facing message for WPErrorDeclinedByIssuer, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPDeclinedByIssuerErrorMessage NSLocalizedStringFromTable(@"The transaction was declined by the issuer bank.", @"WePay",  @"The transaction was declined by the issuer bank.");
+
+/**
+ *  The localizable user facing message for WPErrorIssuerUnreachable, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPIssuerUnreachableErrorMessage NSLocalizedStringFromTable(@"The issuing bank could not be reached.", @"WePay",  @"The issuing bank could not be reached.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidAuthInfo, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPInvalidAuthInfoErrorMessage NSLocalizedStringFromTable(@"The provided auth info is invalid.", @"WePay",  @"The provided auth info is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorAuthInfoNotProvided, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPAuthInfoNotProvidedErrorMessage NSLocalizedStringFromTable(@"Auth info was not provided.", @"WePay",  @"Auth info was not provided.");

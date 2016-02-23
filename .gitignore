@@ -19,10 +19,22 @@ DerivedData
 .DS_Store
 project.xcworkspace
 
+# WePay internal documentation and tools
 /Documentation/html
 /Documentation/latex
 /Documentation/rtf
 /wepay-ios-tools/
+
+# Card reader libs are git-ignored by default.
+/SwiftExample/Pods/WePay/G4XSwiper.framework/
+/SwiftExample/Pods/WePay/RPx.framework/
+/SwiftExample/Pods/WePay/RUA.framework/
+/WePayExample/WePayExample/Libs/G4XSwiper.framework/
+/WePayExample/WePayExample/Libs/RPx.framework/
+/WePayExample/WePayExample/Libs/RUA.framework/
+/WePay/Libs/G4XSwiper.framework/
+/WePay/Libs/RPx.framework/
+/WePay/Libs/RUA.framework/
 
 # CocoaPods
 #

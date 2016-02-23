@@ -24,6 +24,8 @@
     return [self initWithClientId:clientId
                       environment:environment
                       useLocation:NO
+                  useTestEMVCards:NO
+  callDelegateMethodsOnMainThread:YES
     restartCardReaderAfterSuccess:NO
 restartCardReaderAfterGeneralError:YES
 restartCardReaderAfterOtherErrors: NO];
@@ -33,15 +35,19 @@ restartCardReaderAfterOtherErrors: NO];
 - (instancetype) initWithClientId:(NSString *)clientId
                       environment:(NSString *)environment
                       useLocation:(BOOL)useLocation
+                  useTestEMVCards:(BOOL)useTestEMVCards
+  callDelegateMethodsOnMainThread:(BOOL)callDelegateMethodsOnMainThread
     restartCardReaderAfterSuccess:(BOOL)restartCardReaderAfterSuccess
 restartCardReaderAfterGeneralError:(BOOL)restartCardReaderAfterGeneralError
-restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors
+restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors;
 {
     if (self = [super init])
     {
         self.clientId = clientId;
         self.environment = environment;
         self.useLocation = useLocation;
+        self.useTestEMVCards = useTestEMVCards;
+        self.callDelegateMethodsOnMainThread = callDelegateMethodsOnMainThread;
         self.restartCardReaderAfterSuccess = restartCardReaderAfterSuccess;
         self.restartCardReaderAfterGeneralError = restartCardReaderAfterGeneralError;
         self.restartCardReaderAfterOtherErrors = restartCardReaderAfterOtherErrors;
@@ -57,6 +63,7 @@ restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors
     [dict setValue:self.clientId ? self.clientId : [NSNull null] forKey:@"clientId"];
     [dict setValue:self.environment ? self.environment : [NSNull null] forKey:@"environment"];
     [dict setValue:@(self.useLocation) forKey:@"useLocation"];
+    [dict setValue:@(self.useTestEMVCards) forKey:@"useTestEMVCards"];
     [dict setValue:@(self.restartCardReaderAfterSuccess) forKey:@"restartCardReaderAfterSuccess"];
     [dict setValue:@(self.restartCardReaderAfterGeneralError) forKey:@"restartCardReaderAfterGeneralError"];
     [dict setValue:@(self.restartCardReaderAfterOtherErrors) forKey:@"restartCardReaderAfterOtherErrors"];

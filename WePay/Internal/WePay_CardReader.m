@@ -9,41 +9,41 @@
 #if defined(__has_include)
 #if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
 
-
 #import "WePay_CardReader.h"
 #import "WePay.h"
 #import "WPConfig.h"
 #import "WPClient.h"
+#import "WPRP350XManager.h"
 #import "WPError+internal.h"
+#import "WPRoamHelper.h"
+#import "WPG5XManager.h"
+#import "WPExternalCardReaderHelper.h"
+#import "WPClientHelper.h"
 
-#define TIMEOUT_DEFAULT_SEC 60
-#define TIMEOUT_INFINITE_SEC -1
-#define TIMEOUT_WORKAROUND_SEC 112
+NSString *const kRP350XModelName = @"RP350X";
+NSString *const kG5XModelName = @"G5X";
+
+#define READ_AMOUNT 10.0
+#define READ_CURRENCY @"USD"
+#define READ_ACCOUNT_ID 12345
 
 @interface WePay_CardReader ()
 
-@property (nonatomic, strong) NSString *clientId;
+@property (nonatomic, strong) WPConfig *config;
 @property (nonatomic, strong) NSString *sessionId;
 
-@property (nonatomic, assign) BOOL restartCardReaderAfterSuccess;
-@property (nonatomic, assign) BOOL restartCardReaderAfterGeneralError;
-@property (nonatomic, assign) BOOL restartCardReaderAfterOtherErrors;
+@property (nonatomic, strong) id<WPDeviceManager> deviceManager;
+@property (nonatomic, strong) id<WPExternalCardReaderDelegate> externalHelper;
 
-@property (nonatomic, strong) id<RUADeviceManager> roamDeviceManager;
-@property (nonatomic, strong) NSTimer *swipeTimeoutTimer;
-
-@property (nonatomic, weak) id<WPCardReaderDelegate> externalCardReaderDelegate;
-@property (nonatomic, weak) id<WPTokenizationDelegate> externalTokenizationDelegate;
+@property (nonatomic, strong) NSString *connectedDeviceType;
 
 @property (nonatomic, assign) BOOL swiperShouldTokenize;
-@property (nonatomic, assign) BOOL swiperShouldWaitForSwipe;
-@property (nonatomic, assign) BOOL swiperIsWaitingForSwipe;
-@property (nonatomic, assign) BOOL swiperIsConnected;
 
 @end
 
 @implementation WePay_CardReader
 
+#define WEPAY_LAST_DEVICE_KEY @"wepay.last.device.type"
 
 - (instancetype) initWithConfig:(WPConfig *)config
 {
@@ -51,59 +51,100 @@
         // pass the config to the client
         WPClient.config = config;
         
-        // set the clientId
-        self.clientId = config.clientId;
+        // save the config
+        self.config = config;
 
-        // set the swiper restart options
-        self.restartCardReaderAfterSuccess = config.restartCardReaderAfterSuccess;
-        self.restartCardReaderAfterGeneralError = config.restartCardReaderAfterGeneralError;
-        self.restartCardReaderAfterOtherErrors = config.restartCardReaderAfterOtherErrors;
+        // create the external helper
+        self.externalHelper = [[WPExternalCardReaderHelper alloc] initWithConfig:self.config];
+
+        // fetch saved device type
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *lastDeviceType = [defaults objectForKey:WEPAY_LAST_DEVICE_KEY];
+        
+        // initialize a device manager
+        // TODO: Implement Roam ReaderSearchListener, instead of trying each device ourselves
+        if ([kG5XModelName isEqualToString:lastDeviceType]) {
+            [self startSwiperManager];
+        } else {
+            [self startEMVManager];
+        }
+
+        // configure RUA
+        #ifdef DEBUG
+            // Log response only when in debug builds
+            [RUA enableDebugLogMessages:YES];
+        #else
+            [RUA enableDebugLogMessages:NO];
+        #endif
     }
     
     return self;
 }
 
+- (void) startSwiperManager
+{
+    self.deviceManager = [[WPG5XManager alloc] initWithConfig:self.config];
+    [self.deviceManager setManagerDelegate:self
+                          externalDelegate:self.externalHelper];
+}
+
+- (void) startEMVManager
+{
+    self.deviceManager = [[WPRP350XManager alloc] initWithConfig:self.config];
+    [self.deviceManager setManagerDelegate:self
+                          externalDelegate:self.externalHelper];
+}
+
 - (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
-    self.externalTokenizationDelegate = nil;
-    self.externalCardReaderDelegate = cardReaderDelegate;
+    self.externalHelper.externalTokenizationDelegate = nil;
+    self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
     self.sessionId = nil;
-    
-    [self startSwiperForTokenizing:NO];
+    self.swiperShouldTokenize = NO;
+
+   [self.deviceManager processCard];
 }
 
 - (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                                  sessionId:(NSString *)sessionId;
+                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
+                                                  sessionId:(NSString *)sessionId
 {
-    self.externalTokenizationDelegate = tokenizationDelegate;
-    self.externalCardReaderDelegate = cardReaderDelegate;
+    self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
+    self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
+    self.externalHelper.externalAuthorizationDelegate = authorizationDelegate;
     self.sessionId = sessionId;
-    
-    [self startSwiperForTokenizing:YES];
+    self.swiperShouldTokenize = YES;
+
+    [self.deviceManager processCard];
 }
 
 - (void) tokenizeSwipedPaymentInfo:(WPPaymentInfo *)paymentInfo
               tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
                          sessionId:(NSString *)sessionId;
 {
-    self.externalTokenizationDelegate = tokenizationDelegate;
+    self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
 
     NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
 
     if (error) {
         // invalid payment info, return error
-        [self informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+        [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
     } else {
-        [WPClient creditCardCreateSwipe:[self createSwipeRequestParamsForPaymentInfo:paymentInfo]
+
+        NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
+                                                                            clientId:self.config.clientId
+                                                                           sessionId:self.sessionId];
+
+        [WPClient creditCardCreateSwipe:params
                            successBlock:^(NSDictionary * returnData) {
                                NSNumber *credit_card_id = [returnData objectForKey:@"credit_card_id"];
                                WPPaymentToken *token = [[WPPaymentToken alloc] initWithId:[credit_card_id stringValue]];
-                               [self informExternalTokenizerSuccess:token forPaymentInfo:paymentInfo];
+                               [self.externalHelper informExternalTokenizerSuccess:token forPaymentInfo:paymentInfo];
                            }
                            errorHandler:^(NSError * error) {
                                // Call error handler with error returned.
-                               [self informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+                               [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
                            }
          ];
     }
@@ -114,295 +155,193 @@
  */
 - (void) stopCardReader
 {
-    self.swiperShouldWaitForSwipe = NO;
-
-    // stop waiting for swipe and cancel all pending notifications
-    [self stopWaitingForSwipe];
-
-    // release and delete the device manager
-    [self.roamDeviceManager releaseDevice];
-    self.roamDeviceManager = nil;
-
-    // inform delegate
-    [self informExternalCardReader:kWPCardReaderStatusStopped];
+    [self.deviceManager stopDevice];
 }
 
+#pragma mark WPDeviceManagerDelegate methods
 
-#pragma mark Card Reader Swipe (private)
-
-/**
- *  Initializes the swiper and waits for swipe
- *
- *  @param shouldTokenize determines if the obtained card info should be tokenized or not
- */
-- (void) startSwiperForTokenizing:(BOOL)shouldTokenize
+- (void) handleSwipeResponse:(NSDictionary *) responseData
 {
-    // clear any pending actions
-    [self stopWaitingForSwipe];
-
-    // set options
-    self.swiperShouldTokenize = shouldTokenize;
-    self.swiperShouldWaitForSwipe = YES;
-
-    // start swiper and wait for swipe
-    if (!self.roamDeviceManager) {
-        [self startRoamDeviceManager];
-    } else {
-        [self checkAndWaitForSwipe];
-    }
-}
-
-/**
- *  Initializes roam device manager, providing self as the delegate for device status handler
- *  If initialization fails, sends an error to WPCardReaderDelegate
- *  If initialization succeeds, tries to wait for swipe
- */
-- (void) startRoamDeviceManager
-{
-    self.roamDeviceManager = [RUA getDeviceManager:RUADeviceTypeG4x];
-
-    BOOL init = [self.roamDeviceManager initializeDevice:self];
-    if (init) {
-        [[self.roamDeviceManager getConfigurationManager] setCommandTimeout:TIMEOUT_WORKAROUND_SEC];
-
-        [self checkAndWaitForSwipe];
-    } else {
-        self.roamDeviceManager = nil;
-
-        NSError *error = [WPError errorInitializingCardReader];
-        [self informExternalCardReaderFailure:error];
-        self.swiperShouldWaitForSwipe = NO;
-    }
-}
-
-/**
- *  Checks if swiper is connected. If yes, informs WPCardReaderDelegate of connected status, and triggers device to wait for swipe
- *  If device is not connected, then informs WPCardReaderDelegate of not connected status
- */
-- (void) checkAndWaitForSwipe
-{
-    if (self.swiperIsConnected) {
-        [self waitForSwipe];
-    } else {
-        // Wait a few seconds for the swiper to be detected, otherwise announce not connected
-        [self performSelector:@selector(informExternalCardReader:) withObject:kWPCardReaderStatusNotConnected afterDelay:3.5];
-    }
-}
-
-/**
- *  Asks roam device manager to wait for swipe
- *  Starts timeout timer to stop waiting if swipe does not occur
- */
-- (void) waitForSwipe
-{
-    self.swiperIsWaitingForSwipe = YES;
-    id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
-    [tmgr waitForMagneticCardSwipe: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                                        switch (messageType) {
-                                            case RUAProgressMessageWaitingforCardSwipe:
-                                                [self informExternalCardReader:kWPCardReaderStatusWaitingForSwipe];
-                                                break;
-                                            case RUAProgressMessageSwipeDetected:
-                                                [self informExternalCardReader:kWPCardReaderStatusSwipeDetected];
-                                                break;
-                                            default:
-                                                // Do nothing on progress, react to the response when it comes
-                                                break;
-                                        }
-                                    }
-                          response: ^(RUAResponse *ruaResponse) {
-                                        // check if we should wait for swipe again
-                                        if ([self shouldKeepWaitingForSwipeAfterResponse:ruaResponse]) {
-                                            [self waitForSwipe];
-                                        } else {
-                                            self.swiperShouldWaitForSwipe = NO;
-                                            [self stopCardReader];
-                                        }
-
-                                        // process reponse from swiper
-                                        [self handleResponse:ruaResponse];
-                                    }
-    ];
-
-    // WORKAROUND: Roam's SDK does not properly handle assigned timeouts. We're working around that by immediately restarting the swiper when it timesout on its own.
-    // when Roam fixes their SDK, we should handle timeouts correctly - ie, timeout at the correct time as configured, or never timeout if configured as such.
-    NSInteger timeout = self.restartCardReaderAfterOtherErrors ? TIMEOUT_WORKAROUND_SEC : TIMEOUT_DEFAULT_SEC;
-
-    
-    // Reset swipe timeout timer
-    [self.swipeTimeoutTimer invalidate];
-    self.swipeTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval: timeout
-                                                  target:self
-                                                selector:@selector(handleSwipeTimeout)
-                                                userInfo:@"Timed out" repeats:NO];
-}
-
-- (void) handleSwipeTimeout
-{
-    // inform external
-    NSError *error = [WPError errorForCardReaderTimeout];
-    [self informExternalCardReaderFailure:error];
-
-    if (self.restartCardReaderAfterOtherErrors) {
-        // keep waiting for swipe
-        [self waitForSwipe];
-    } else {
-        // stop waiting
-        self.swiperShouldWaitForSwipe = NO;
-        [self stopCardReader];
-    }
-}
-
-/**
- *  Determines if we should restart waiting for swipe based on the response and the configuration.
- *  We may restart waiting if a CardReaderGeneralError was returned by the swiper (and we're configured to wait). This usually happens due to a bad swipe.
- *  For successful swipes and unknown errors, we stop/restart waiting depending on the configuration.
- *
- */
-- (BOOL) shouldKeepWaitingForSwipeAfterResponse:(RUAResponse *)ruaResponse
-{
-    // convert the response to a dictionary
-    NSDictionary *responseData = [self RUAResponse_toDictionary:ruaResponse];
-
-    // check for errors
-    NSError *error = [self validateSwiperInfoForTokenization:responseData];
-    if (error != nil) {
-        // if the error code was a general error
-        if (error.domain == kWPErrorSDKDomain && error.code == WPErrorCardReaderGeneralError) {
-            // return whether or not we're configured to restart on general error
-            return self.restartCardReaderAfterGeneralError;
-        }
-        // return whether or not we're configured to restart on other errors
-        return self.restartCardReaderAfterOtherErrors;
-    } else {
-        // return whether or not we're configured to restart on success
-        return self.restartCardReaderAfterSuccess;
-    }
-}
-
-/**
- *  Stops waiting for swipe - cancels swipe timeout timer, cancels schduled checkAndWaitForSwipe, asks Roam to stop waiting for swipe
- *
- */
-- (void) stopWaitingForSwipe
-{
-    // cancel waiting for swipe timeout timer
-    [self.swipeTimeoutTimer invalidate];
-    
-    self.swiperIsWaitingForSwipe = NO;
-    
-    // cancel any scheduled wait for swipe
-    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(checkAndWaitForSwipe)
-                                               object:nil];
-
-    // cancel any scheduled notifications - kWPSwiperStatusNotConnected
-    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(informExternalCardReader:)
-                                               object:kWPCardReaderStatusNotConnected];
-
-    
-    // tell RUA to stop waiting for swipe
-    id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
-    [tmgr stopWaitingForMagneticCardSwipe];
-}
-
-/**
- *  Handle swipe response from Roam
- *
- *  @param ruaResponse The response
- */
-- (void) handleResponse:(RUAResponse *) ruaResponse
-{
-    NSDictionary *responseData = [self RUAResponse_toDictionary:ruaResponse];
     NSError *error = [self validateSwiperInfoForTokenization:responseData];
 
     if (error != nil) {
         // we found an error, return it
-        [self informExternalCardReaderFailure:error];
+        [self.externalHelper informExternalCardReaderFailure:error];
     } else {
         // extract useful non-encrypted data
-        NSDictionary *info = @{@"firstName"         : [self firstNameFromRUAData:responseData],
-                               @"lastName"          : [self lastNameFromRUAData:responseData],
-                               @"paymentDescription": [responseData objectForKey:@"PAN"],
-                               @"swiperInfo"        : responseData};
+        NSString *pan = [self sanitizePAN:[responseData objectForKey:@"PAN"]];
+        NSDictionary *info = @{@"firstName"         : [WPRoamHelper firstNameFromRUAData:responseData],
+                               @"lastName"          : [WPRoamHelper lastNameFromRUAData:responseData],
+                               @"paymentDescription": pan ? pan : @"",
+                               @"swiperInfo"        : responseData
+                            };
 
         WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithSwipedInfo:info];
 
         // return payment info to delegate
-        [self informExternalCardReaderSuccess:paymentInfo];
+        [self handlePaymentInfo:paymentInfo];
+    }
+}
+
+
+- (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
+{
+    [self handlePaymentInfo:paymentInfo successHandler:nil errorHandler:nil];
+}
+
+- (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
+            successHandler:(void (^)(NSDictionary * returnData)) successHandler
+              errorHandler:(void (^)(NSError * error)) errorHandler
+{
+    [self.externalHelper informExternalTokenizerEmailCompletion:^(NSString *email) {
+        if (email) {
+            [paymentInfo addEmail:email];
+        }
+
+        // send paymentInfo to external delegate
+        [self.externalHelper informExternalCardReaderSuccess:paymentInfo];
 
         // tokenize if requested
-        if(self.swiperShouldTokenize && self.externalTokenizationDelegate) {
-            // inform external
-            [self informExternalCardReader:kWPCardReaderStatusTokenizing];
+        if(self.swiperShouldTokenize && self.externalHelper.externalTokenizationDelegate) {
+            if (paymentInfo.swiperInfo) {
+                // inform external
+                [self.externalHelper informExternalCardReader:kWPCardReaderStatusTokenizing];
 
-            // tokenize
-            [self tokenizeSwipedPaymentInfo:paymentInfo
-                       tokenizationDelegate:self.externalTokenizationDelegate
-                                  sessionId:self.sessionId];
+                // tokenize
+                [self tokenizeSwipedPaymentInfo:paymentInfo
+                           tokenizationDelegate:self.externalHelper.externalTokenizationDelegate
+                                      sessionId:self.sessionId];
+            } else if (paymentInfo.emvInfo) {
+                
+                NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
+                if (error) {
+                    // invalid payment info, return error
+                    [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+                    errorHandler(error);
+                    
+                } else {
+                    // inform external
+                    [self.externalHelper informExternalCardReader:kWPCardReaderStatusAuthorizing];
+                    
+                    // make params
+                    NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
+                                                                                        clientId:self.config.clientId
+                                                                                       sessionId:self.sessionId];
+                    // execute api call
+                    [WPClient creditCardCreateEMV:params
+                                     successBlock:successHandler
+                                     errorHandler:errorHandler];
+                }
+            }
         }
+
+    }];
+}
+
+- (void) issueReversalForCreditCardId:(NSNumber *)creditCardId
+                            accountId:(NSNumber *)accountId
+                         roamResponse:(NSDictionary *)cardInfo
+{
+    NSDictionary *requestParams = [WPClientHelper reversalRequestParamsForCardInfo:cardInfo
+                                                                          clientId:self.config.clientId
+                                                                      creditCardId:creditCardId
+                                                                         accountId:accountId];
+    
+    [WPClient creditCardAuthReverse:requestParams
+                       successBlock:^(NSDictionary * returnData) {
+                           NSLog(@"creditCardAuthReverse success response: %@", returnData);
+                       }
+                       errorHandler:^(NSError * error) {
+                           NSLog(@"creditCardAuthReverse error response: %@", error);
+                       }];
+}
+
+- (void) fetchAuthInfo:(void (^)(BOOL implemented, double amount, NSString *currencyCode, long accountId))completion
+{
+    if (self.swiperShouldTokenize) {
+        // ask external for auth info
+        [self.externalHelper informExternalCardReaderAmountCompletion:completion];
+    } else {
+        // this is a read operation, auth a small amount
+        completion(YES, READ_AMOUNT, READ_CURRENCY, READ_ACCOUNT_ID);
     }
 }
 
-/**
- *  Converts swiped payment info into request params for a create_swipe request
- *
- *  @param paymentInfo The swiped payment info
- *
- *  @return The request params
- */
-- (NSDictionary *) createSwipeRequestParamsForPaymentInfo:(WPPaymentInfo *)paymentInfo
+- (NSError *) validateAuthInfoImplemented:(BOOL)implemented
+                                   amount:(double)amount
+                             currencyCode:(NSString *)currencyCode
+                                accountId:(long)accountId
 {
-    NSDictionary *swiperInfo = paymentInfo.swiperInfo;
-
-    NSString *fullName = [self fullNameFromRUAData:swiperInfo];
-    NSString *track1Status = [swiperInfo objectForKey:@"track1Status"] ? [swiperInfo objectForKey:@"track1Status"] : @"0";
-    NSString *track2Status = [swiperInfo objectForKey:@"track2Status"] ? [swiperInfo objectForKey:@"track2Status"] : @"0";
-
-    NSString *formatID = [swiperInfo objectForKey:@"FormatID"];
-
-    NSMutableDictionary * requestParams = [@{} mutableCopy];
-    [requestParams setObject:self.clientId forKey:@"client_id"];
-    [requestParams setObject:(fullName ? fullName : [NSNull null]) forKey:@"user_name"];
-    [requestParams setObject:[swiperInfo objectForKey:@"EncryptedTrack"] forKey:@"encrypted_track"];
-    [requestParams setObject:[swiperInfo objectForKey:@"KSN"] forKey:@"ksn"];
-    [requestParams setObject:track1Status forKey:@"track_1_status"];
-    [requestParams setObject:track2Status forKey:@"track_2_status"];
-    [requestParams setObject:formatID forKey:@"format_id"];
-
-    if (self.sessionId) {
-        [requestParams setObject:self.sessionId forKey:@"device_token"];
-    }
-
-    if (paymentInfo.email) {
-        [requestParams setObject:paymentInfo.email forKey:@"email"];
+    NSArray *allowedCurrencyCodes = @[kWPCurrencyCodeUSD];
+    
+    if (!implemented) {
+        return [WPError errorAuthInfoNotProvided];
+    } else if (((int) (amount*100)) <= 0) {
+        return [WPError errorInvalidAuthInfo];
+    } else if (![allowedCurrencyCodes containsObject:currencyCode]) {
+        return [WPError errorInvalidAuthInfo];
+    } else if (accountId <= 0) {
+        return [WPError errorInvalidAuthInfo];
     }
     
-    return requestParams;
+    // no validation errors
+    return nil;
 }
 
-/**
- *  Validates a payment info instance for tokenization.
- *
- *  @param paymentInfo the payment info to be validated.
- *
- *  @return NSError instance if validation fails, else nil.
- */
+- (void) handleDeviceStatusError:(NSString *)message
+{
+    // stop device silently
+    [self.deviceManager setManagerDelegate:nil externalDelegate:nil];
+    [self.deviceManager stopDevice];
+
+    if ([@"Connected Device is not G4x" isEqualToString:message]) {
+        [self startEMVManager];
+        [self.deviceManager processCard];
+    } else if ([@"Landi OpenDevice Error::-3" isEqualToString:message] || [@"Connected Device is not RP350x" isEqualToString:message]) {
+        [self startSwiperManager];
+        [self.deviceManager processCard];
+    } else {
+        NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
+        [self.externalHelper informExternalCardReaderFailure:error];
+    }
+}
+
+- (void) connectedDevice:(NSString *)deviceType
+{
+    if (![self.connectedDeviceType isEqualToString:deviceType]) {
+        self.connectedDeviceType = deviceType;
+        [self storeLastConnectedDeviceType:deviceType];
+    }
+}
+
+- (void) disconnectedDevice
+{
+    self.connectedDeviceType = nil;
+}
+
+- (void)storeLastConnectedDeviceType:(NSString *)deviceTpe
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:deviceTpe forKey:WEPAY_LAST_DEVICE_KEY];
+    [defaults synchronize];
+}
+
+
+
 - (NSError *) validatePaymentInfoForTokenization:(WPPaymentInfo *)paymentInfo
 {
-    NSDictionary *swiperInfo = paymentInfo.swiperInfo;
-    return [self validateSwiperInfoForTokenization:swiperInfo];
+    if (paymentInfo.swiperInfo) {
+        NSDictionary *swiperInfo = paymentInfo.swiperInfo;
+        return [self validateSwiperInfoForTokenization:swiperInfo];
+    } else if (paymentInfo.emvInfo) {
+        NSDictionary *emvInfo = paymentInfo.emvInfo;
+        return [self validateEMVInfoForTokenization:emvInfo];
+    }
+
+    // no issues
+    return nil;
 }
 
-/**
- *  Validates swiper info for tokenization.
- *  If the swiper info has an error code, the appropriate error is returned. Otherwise, we validate that full name exists.
- *
- *  @param paymentInfo the payment info to be validated.
- *
- *  @return NSError instance if validation fails, else nil.
- */
 - (NSError *) validateSwiperInfoForTokenization:(NSDictionary *)swiperInfo
 {
     // if the swiper info has an error code, return the appropriate error
@@ -411,209 +350,56 @@
     }
 
     // check if name exists
-    NSString *fullName = [self fullNameFromRUAData:swiperInfo];
+    NSString *fullName = [WPRoamHelper fullNameFromRUAData:swiperInfo];
     if (fullName == nil) {
         // this indicates a bad swipe or an unsupported card.
         // we expect all supported cards to return a name
-        return [WPError errorCardReaderNameNotFound];
+        return [WPError errorNameNotFound];
     }
+
+    // check if encrypted track exists
+    NSString *encryptedTrack = [swiperInfo objectForKey:@"EncryptedTrack"];
+    if (encryptedTrack == nil || [@"" isEqualToString:encryptedTrack]) {
+        // this indicates a bad swipe or an unsupported card.
+        // we expect all supported cards to return an encrypted track
+        NSLog(@"validateSwiperInfoForTokenization: No encrypted track found");
+        return [WPError errorInvalidCardData];
+    }
+
+    // check if KSN exists
+    NSString *ksn = [swiperInfo objectForKey:@"KSN"];
+    if (ksn == nil || [@"" isEqualToString:ksn]) {
+        NSLog(@"validateSwiperInfoForTokenization: No KSN found");
+        return [WPError errorInvalidCardData];
+    }
+
 
     // no issues
     return nil;
 }
 
-
-#pragma mark ReaderStatusHandler
-
-- (void)onConnected
+- (NSError *) validateEMVInfoForTokenization:(NSDictionary *)emvInfo
 {
-    self.swiperIsConnected = YES;
-    
-    // Cancel any scheduled calls for swiper not connected
-    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(informExternalCardReader:)
-                                               object:kWPCardReaderStatusNotConnected];
-    
-    // If we should wait for swipe
-    if (self.swiperShouldWaitForSwipe) {
-        // Inform external delegate
-        [self informExternalCardReader:kWPCardReaderStatusConnected];
-
-        // Check and wait - the delay is to let the swiper get charged
-        [self performSelector:@selector(checkAndWaitForSwipe) withObject:nil afterDelay:2.0];
-    }
+    // validate same data as swiper
+    return [self validateSwiperInfoForTokenization:emvInfo];
 }
 
-- (void)onDisconnected
+- (NSString *) sanitizePAN:(NSString *)pan
 {
-    self.swiperIsConnected = NO;
-    
-    // Inform external delegate if we should wait for swipe
-    if (self.swiperShouldWaitForSwipe) {
-        [self informExternalCardReader:kWPCardReaderStatusNotConnected];
+    if (pan == nil || [pan isEqual:[NSNull null]]) {
+        return pan;
     }
-    
-    // Stop waiting for swipe
-    [self stopWaitingForSwipe];
-}
 
-- (void)onError:(NSString *)message
-{
-    NSLog(@"onError");
-    self.swiperIsConnected = NO;
+    NSString *result = [pan stringByReplacingOccurrencesOfString:@"F" withString:@""];
+    NSInteger length = [result length];
 
-    // inform delegate
-    NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
-    [self informExternalCardReaderFailure:error];
-
-    // Stop waiting for swipe
-    [self stopWaitingForSwipe];
-}
-
-#pragma mark - inform external
-
-- (void) informExternalCardReader:(NSString *)status
-{
-    // If the external delegate is listening for status updates, send it
-    if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(cardReaderDidChangeStatus:)]) {
-        [self.externalCardReaderDelegate cardReaderDidChangeStatus:status];
+    if (length > 4) {
+        result = [result stringByReplacingCharactersInRange:NSMakeRange(0, length - 4) withString:[@"" stringByPaddingToLength:length - 4 withString: @"X" startingAtIndex:0]];
     }
-}
 
-- (void) informExternalCardReaderSuccess:(WPPaymentInfo *)paymentInfo
-{
-    // If the external delegate is listening for success, send it
-    if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(didReadPaymentInfo:)]) {
-        [self.externalCardReaderDelegate didReadPaymentInfo:paymentInfo];
-    }
-}
-
-- (void) informExternalCardReaderFailure:(NSError *)error
-{
-    // If the external delegate is listening for errors, send it
-    if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(didFailToReadPaymentInfoWithError:)]) {
-        [self.externalCardReaderDelegate didFailToReadPaymentInfoWithError:error];
-    }
-}
-
-- (void) informExternalTokenizerSuccess:(WPPaymentToken *)token forPaymentInfo:(WPPaymentInfo *)paymentInfo
-{
-    // If the external delegate is listening for success, send it
-    if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didTokenize:)]) {
-        [self.externalTokenizationDelegate paymentInfo:paymentInfo didTokenize:token];
-    }
-}
-
-- (void) informExternalTokenizerFailure:(NSError *)error forPaymentInfo:(WPPaymentInfo *)paymentInfo
-{
-    // If the external delegate is listening for error, send it
-    if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didFailTokenization:)]) {
-        [self.externalTokenizationDelegate paymentInfo:paymentInfo didFailTokenization:error];
-    }
-}
-
-#pragma mark - Roam data manipulation
-
-/**
- *  Converts Roam's response into a dictionary
- *
- *  @param response The response from Roam
- *
- *  @return The response as a dictionary
- */
-- (NSDictionary *)RUAResponse_toDictionary:(RUAResponse *)response
-{
-    NSMutableDictionary *returnDict = [@{} mutableCopy];
-    NSDictionary *responseData = [response responseData];
-    
-    [returnDict setObject:[RUAEnumerationHelper RUACommand_toString:[response command]] forKey:[RUAEnumerationHelper RUAParameter_toString:RUAParameterCommand]];
-    [returnDict setObject:[RUAEnumerationHelper RUAResponseCode_toString:[response responseCode]] forKey:[RUAEnumerationHelper RUAParameter_toString:RUAParameterResponseCode]];
-    [returnDict setObject:[RUAEnumerationHelper RUAResponseType_toString:[response responseType]] forKey:[RUAEnumerationHelper RUAParameter_toString:RUAParameterResponseType]];
-    
-    if ([response responseCode] == RUAResponseCodeError) {
-        [returnDict setObject:[RUAEnumerationHelper RUAErrorCode_toString:[response errorCode]] forKey:[RUAEnumerationHelper RUAParameter_toString:RUAParameterErrorCode]];
-        if ([response additionalErrorDetails] != nil) {
-            [returnDict setObject:[response additionalErrorDetails] forKey:[RUAEnumerationHelper RUAParameter_toString:RUAParameterErrorDetails]];
-        }
-    }
-    
-    if (responseData != nil) {
-        NSArray *keyArray =  [[response responseData] allKeys];
-        int count = (int)[keyArray count];
-        RUAParameter param;
-        for (int i = 0; i < count; i++) {
-            param = (RUAParameter)[[keyArray objectAtIndex:i] intValue];
-            [returnDict setObject:[responseData objectForKey:[keyArray objectAtIndex:i]] forKey:[RUAEnumerationHelper RUAParameter_toString:param]];
-        }
-    }
-    
-    return returnDict;
-}
-
-/**
- *  Extracts first name from Roam response dictionary
- *
- *  @param ruaData Roam respose dictionary
- *
- *  @return first name if available, otherwise empty string
- */
-- (NSString *) firstNameFromRUAData:(NSDictionary *) ruaData
-{
-    NSMutableString *encName = [[ruaData objectForKey:@"CardHolderName"] mutableCopy];
-    CFStringTrimWhitespace((__bridge CFMutableStringRef) encName);
-    NSArray *names = [encName componentsSeparatedByString:@"/"];
-    
-    NSString *result = @"";
-    
-    if (names && [names count] > 1) {
-        result = names[1];
-    }
-    
     return result;
 }
 
-/**
- *  Extracts last name from Roam response dictionary
- *
- *  @param ruaData Roam respose dictionary
- *
- *  @return last name if available, otherwise empty string
- */
-
-- (NSString *) lastNameFromRUAData:(NSDictionary *) ruaData
-{
-    NSMutableString *encName = [[ruaData objectForKey:@"CardHolderName"] mutableCopy];
-    CFStringTrimWhitespace((__bridge CFMutableStringRef) encName);
-    NSArray *names = [encName componentsSeparatedByString:@"/"];
-    
-    NSString *result = @"";
-    
-    if (names && [names count] > 0) {
-        result = names[0];
-    }
-    
-    return result;
-}
-
-/**
- *  Extracts full name from Roam response dictionary
- *
- *  @param ruaData Roam respose dictionary
- *
- *  @return full name if available, otherwise nil
- */
-
-- (NSString *) fullNameFromRUAData:(NSDictionary *) ruaData
-{
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [self firstNameFromRUAData:ruaData], [self lastNameFromRUAData:ruaData]];
-    name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
-    if ([@"" isEqualToString:name] ) {
-        return nil;
-    }
-    
-    return name;
-}
 
 @end
 

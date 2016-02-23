@@ -29,7 +29,8 @@
 @property (nonatomic, strong, readonly) NSString *email;
 
 /**
- *  Masked representation of the payment instrument. e.g. 4242XXXXXXXX1234
+ *  Masked representation of the payment instrument. e.g. XXXXXXXXXXXX1234
+ *  Note: the display format may change depending on the payment instrument and the payment method, so this field should not be parsed. It is meant for display to the end user as-is.
  */
 @property (nonatomic, strong, readonly) NSString *paymentDescription;
 
@@ -49,7 +50,7 @@
 @property (nonatomic, strong, readonly) WPAddress *shippingAddress;
 
 /**
- *  The payment method used, one of (kWPPaymentMethodManual, kWPPaymentMethodSwipe).
+ *  The payment method used, one of (kWPPaymentMethodManual, kWPPaymentMethodSwipe, kWPPaymentMethodDip).
  */
 @property (nonatomic, strong, readonly) id paymentMethod;
 
@@ -63,6 +64,12 @@
  */
 @property (nonatomic, strong, readonly) id manualInfo;
 
+/**
+ *  Additional info obtained by using the EMV payment method.
+ */
+@property (nonatomic, strong, readonly) id emvInfo;
+
+
 /** \internal
  *  Intializes a \ref WPPaymentInfo instance with card info obtained from the swiper.
  *
@@ -71,6 +78,15 @@
  *  @return A \ref WPPaymentInfo object initialized with card info obtained from the swiper.
  */
 - (instancetype) initWithSwipedInfo:(id)swipedInfo;
+
+/** \internal
+ *  Intializes a \ref WPPaymentInfo instance with card info obtained from the EMV card reader.
+ *
+ *  @param emvInfo Card info obtained from the EMV card reader.
+ *
+ *  @return A \ref WPPaymentInfo object initialized with card info obtained from the EMV card reader.
+ */
+- (instancetype) initWithEMVInfo:(id)emvInfo;
 
 /**
  *  Initializes a WPPaymentInfo instance of type \ref kWPPaymentMethodManual.

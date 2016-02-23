@@ -23,7 +23,6 @@
 		574173EB1A37F39700B73D95 /* swipe tokenize.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E61A37F39700B73D95 /* swipe tokenize.png */; };
 		57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */; };
 		57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC61A1AE9060092B3AA /* AVFoundation.framework */; };
-		57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */; };
 		57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */; };
 		57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */; };
 		57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */; };
@@ -68,7 +67,6 @@
 		574173E61A37F39700B73D95 /* swipe tokenize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "swipe tokenize.png"; path = "Resources/swipe tokenize.png"; sourceTree = "<group>"; };
 		57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		57664BC61A1AE9060092B3AA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -85,6 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
+				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
 				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
 				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
 				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
@@ -92,9 +92,6 @@
 				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
 				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
 				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
-				57664BC91A1AE9650092B3AA /* libstdc++.6.0.9.dylib in Frameworks */,
-				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
-				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
 				57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */,
 				57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */,
 			);
@@ -131,8 +128,8 @@
 		570693AF1A02FF3800182EA2 /* WePayExample */ = {
 			isa = PBXGroup;
 			children = (
-				570F9FDA1B437168008C96BF /* ViewController.m */,
 				570F9FDB1B437168008C96BF /* ViewController.h */,
+				570F9FDA1B437168008C96BF /* ViewController.m */,
 				570F9FDC1B437168008C96BF /* AppDelegate.h */,
 				570F9FDD1B437168008C96BF /* AppDelegate.m */,
 				574173E11A37F36700B73D95 /* Resources */,
@@ -181,7 +178,6 @@
 				57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */,
 				57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */,
 				57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */,
-				57664BC81A1AE9650092B3AA /* libstdc++.6.0.9.dylib */,
 				57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */,
 				57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */,
 				57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */,
@@ -392,7 +388,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -428,6 +424,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -440,6 +437,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -449,6 +447,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wepay.WePayExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "$(ARCHS)";
@@ -461,6 +460,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -470,6 +470,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wepay.WePayExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "$(ARCHS)";

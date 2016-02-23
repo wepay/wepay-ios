@@ -9,12 +9,12 @@
 #import "WePay_Checkout.h"
 
 #import "WePay.h"
-#import <WPError+internal.h>
-#import <WPClient.h>
+#import "WPError+internal.h"
+#import "WPClient.h"
 
 @interface WePay_Checkout ()
 
-@property (nonatomic, strong) NSString *clientId;
+@property (nonatomic, strong) WPConfig *config;
 @property (nonatomic, weak) id<WPCheckoutDelegate> externalCheckoutDelegate;
 
 @end
@@ -25,7 +25,7 @@
 {
     if (self = [super init]) {
         // set the clientId
-        self.clientId = config.clientId;
+        self.config = config;
 
         // pass the config to the client
         WPClient.config = config;
@@ -57,9 +57,9 @@
         [self uploadSignatureData:base64Data forCheckoutId:checkoutId image:image];
     } else {
         // no, return error
-        [self.externalCheckoutDelegate didFailToStoreSignatureImage:image
-                                                      forCheckoutId:checkoutId
-                                                          withError:[WPError errorInvalidSignatureImage]];
+        [self informExternalSignatureFailure:[WPError errorInvalidSignatureImage]
+                               forCheckoutId:checkoutId
+                                       image:image];
     }
 }
 
@@ -245,7 +245,7 @@ const static CGFloat MAX_WIDTH = 256;
                        image:(UIImage *) image
 {
     NSMutableDictionary * requestParams = [@{} mutableCopy];
-    [requestParams setObject:self.clientId forKey:@"client_id"];
+    [requestParams setObject:self.config.clientId forKey:@"client_id"];
     [requestParams setObject:checkoutId forKey:@"checkout_id"];
     [requestParams setObject:base64Data forKey:@"base64_img_data"];
 
@@ -267,18 +267,24 @@ const static CGFloat MAX_WIDTH = 256;
 
 - (void) informExternalSignatureSuccess:(NSString *)signatureUrl forCheckoutId:(NSString *) checkoutId
 {
-    // If the external delegate is listening for success, send it
-    if (self.externalCheckoutDelegate && [self.externalCheckoutDelegate respondsToSelector:@selector(didStoreSignature:forCheckoutId:)]) {
-        [self.externalCheckoutDelegate didStoreSignature:signatureUrl forCheckoutId:checkoutId];
-    }
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for success, send it
+        if (self.externalCheckoutDelegate && [self.externalCheckoutDelegate respondsToSelector:@selector(didStoreSignature:forCheckoutId:)]) {
+            [self.externalCheckoutDelegate didStoreSignature:signatureUrl forCheckoutId:checkoutId];
+        }
+    });
 }
 
 - (void) informExternalSignatureFailure:(NSError *)error forCheckoutId:(NSString *) checkoutId image:(UIImage *)image
 {
-    // If the external delegate is listening for error, send it
-    if (self.externalCheckoutDelegate && [self.externalCheckoutDelegate respondsToSelector:@selector(didFailToStoreSignatureImage:forCheckoutId:withError:)]) {
-        [self.externalCheckoutDelegate didFailToStoreSignatureImage:image forCheckoutId:checkoutId withError:error];
-    }
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for error, send it
+        if (self.externalCheckoutDelegate && [self.externalCheckoutDelegate respondsToSelector:@selector(didFailToStoreSignatureImage:forCheckoutId:withError:)]) {
+            [self.externalCheckoutDelegate didFailToStoreSignatureImage:image forCheckoutId:checkoutId withError:error];
+        }
+    });
 }
 
 @end

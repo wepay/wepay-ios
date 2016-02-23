@@ -21,17 +21,30 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
 
 @implementation WPError (internal)
 
++ (NSError *) makeErrorWithCode:(NSInteger)errorCode
+                           text:(NSString *)errorText
+                       category:(NSString *)errorCategory
+                         domain:(NSString *)errorDomain
+{
+    NSDictionary * details = @{
+                               NSLocalizedDescriptionKey:errorText,
+                               kWPErrorCategoryKey: errorCategory
+                            };
+
+    return [NSError errorWithDomain:errorDomain code:errorCode userInfo:details];
+}
+
 + (NSError *) errorWithApiResponseData:(NSDictionary *)data;
 {
     NSInteger errorCode;
-    NSString * errorText;
-    NSString * errorCategory;
+    NSString *errorText;
+    NSString *errorCategory;
     
     // get error code
     if ([data objectForKey: @"error_code"] != (id)[NSNull null]) {
         errorCode = [[data objectForKey: @"error_code"] intValue];
     } else if (data == nil) {
-        // This should not happen, but we handle it gracefully
+        // This can happen when api calls fail
         errorCode = WPErrorNoDataReturned;
     }  else {
         // This should not happen
@@ -48,10 +61,10 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
         [[data objectForKey: @"error_description"] length]) {
         errorText = [data objectForKey: @"error_description"];
     } else if (data == nil) {
-        // This should not happen, but we handle it gracefully
+        // This can happen when api calls fail
         errorText = WPNoDataReturnedErrorMessage;
     } else {
-        // This should really not happen
+        // This should not happen
         errorText = WPUnexpectedErrorMessage;
     }
     
@@ -63,19 +76,18 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
         // This should not happen, but we handle it gracefully
         errorCategory = kWPErrorCategoryNone;
     }
-    
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-    
-    return [NSError errorWithDomain:kWPErrorAPIDomain code:errorCode userInfo:details];
+
+    return [WPError makeErrorWithCode:errorCode
+                                 text:errorText
+                             category:errorCategory
+                               domain:kWPErrorAPIDomain];
 }
 
 + (NSError *) errorWithCardReaderResponseData:(NSDictionary *)data;
 {
     NSInteger errorCode;
-    NSString * errorText;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
+    NSString *errorText;
+    NSString *errorCategory = kWPErrorCategoryCardReader;
     
     // get error code
     if ([data objectForKey: @"ErrorCode"] != (id)[NSNull null]) {
@@ -102,38 +114,29 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
         // This should not happen
         errorText = WPUnexpectedErrorMessage;
     }
-    
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-    
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+
+    return [WPError makeErrorWithCode:errorCode
+                                 text:errorText
+                             category:errorCategory
+                               domain:kWPErrorSDKDomain];
 }
 
 + (NSError *) errorInitializingCardReader
 {
-    NSInteger errorCode = WPErrorCardReaderInitialization;
-    NSString * errorText = WPCardReaderInitializationErrorMessage;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
-    
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-    
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+    NSString *errorText = WPCardReaderInitializationErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardReaderInitialization
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
 }
 
 + (NSError *) errorForCardReaderTimeout
 {
-    NSInteger errorCode = WPErrorCardReaderTimeout;
-    NSString * errorText = WPCardReaderTimeoutErrorMessage;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
-    
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-    
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+    NSString *errorText = WPCardReaderTimeoutErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardReaderTimeout
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
 }
 
 + (NSError *) errorForCardReaderStatusErrorWithMessage:(NSString *)message
@@ -143,42 +146,122 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
     NSLog(@"[WPError] card reader status error: %@", message);
     #endif
     
-    NSInteger errorCode = WPErrorCardReaderStatusError;
-    NSString * errorText = message;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
-    
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-    
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+    return [WPError makeErrorWithCode:WPErrorCardReaderStatusError
+                                 text:message
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
 }
 
 + (NSError *) errorInvalidSignatureImage
 {
-    NSInteger errorCode = WPErrorInvalidSignatureImage;
-    NSString * errorText = WPSignatureInvalidImageErrorMessage;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
-
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+    NSString *errorText = WPSignatureInvalidImageErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidSignatureImage
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
 }
 
-+ (NSError *) errorCardReaderNameNotFound
++ (NSError *) errorNameNotFound
 {
-    NSInteger errorCode = WPErrorNameNotFound;
-    NSString * errorText = WPNameNotFoundErrorMessage;
-    NSString * errorCategory = kWPErrorCategoryCardReader;
-
-    NSMutableDictionary * details = [NSMutableDictionary dictionary];
-    [details setValue: errorText forKey: NSLocalizedDescriptionKey];
-    [details setValue: errorCategory forKey: kWPErrorCategoryKey];
-
-    return [NSError errorWithDomain:kWPErrorSDKDomain code:errorCode userInfo:details];
+    NSString *errorText = WPNameNotFoundErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorNameNotFound
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
 }
 
++ (NSError *) errorInvalidCardData
+{
+    NSString *errorText = WPInvalidCardDataErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidCardData
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardNotSupported
+{
+    NSString *errorText = WPCardNotSupportedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardNotSupported
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorForEMVTransactionErrorWithMessage:(NSString *)message
+{
+    #ifdef DEBUG
+    // Log status error only when in debug builds
+    NSLog(@"[WPError] card reader emv transaction error: %@", message);
+    #endif
+
+    return [WPError makeErrorWithCode:WPErrorEMVTransactionError
+                                 text:message
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorInvalidApplicationId
+{
+    NSString *errorText = WPInvalidApplicationIdErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidApplicationId
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorDeclinedByCard
+{
+    NSString *errorText = WPDeclinedByCardErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorDeclinedByCard
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardBlocked
+{
+    NSString *errorText = WPCardBlockedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardBlocked
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorDeclinedByIssuer
+{
+    NSString *errorText = WPDeclinedByIssuerErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorDeclinedByIssuer
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorIssuerUnreachable
+{
+    NSString *errorText = WPIssuerUnreachableErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorIssuerUnreachable
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorInvalidAuthInfo
+{
+    NSString *errorText = WPInvalidAuthInfoErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidAuthInfo
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorAuthInfoNotProvided
+{
+    NSString *errorText = WPAuthInfoNotProvidedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorAuthInfoNotProvided
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
 
 @end

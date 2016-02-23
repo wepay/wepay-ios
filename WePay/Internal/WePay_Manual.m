@@ -12,7 +12,7 @@
 
 @interface WePay_Manual ()
 
-@property (nonatomic, strong) NSString *clientId;
+@property (nonatomic, strong) WPConfig *config;
 @property (nonatomic, strong) NSString *sessionId;
 
 @property (nonatomic, weak) id<WPTokenizationDelegate> externalTokenizationDelegate;
@@ -25,7 +25,7 @@
 {
     if (self = [super init]) {
         // set the clientId
-        self.clientId = config.clientId;
+        self.config = config;
 
         // pass the config to the client
         WPClient.config = config;
@@ -72,18 +72,24 @@
 
 - (void) informExternalTokenizerSuccess:(WPPaymentToken *)token forPaymentInfo:(WPPaymentInfo *)paymentInfo
 {
-    // If the external delegate is listening for success, send it
-    if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didTokenize:)]) {
-        [self.externalTokenizationDelegate paymentInfo:paymentInfo didTokenize:token];
-    }
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for success, send it
+        if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didTokenize:)]) {
+            [self.externalTokenizationDelegate paymentInfo:paymentInfo didTokenize:token];
+        }
+    });
 }
 
 - (void) informExternalTokenizerFailure:(NSError *)error forPaymentInfo:(WPPaymentInfo *)paymentInfo
 {
-    // If the external delegate is listening for error, send it
-    if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didFailTokenization:)]) {
-        [self.externalTokenizationDelegate paymentInfo:paymentInfo didFailTokenization:error];
-    }
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for error, send it
+        if (self.externalTokenizationDelegate && [self.externalTokenizationDelegate respondsToSelector:@selector(paymentInfo:didFailTokenization:)]) {
+            [self.externalTokenizationDelegate paymentInfo:paymentInfo didFailTokenization:error];
+        }
+    });
 }
 
 #pragma mark - helpers
@@ -101,7 +107,7 @@
     NSDictionary *manualInfo = (NSDictionary *)paymentInfo.manualInfo;
     
     NSMutableDictionary *requestParams = [@{
-                                    @"client_id":self.clientId,
+                                    @"client_id":self.config.clientId,
                                     @"cc_number":[manualInfo objectForKey:@"cc_number"],
                                     @"cvv":[manualInfo objectForKey:@"cvv"],
                                     @"expiration_month":[manualInfo objectForKey:@"expiration_month"],
