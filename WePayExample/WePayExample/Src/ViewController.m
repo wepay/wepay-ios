@@ -13,7 +13,7 @@
 #define SETTINGS_ENVIRONMENT_KEY @"settingEnvironment"
 #define SETTINGS_ACCOUNT_ID_KEY @"settingAccountId"
 
-#define EMV_AMOUNT_DOUBLE 12.34
+#define EMV_AMOUNT_DOUBLE 22.61 // Magic success amount
 #define EMV_READER_SHOULD_RESET NO
 #define EMV_SELECT_APP_INDEX 0
 
@@ -73,15 +73,15 @@
 - (NSString *) fetchSetting:(NSString *)key withDefault:(NSString *)value
 {
     [[NSUserDefaults standardUserDefaults] synchronize];
-    NSString *clientId = [[NSUserDefaults standardUserDefaults] stringForKey:key];
+    NSString *settings = [[NSUserDefaults standardUserDefaults] stringForKey:key];
     
-    if (clientId == nil || [clientId isEqualToString:@""]) {
-        clientId = value;
-        [[NSUserDefaults standardUserDefaults] setObject:clientId forKey:key];
+    if (settings == nil || [settings isEqualToString:@""]) {
+        settings = value;
+        [[NSUserDefaults standardUserDefaults] setObject:settings forKey:key];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
-    return clientId;
+    return settings;
 }
 
 - (void) setupUserInterface
