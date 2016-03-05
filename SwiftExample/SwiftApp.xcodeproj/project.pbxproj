@@ -29,8 +29,8 @@
 
 /* Begin PBXFileReference section */
 		20798957B5CFD53520367134 /* Pods_SwiftApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D0437EE1BDEFCC500956B2A /* SwiftApp-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwiftApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		8D130FFC1BEABA1300F21F86 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../Settings.bundle; sourceTree = "<group>"; };
+		8D8033951C7B9F43004CEB7A /* SwiftApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		8DAB3F691BDEE40400B8BA98 /* SwiftApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DAB3F6C1BDEE40400B8BA98 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8DAB3F6E1BDEE40400B8BA98 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -98,12 +98,12 @@
 			children = (
 				8DAB3F6C1BDEE40400B8BA98 /* AppDelegate.swift */,
 				8DAB3F6E1BDEE40400B8BA98 /* ViewController.swift */,
-				8D0437EE1BDEFCC500956B2A /* SwiftApp-Bridging-Header.h */,
 				8DAB3F701BDEE40400B8BA98 /* Main.storyboard */,
 				8DAB3F731BDEE40400B8BA98 /* Assets.xcassets */,
 				8DAB3F751BDEE40400B8BA98 /* LaunchScreen.storyboard */,
 				8DAB3F781BDEE40400B8BA98 /* Info.plist */,
 				8D130FFC1BEABA1300F21F86 /* Settings.bundle */,
+				8D8033951C7B9F43004CEB7A /* SwiftApp-Bridging-Header.h */,
 			);
 			path = SwiftApp;
 			sourceTree = "<group>";
@@ -413,7 +413,7 @@
 					"$(PROJECT_DIR)/Pods/WePay",
 				);
 				INFOPLIST_FILE = SwiftApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WePay.SwiftApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -434,7 +434,7 @@
 					"$(PROJECT_DIR)/Pods/WePay",
 				);
 				INFOPLIST_FILE = SwiftApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WePay.SwiftApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";

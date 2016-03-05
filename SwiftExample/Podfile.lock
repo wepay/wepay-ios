@@ -1,10 +1,10 @@
 PODS:
-  - WePay (2.0.1)
+  - WePay (4.0.0)
 
 DEPENDENCIES:
   - WePay
 
 SPEC CHECKSUMS:
-  WePay: bf20fbfd0f173c9dcc32c48085ead1d6a6341db6
+  WePay: 926cfd2e3e1f88b66a0ca50c90f40a6e5b2d7205
 
 COCOAPODS: 0.39.0

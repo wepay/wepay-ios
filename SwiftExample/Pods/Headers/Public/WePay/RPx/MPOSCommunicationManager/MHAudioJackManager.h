@@ -1,1 +1,0 @@
-../../../../../WePay/RPx.framework/Versions/A/Headers/MPOSCommunicationManager/MHAudioJackManager.h

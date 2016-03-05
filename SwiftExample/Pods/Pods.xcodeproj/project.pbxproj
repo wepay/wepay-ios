@@ -13,8 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		048A0F54EFA6814924764A8A2208F3F1 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WePay.framework; sourceTree = "<group>"; };
-		087452F4151439EDAD21A30BF6DF4A54 /* RPx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx.framework; sourceTree = "<group>"; };
+		0DE01536128AB15CBC4FE4B67D66C6FE /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
 		259C55ED084A488B891C1E78BA130FC9 /* Pods-SwiftApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-SwiftApp-acknowledgements.markdown"; sourceTree = "<group>"; };
 		29834E7F6FDBC45273EEB282C0DE67A6 /* Pods-SwiftApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftApp.modulemap"; sourceTree = "<group>"; };
 		3A6CC0EFEDF7B362E94679ABE5AA5B18 /* Pods-SwiftApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-SwiftApp-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -24,13 +23,11 @@
 		4E7AE714AE11B7FED4A46286E4A394A4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52297739706E5C8990924D8FBD31DECD /* Pods-SwiftApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftApp-umbrella.h"; sourceTree = "<group>"; };
 		586AE72CF24F026B87187D8FBB39E424 /* Pods-SwiftApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SwiftApp-dummy.m"; sourceTree = "<group>"; };
-		7ABB5F6EDC0455C1685B52A956E0546F /* RUA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA.framework; sourceTree = "<group>"; };
+		674DDAA845D57AED35597116F9E6CD56 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WePay.framework; sourceTree = "<group>"; };
 		7D9ED4006E451D44D076332F4E382155 /* Pods_SwiftApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9433863485A594D014DDC0998A7D560D /* Pods-SwiftApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftApp.release.xcconfig"; sourceTree = "<group>"; };
-		98D66393E6FCD619F35FBDC7960307B6 /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
 		BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		C37EDB9748EC384167C12DC8E68B9E5C /* Pods-SwiftApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftApp.debug.xcconfig"; sourceTree = "<group>"; };
-		E0A78B3961C644807E26ACA56C40DB39 /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = G4XSwiper.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,30 +42,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1E40413498FD0208F4456CB6404D71A6 /* WePay */ = {
-			isa = PBXGroup;
-			children = (
-				3FA00342D1D3CCC938587D0D8B9B075B /* Frameworks */,
-			);
-			path = WePay;
-			sourceTree = "<group>";
-		};
-		3FA00342D1D3CCC938587D0D8B9B075B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				E0A78B3961C644807E26ACA56C40DB39 /* G4XSwiper.framework */,
-				087452F4151439EDAD21A30BF6DF4A54 /* RPx.framework */,
-				7ABB5F6EDC0455C1685B52A956E0546F /* RUA.framework */,
-				98D66393E6FCD619F35FBDC7960307B6 /* TrustDefenderMobile.framework */,
-				048A0F54EFA6814924764A8A2208F3F1 /* WePay.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		4329E5F002FAEA2F79C7E3CD9FB5008F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1E40413498FD0208F4456CB6404D71A6 /* WePay */,
+				DF99ACEC5EDA12E4C15D38AB0C8D0D13 /* WePay */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -132,6 +109,23 @@
 				7D9ED4006E451D44D076332F4E382155 /* Pods_SwiftApp.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D76B1EA92183A78A6F96F8C64495CAC9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0DE01536128AB15CBC4FE4B67D66C6FE /* TrustDefenderMobile.framework */,
+				674DDAA845D57AED35597116F9E6CD56 /* WePay.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DF99ACEC5EDA12E4C15D38AB0C8D0D13 /* WePay */ = {
+			isa = PBXGroup;
+			children = (
+				D76B1EA92183A78A6F96F8C64495CAC9 /* Frameworks */,
+			);
+			path = WePay;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

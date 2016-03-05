@@ -10,8 +10,13 @@ import UIKit
 
 let SETTINGS_CLIENT_ID_KEY = "settingClientId"
 let SETTINGS_ENVIRONMENT_KEY = "settingEnvironment"
+let SETTINGS_ACCOUNT_ID_KEY = "settingAccountId"
 
-class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDelegate, WPCheckoutDelegate {
+let EMV_AMOUNT_DOUBLE = 22.61 // Magic success amount
+let EMV_READER_SHOULD_RESET = false
+let EMV_SELECT_APP_INDEX = 0
+
+class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate {
     
     var wepay = WePay()
     let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -26,16 +31,16 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
     @IBOutlet var manualEntryBtn: UIButton!
     @IBOutlet var submitSignatureBtn: UIButton!
     
+    var accountId = Int()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Initialize WePay Config with your clientId and environment
-        let clientId: String = self.fetchClientIdFromSettings()
-        let environment: String = self.fetchEnvironmentFromSettings()
-        let config: WPConfig = WPConfig(
-            clientId: clientId,
-            environment: environment
-        )
+        // Initialize WePay config with your clientId and environment
+        let clientId: String = self.fetchSetting(SETTINGS_CLIENT_ID_KEY, withDefault: "171482")
+        let environment: String = self.fetchSetting(SETTINGS_ENVIRONMENT_KEY, withDefault: kWPEnvironmentStage)
+        self.accountId = Int(self.fetchSetting(SETTINGS_ACCOUNT_ID_KEY, withDefault: "1170640190"))!
+        let config: WPConfig = WPConfig(clientId: clientId, environment: environment)
         
         // Allow WePay to use location services
         config.useLocation = true
@@ -43,43 +48,51 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         // Initialize WePay
         self.wepay = WePay(config: config)
         
-        // Do any additional setup after loading the view, typically from a nib.
+        // Do any additional setup after loading the view, typically from a nib
         self.setupUserInterface()
+        
+        var str: NSAttributedString = NSAttributedString(
+            string: "Environment: \(environment)",
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+        
+        str = NSAttributedString(
+            string: "ClientId: \(clientId)",
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+        
+        str = NSAttributedString(
+            string: "AccountId: \(self.accountId)",
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+
     }
     
-    func fetchClientIdFromSettings() -> String {
-        userDefaults.synchronize()
-        var clientId: String = userDefaults.stringForKey(SETTINGS_CLIENT_ID_KEY) ?? "171482"
-        
-        // Default to 171482
-        if clientId.isEmpty {
-            clientId = "171482"
-            userDefaults.setObject(clientId, forKey: SETTINGS_CLIENT_ID_KEY)
-            userDefaults.synchronize()
-        }
-        return clientId
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
-    func fetchEnvironmentFromSettings() -> String {
+    func fetchSetting(key: String, withDefault value: String) -> String {
         userDefaults.synchronize()
-        var env: String = userDefaults.stringForKey(SETTINGS_ENVIRONMENT_KEY) ?? kWPEnvironmentStage
-        
-        // Default to stage
-        if env.isEmpty {
-            env = kWPEnvironmentStage
-            userDefaults.setObject(env, forKey: SETTINGS_ENVIRONMENT_KEY)
+        var settings: String? = userDefaults.stringForKey(key)
+        if settings == nil || settings!.isEmpty {
+            settings = value
+            userDefaults.setObject(settings, forKey: key)
             userDefaults.synchronize()
         }
-        return env
+        return settings!
     }
     
     func setupUserInterface() {        
-        self.statusLabel.text = "Choose a payment method"
+        self.showStatus("Choose a payment method")
     }
     
     @IBAction func swipeInfoBtnPressed(sender: AnyObject) {
         // Change status label
-        self.statusLabel.text = "Please wait..."
+        self.showStatus("Please wait...")
         
         // Print message to screen
         let str: NSAttributedString = NSAttributedString(
@@ -94,7 +107,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
     
     @IBAction func swipeTokenButtonPressed(sender: AnyObject) {
         // Change status label
-        self.statusLabel.text = "Please wait..."
+        self.showStatus("Please wait...")
         
         // Print message to screen
         let str: NSAttributedString = NSAttributedString(
@@ -104,12 +117,12 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         self.consoleLog(str)
         
         // Make WePay API call
-        self.wepay.startCardReaderForTokenizingWithCardReaderDelegate(self, tokenizationDelegate: self)
+        self.wepay.startCardReaderForTokenizingWithCardReaderDelegate(self, tokenizationDelegate: self, authorizationDelegate: self)
     }
     
     @IBAction func stopCardReaderButtonPressed(sender: AnyObject) {
         // Change status label
-        self.statusLabel.text = "Stopping Card Reader"
+        self.showStatus("Stopping Card Reader")
         
         // Print message to screen
         let str: NSAttributedString = NSAttributedString(
@@ -138,7 +151,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         )
         
         // Change status label
-        self.statusLabel.text = "Please wait..."
+        self.showStatus("Please wait...")
         
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(
@@ -158,7 +171,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
     
     @IBAction func storeSignatureButtonPressed(sender: AnyObject) {
         // Change status label
-        self.statusLabel.text = "Storing Signature"
+        self.showStatus("Storing Signature")
         
         // Print message to screen
         let str: NSAttributedString = NSAttributedString(
@@ -201,6 +214,12 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         NSLog("%@", data.string)
     }
     
+    func showStatus(message: String) {
+        self.statusLabel.text = message
+    }
+    
+    // MARK: WPCardReaderDelegate methods
+    
     func didReadPaymentInfo(paymentInfo: WPPaymentInfo) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didReadPaymentInfo: \n")
@@ -212,7 +231,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         self.consoleLog(str)
         
         // Change status label
-        self.statusLabel.text = "Got payment info!"
+        self.showStatus("Got payment info!")
     }
     
     func didFailToReadPaymentInfoWithError(error: NSError) {
@@ -226,7 +245,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         self.consoleLog(str)
         
         // Change status label
-        self.statusLabel.text = "Card Reader error"
+        self.showStatus("Card Reader error")
     }
     
     func cardReaderDidChangeStatus(status: AnyObject) {
@@ -242,23 +261,49 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         // Change status label
         switch status as! String {
             case kWPCardReaderStatusNotConnected:
-                self.statusLabel.text = "Connect Card Reader"
-            case kWPCardReaderStatusWaitingForSwipe:
-                self.statusLabel.text = "Swipe Card"
+                self.showStatus("Connect Card Reader")
+            case kWPCardReaderStatusWaitingForCard:
+                self.showStatus("Swipe/Dip Card")
             case kWPCardReaderStatusSwipeDetected:
-                self.statusLabel.text = "Swipe Detected..."
+                self.showStatus("Swipe Detected...")
             case kWPCardReaderStatusTokenizing:
-                self.statusLabel.text = "Tokenizing..."
+                self.showStatus("Tokenizing...")
             case kWPCardReaderStatusStopped:
-                self.statusLabel.text = "Card Reader Stopped"
+                self.showStatus("Card Reader Stopped")
             default:
-                break
+                self.showStatus(status.description)
         }
     }
     
+    @objc func shouldResetCardReaderWithCompletion(completion: (Bool) -> Void) {
+        // Change this to true if you want to reset the card reader
+        completion(EMV_READER_SHOULD_RESET)
+    }
+    
+    func authorizeAmountWithCompletion(completion: ((Double, String!, Int) -> Void)!) {
+        let amount: Double = EMV_AMOUNT_DOUBLE
+        let currencyCode: String = kWPCurrencyCodeUSD
+        
+        // Change status label
+        self.showStatus("Providing auth info")
+        
+        // Print message to console
+        let infoString: String = "amount: \(amount), currency: \(currencyCode), accountId: \(self.accountId)"
+        let str: NSAttributedString = NSAttributedString(
+            string: "Providing auth info: ".stringByAppendingString(infoString),
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+        
+        // execute the completion
+        completion(amount, currencyCode, self.accountId)
+    }
+    
+    // MARK: WPTokenizationDelegate methods
+    
     func paymentInfo(paymentInfo: WPPaymentInfo, didTokenize paymentToken: WPPaymentToken) {
         // Change status label
-        self.statusLabel.text = "Tokenized!"
+        self.showStatus("Tokenized!")
         
         // Print message to console
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "paymentInfo:didTokenize: \n")
@@ -272,7 +317,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
     
     func paymentInfo(paymentInfo: WPPaymentInfo, didFailTokenization error: NSError) {
         // Change status label
-        self.statusLabel.text = "Tokenization error"
+        self.showStatus("Tokenization error")
         
         // Print message to console
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "paymentInfo:didFailTokenization: \n")
@@ -284,9 +329,11 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         self.consoleLog(str)
     }
     
+    // MARK: WPCheckoutDelegate methods
+    
     func didStoreSignature(signatureUrl: String, forCheckoutId checkoutId: String) {
         // Change status label
-        self.statusLabel.text = "Signature success!"
+        self.showStatus("Signature success!")
         
         // Print message to console
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didStoreSignature: \n")
@@ -300,7 +347,7 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
     
     func didFailToStoreSignatureImage(image: UIImage, forCheckoutId checkoutId: String, withError error: NSError) {
         // Change status label
-        self.statusLabel.text = "Signature error"
+        self.showStatus("Signature error")
         
         // Print message to console
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didFailToStoreSignatureImage: \n")
@@ -312,7 +359,67 @@ class ViewController: UIViewController, WPCardReaderDelegate, WPTokenizationDele
         self.consoleLog(str)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    // MARK: WPAuthorizationDelegate methods
+    
+    func selectEMVApplication(applications: [AnyObject]!, completion: ((Int) -> Void)!) -> Void {
+        // In production apps, the payer must choose the application they want to use.
+        // Here, we always select the first application in the array
+        let selectedIndex: Int = Int(EMV_SELECT_APP_INDEX)
+        
+        // Print message to console
+        var str: NSMutableAttributedString = NSMutableAttributedString(string: "Select App Id: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: applications.description,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
+        )
+        str.appendAttributedString(info)
+        self.consoleLog(str)
+        
+        str = NSMutableAttributedString(string: "Selected App Id index: \(selectedIndex)")
+        self.consoleLog(str)
+        
+        // Execute the completion
+        completion(selectedIndex)
+    }
+    
+    func insertPayerEmailWithCompletion(completion: ((String!) -> Void)!) {
+        let email: String = "emv@example.com"
+        
+        // Print message to console
+        let str: NSAttributedString = NSAttributedString(
+            string: "Providing email: ".stringByAppendingString(email),
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+        
+        completion(email)
+    }
+    
+    func paymentInfo(paymentInfo: WPPaymentInfo, didAuthorize authorizationInfo: WPAuthorizationInfo) {
+        // Print message to screen
+        let str: NSMutableAttributedString = NSMutableAttributedString(string: "didAuthorize: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: authorizationInfo.description,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
+        )
+        str.appendAttributedString(info)
+        self.consoleLog(str)
+        
+        // Change status label
+        self.showStatus("Authorized")
+    }
+    
+    func paymentInfo(paymentInfo: WPPaymentInfo, didFailAuthorization error: NSError) {
+        // Print message to screen
+        let str: NSMutableAttributedString = NSMutableAttributedString(string: "didFailAuthorization: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: error.localizedDescription,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
+        )
+        str.appendAttributedString(info)
+        self.consoleLog(str)
+        
+        // Change status label
+        self.showStatus("Authorization failed")
     }
 }
