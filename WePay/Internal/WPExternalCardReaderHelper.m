@@ -70,13 +70,13 @@
     });
 }
 
-- (void) informExternalCardReaderAmountCompletion:(void (^)(BOOL implemented, double amount, NSString *currencyCode, long accountId))innerCompletion
+- (void) informExternalCardReaderAmountCompletion:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))innerCompletion
 {
     dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         // If the external delegate is listening for auth info request, ask for it
         if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(authorizeAmountWithCompletion:)]) {
-            [self.externalCardReaderDelegate authorizeAmountWithCompletion:^(double amount, NSString *currencyCode, long accountId) {
+            [self.externalCardReaderDelegate authorizeAmountWithCompletion:^(NSDecimalNumber *amount, NSString *currencyCode, long accountId) {
                 innerCompletion(YES, amount, currencyCode, accountId);
             }];
         } else {

@@ -23,7 +23,7 @@
 NSString *const kRP350XModelName = @"RP350X";
 NSString *const kG5XModelName = @"G5X";
 
-#define READ_AMOUNT 10.0
+#define READ_AMOUNT [NSDecimalNumber one]
 #define READ_CURRENCY @"USD"
 #define READ_ACCOUNT_ID 12345
 
@@ -256,7 +256,7 @@ NSString *const kG5XModelName = @"G5X";
                        }];
 }
 
-- (void) fetchAuthInfo:(void (^)(BOOL implemented, double amount, NSString *currencyCode, long accountId))completion
+- (void) fetchAuthInfo:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
 {
     if (self.swiperShouldTokenize) {
         // ask external for auth info
@@ -268,7 +268,7 @@ NSString *const kG5XModelName = @"G5X";
 }
 
 - (NSError *) validateAuthInfoImplemented:(BOOL)implemented
-                                   amount:(double)amount
+                                   amount:(NSDecimalNumber *)amount
                              currencyCode:(NSString *)currencyCode
                                 accountId:(long)accountId
 {
@@ -276,7 +276,10 @@ NSString *const kG5XModelName = @"G5X";
     
     if (!implemented) {
         return [WPError errorAuthInfoNotProvided];
-    } else if (((int) (amount*100)) <= 0) {
+    } else if (amount == nil
+               || [amount isEqual:[NSNull null]]
+               || [[amount decimalNumberByMultiplyingByPowerOf10:2] intValue] < 99 // amount is less than 0.99
+               || ([currencyCode isEqualToString:kWPCurrencyCodeUSD] && amount.decimalValue._exponent < -2)) { // USD amount has more than 2 places after decimal point
         return [WPError errorInvalidAuthInfo];
     } else if (![allowedCurrencyCodes containsObject:currencyCode]) {
         return [WPError errorInvalidAuthInfo];

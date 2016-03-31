@@ -22,7 +22,7 @@
 /**
  *  Starts the transaction on the card reader
  */
-- (void) performEMVTransactionStartCommandWithAmount:(double)amount
+- (void) performEMVTransactionStartCommandWithAmount:(NSDecimalNumber *)amount
                                         currencyCode:(NSString *)currencyCode
                                            accountid:(long)accountId
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager

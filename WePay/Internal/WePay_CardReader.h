@@ -37,13 +37,13 @@ extern NSString *const kRP350XModelName;
 - (void) issueReversalForCreditCardId:(NSNumber *)creditCardId
                             accountId:(NSNumber *)accountId
                          roamResponse:(NSDictionary *)cardInfo;
-- (void) fetchAuthInfo:(void (^)(BOOL implemented, double amount, NSString *currencyCode, long accountId))completion;
+- (void) fetchAuthInfo:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion;
 - (void) handleDeviceStatusError:(NSString *)message;
 - (void) connectedDevice:(NSString *)deviceType;
 - (void) disconnectedDevice;
 
 - (NSError *) validateAuthInfoImplemented:(BOOL)implemented
-                                   amount:(double)amount
+                                   amount:(NSDecimalNumber *)amount
                              currencyCode:(NSString *)currencyCode
                                 accountId:(long)accountId;
 - (NSError *) validatePaymentInfoForTokenization:(WPPaymentInfo *)paymentInfo;
@@ -58,7 +58,7 @@ extern NSString *const kRP350XModelName;
 - (void) informExternalCardReaderSuccess:(WPPaymentInfo *)paymentInfo;
 - (void) informExternalCardReaderFailure:(NSError *)error;
 - (void) informExternalCardReaderResetCompletion:(void (^)(BOOL shouldReset))completion;
-- (void) informExternalCardReaderAmountCompletion:(void (^)(BOOL implemented, double amount, NSString *currencyCode, long accountId))completion;
+- (void) informExternalCardReaderAmountCompletion:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion;
 
 - (void) informExternalTokenizerSuccess:(WPPaymentToken *)token forPaymentInfo:(WPPaymentInfo *)paymentInfo;
 - (void) informExternalTokenizerFailure:(NSError *)error forPaymentInfo:(WPPaymentInfo *)paymentInfo;

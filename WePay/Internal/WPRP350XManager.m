@@ -249,7 +249,7 @@
 - (void) fetchAuthInfoForTransaction
 {
     // fetch Tx info from delegate
-    [processor.managerDelegate fetchAuthInfo:^(BOOL implemented, double amount, NSString *currencyCode, long accountId) {
+    [processor.managerDelegate fetchAuthInfo:^(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId) {
         NSError *error = [self.managerDelegate validateAuthInfoImplemented:implemented amount:amount currencyCode:currencyCode accountId:accountId];
         if (error != nil) {
             // we found an error, return it
@@ -291,10 +291,27 @@
             } response:^(RUAResponse *response) {
                 NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
 
-                [processor setupExpectedDOLs];
+                [processor setUserInterfaceOptions];
             }];
         }];
     }];
+}
+
+- (void) setUserInterfaceOptions
+{
+    id <RUAConfigurationManager> cmgr = [self.roamDeviceManager getConfigurationManager];
+
+    [cmgr setUserInterfaceOptions:30
+          withDefaultLanguageCode:RUALanguageCodeENGLISH
+                withPinPadOptions:0x00
+             withBackLightControl:0x00
+                         progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
+                             NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                         }
+                         response: ^(RUAResponse *response) {
+                             NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
+                             [processor setupExpectedDOLs];
+                         }];
 }
 
 - (void)setupExpectedDOLs

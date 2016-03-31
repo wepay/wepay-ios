@@ -13,7 +13,7 @@
 #define SETTINGS_ENVIRONMENT_KEY @"settingEnvironment"
 #define SETTINGS_ACCOUNT_ID_KEY @"settingAccountId"
 
-#define EMV_AMOUNT_DOUBLE 22.61 // Magic success amount
+#define EMV_AMOUNT_STRING @"22.61" // Magic success amount
 #define EMV_READER_SHOULD_RESET NO
 #define EMV_SELECT_APP_INDEX 0
 
@@ -308,16 +308,16 @@
     completion(EMV_READER_SHOULD_RESET);
 }
 
-- (void) authorizeAmountWithCompletion:(void (^)(double amount, NSString *currencyCode, long accountId))completion
+- (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
 {
-    double amount = EMV_AMOUNT_DOUBLE;
+    NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithString:EMV_AMOUNT_STRING];
     NSString *currencyCode = kWPCurrencyCodeUSD;
     
     // Change status label
     [self showStatus:@"Providing auth info"];
     
     // Print message to console
-    NSString *infoString = [NSString stringWithFormat:@"amount: %.2f, currency: %@, accountId: %ld", amount, currencyCode, self.accountId];
+    NSString *infoString = [NSString stringWithFormat:@"amount: %@, currency: %@, accountId: %ld", amount, currencyCode, self.accountId];
     NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@"Providing auth info: " stringByAppendingString:infoString]
                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
                                ];

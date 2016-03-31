@@ -24,7 +24,7 @@
 #define AUTH_RESPONSE_CODE_ONLINE_APPROVE @"00" // any other code is decline
 #define MAGIC_TC @"0123456789ABCDEF"
 
-@property (nonatomic, assign) double amount;
+@property (nonatomic, strong) NSDecimalNumber *amount;
 @property (nonatomic, assign) long accountId;
 @property (nonatomic, strong) NSString *currencyCode;
 
@@ -112,7 +112,7 @@
     return transactionParameters;
 }
 
-- (void) performEMVTransactionStartCommandWithAmount:(double)amount
+- (void) performEMVTransactionStartCommandWithAmount:(NSDecimalNumber *)amount
                                         currencyCode:(NSString *)currencyCode
                                            accountid:(long)accountId
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
@@ -121,7 +121,7 @@
 
 {
     NSLog(@"performEMVTransactionStartCommand");
-
+    
     // save transaction info
     self.amount = amount;
     self.currencyCode = currencyCode;
@@ -202,8 +202,7 @@
                      [responseData setObject:@(self.isFallbackSwipe) forKey:@"Fallback"];
                      [responseData setObject:@(self.accountId) forKey:@"AccountId"];
                      [responseData setObject:self.currencyCode forKey:@"CurrencyCode"];
-                     [responseData setObject:@(self.amount) forKey:@"Amount"];
-
+                     [responseData setObject:self.amount forKey:@"Amount"];
 
                      [self.managerDelegate handleSwipeResponse:responseData];
 
@@ -442,7 +441,7 @@
 
 - (BOOL) shouldExecuteMagicNumbers
 {
-    BOOL isMagicSuccessAmount = [@[@(21.61), @(121.61), @(22.61), @(122.61), @(24.61), @(124.61), @(25.61), @(125.61)] containsObject:@(self.amount)];
+    BOOL isMagicSuccessAmount = [@[@(21.61), @(121.61), @(22.61), @(122.61), @(24.61), @(124.61), @(25.61), @(125.61)] containsObject:self.amount];
 
     // YES, if not in production and amount is magic amount
     return (![kWPEnvironmentProduction isEqualToString:self.wepayEnvironment] && isMagicSuccessAmount);
@@ -719,9 +718,9 @@
     }
 }
 
-- (NSString *) convertToEMVAmount:(double) amount
+- (NSString *) convertToEMVAmount:(NSDecimalNumber *)amount
 {
-    int intAmount = (int) (amount*100);
+    int intAmount = [[amount decimalNumberByMultiplyingByPowerOf10:2] intValue];
     return [NSString stringWithFormat:@"%012d", intAmount];
 }
 

@@ -10,16 +10,16 @@
 
 @interface WPAuthorizationInfo()
 
-@property (nonatomic, readwrite) double amount;
-@property (nonatomic, strong, readwrite) NSString* currencyCode;
-@property (nonatomic, strong, readwrite) NSString* transactionToken;
+@property (nonatomic, strong, readwrite) NSDecimalNumber *amount;
+@property (nonatomic, strong, readwrite) NSString *currencyCode;
+@property (nonatomic, strong, readwrite) NSString *transactionToken;
 
 
 @end
 
 @implementation WPAuthorizationInfo
 
-- (instancetype) initWithAmount:(double) amount
+- (instancetype) initWithAmount:(NSDecimalNumber *)amount
                    currencyCode:(NSString *)currencyCode
                transactionToken:(NSString *)transactionToken
                         tokenId:(NSString* )tokenId
@@ -38,7 +38,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
     [dict setValue:self.tokenId ? self.tokenId : [NSNull null] forKey:@"tokenId"];
-    [dict setValue:self.amount ? @(self.amount) : [NSNull null] forKey:@"amount"];
+    [dict setValue:self.amount ? self.amount : [NSNull null] forKey:@"amount"];
     [dict setValue:self.currencyCode ? self.currencyCode : [NSNull null] forKey:@"currencyCode"];
     [dict setValue:self.transactionToken ? self.transactionToken : [NSNull null] forKey:@"transactionToken"];
 

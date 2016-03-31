@@ -1,3 +1,9 @@
+2016-03-30
+* Released version 5.0.0
+* Fixed issue where card reader was allowing chip cards to be swiped
+* Changed data type of amount in WPCardReaderDelegate.authorizeAmountWithCompletion: from double to NSDecimalNumber
+* Amounts having more than two places after the decimal will result in an WPErrorInvalidAuthInfo error
+
 2016-02-22
 * Released version 4.0.0
 * Added kWPPaymentMethodDip

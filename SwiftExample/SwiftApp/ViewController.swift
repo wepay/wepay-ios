@@ -12,7 +12,7 @@ let SETTINGS_CLIENT_ID_KEY = "settingClientId"
 let SETTINGS_ENVIRONMENT_KEY = "settingEnvironment"
 let SETTINGS_ACCOUNT_ID_KEY = "settingAccountId"
 
-let EMV_AMOUNT_DOUBLE = 22.61 // Magic success amount
+let EMV_AMOUNT_STRING = "22.61" // Magic success amount
 let EMV_READER_SHOULD_RESET = false
 let EMV_SELECT_APP_INDEX = 0
 
@@ -280,8 +280,8 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         completion(EMV_READER_SHOULD_RESET)
     }
     
-    func authorizeAmountWithCompletion(completion: ((Double, String!, Int) -> Void)!) {
-        let amount: Double = EMV_AMOUNT_DOUBLE
+    func authorizeAmountWithCompletion(completion: ((NSDecimalNumber!, String!, Int) -> Void)!) {
+        let amount: NSDecimalNumber = NSDecimalNumber(string: EMV_AMOUNT_STRING)
         let currencyCode: String = kWPCurrencyCodeUSD
         
         // Change status label

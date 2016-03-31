@@ -180,16 +180,16 @@ didFailAuthorization:(NSError *)error;
 
 /**
  *  Called when an EMV reader is connected, so that you can provide the amount, currency code and the WePay account Id of the merchant. The transaction cannot proceed until the completion block is executed.
- *  Note: In the staging environment, use amounts of 20.61, 120.61, 23.61 and 123.61 to simulate authorization errors. Amounts of 21.61, 121.61, 22.61 and 122.61 will simulate successful auth.
+ *  Note: In the staging environment, use amounts of 20.61, 120.61, 23.61 and 123.61 to simulate authorization errors. Amounts of 21.61, 121.61, 22.61, 122.61, 24.61, 124.61, 25.61, and 125.61 will simulate successful auth.
  *  Example:
- *      completion(21.61, @"USD", 1234567);
+ *      completion([NSDecimalNumber decimalNumberWithString:@"21.61"], kWPCurrencyCodeUSD, 1234567);
  *
  *  @param completion            The block to be executed with the amount, currency code and merchant account Id for the transaction.
- *  @param amount                The amount for the transaction. It will be truncated to two places after the decimal point.
- *  @param currencyCode          The 3-character ISO 4217 currency code. e.g. @"USD".
+ *  @param amount                The amount for the transaction. For USD amounts, there can be a maximum of two places after the decimal point. (amount.decimalValue._exponent must be >= -2)
+ *  @param currencyCode          The 3-character ISO 4217 currency code. The only supported currency code is kWPCurrencyCodeUSD.
  *  @param accountId             The WePay account id of the merchant.
  */
-- (void) authorizeAmountWithCompletion:(void (^)(double amount, NSString *currencyCode, long accountId))completion;
+- (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion;
 
 @end
 

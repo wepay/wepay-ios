@@ -147,7 +147,7 @@
                               }
 
                               // fetch Tx info from delegate
-                              [self.managerDelegate fetchAuthInfo:^(BOOL implemented, double amount, NSString *currencyCode, long accountId) {
+                              [self.managerDelegate fetchAuthInfo:^(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId) {
                                   NSError *error = [self.managerDelegate validateAuthInfoImplemented:implemented amount:amount currencyCode:currencyCode accountId:accountId];
                                   if (error != nil) {
                                       // we found an error, return it
@@ -162,7 +162,7 @@
                                       [responseData setObject:@(NO) forKey:@"Fallback"];
                                       [responseData setObject:@(accountId) forKey:@"AccountId"];
                                       [responseData setObject:currencyCode forKey:@"CurrencyCode"];
-                                      [responseData setObject:@(amount) forKey:@"Amount"];
+                                      [responseData setObject:amount forKey:@"Amount"];
                                       
                                       [self.managerDelegate handleSwipeResponse:responseData];
                                   }
