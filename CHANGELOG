@@ -1,3 +1,10 @@
+2016-04-14
+* Released version 5.0.1
+* Fixed rare crash on cancelling or ending transactions
+* Fixed PaymentInfo.paymentDescription being blank for some swiped cards
+* Explicitly emit a card blocked error for some dipped cards
+* Removed unsupported Visa Interlink AID from EMV configs
+
 2016-03-30
 * Released version 5.0.0
 * Fixed issue where card reader was allowing chip cards to be swiped

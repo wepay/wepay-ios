@@ -613,6 +613,8 @@
 
 - (void) stopTransactionWithCompletion:(void (^)(void))completion
 {
+    NSLog(@"stopTransactionWithCompletion");
+    
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
 
     [tmgr sendCommand:RUACommandEMVTransactionStop withParameters:nil
@@ -644,6 +646,8 @@
             // This is only known to happen when "Conditions of Use Not Satisfied" e.g. geographical restrictions.
             error = [WPError errorCardNotSupported];
         } else if ([errorCode isEqualToString:[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeApplicationBlocked]]) {
+            error = [WPError errorCardBlocked];
+        } else if ([errorCode isEqualToString:[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeCardBlocked]]) {
             error = [WPError errorCardBlocked];
         } else if ([errorCode isEqualToString:[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeTimeoutExpired]]) {
             error = [WPError errorForCardReaderTimeout];
@@ -709,13 +713,16 @@
 
 - (void) reactToError:(NSError *)error forPaymentMethod:(NSString *)paymentMethod
 {
-    if ([self.delegate shouldKeepWaitingForCardAfterError:error forPaymentMethod:paymentMethod]) {
-        // restart transaction
-        [self startTransaction];
-    } else {
-        // stop reader
-        [self.delegate stopDevice];
-    }
+    // stop(end) transaction, then either restart transaction or stop reader
+    [self stopTransactionWithCompletion:^{
+        if ([self.delegate shouldKeepWaitingForCardAfterError:error forPaymentMethod:paymentMethod]) {
+            // restart transaction
+            [self startTransaction];
+        } else {
+            // stop reader
+            [self.delegate stopDevice];
+        }
+    }];
 }
 
 - (NSString *) convertToEMVAmount:(NSDecimalNumber *)amount

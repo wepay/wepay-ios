@@ -107,6 +107,8 @@
 
 - (void) stopDevice
 {
+    NSLog(@"stopDevice");
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         self.readerShouldWaitForCard = NO;
 
@@ -116,6 +118,7 @@
         // release and delete the device manager
         [self.roamDeviceManager releaseDevice];
         self.roamDeviceManager = nil;
+        NSLog(@"released device manager");
 
         // inform delegate
         [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
@@ -226,6 +229,7 @@
  */
 - (void) stopWaitingForCard
 {
+    NSLog(@"stopWaitingForCard");
     // cancel waiting for dip timeout timer
     // [self.dipTimeoutTimer invalidate];
 
@@ -242,8 +246,9 @@
                                                object:kWPCardReaderStatusNotConnected];
 
 
-    // stop transaction if running
-    [self.dipTransactionHelper stopTransactionWithCompletion:nil];
+    // cancel transaction in case it is running
+    id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
+    [tmgr cancelLastCommand];
 }
 
 - (void) fetchAuthInfoForTransaction

@@ -28,12 +28,6 @@
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
                                      managerDelegate:(id<WPDeviceManagerDelegate>) managerDeletage
                                     externalDelegate:(id<WPExternalCardReaderDelegate>) externalDelegate;
-
-/**
- *  Stops the transaction
- */
-- (void) stopTransactionWithCompletion:(void (^)(void))completion;
-
 @end
 
 #endif

@@ -169,7 +169,17 @@ NSString *const kG5XModelName = @"G5X";
         [self.externalHelper informExternalCardReaderFailure:error];
     } else {
         // extract useful non-encrypted data
-        NSString *pan = [self sanitizePAN:[responseData objectForKey:@"PAN"]];
+        NSString *pan = [responseData objectForKey:@"PAN"];
+        if (pan == nil) {
+            NSString *track2 = [responseData objectForKey:@"Track2Data"];
+            if (track2 != nil) {
+                pan = [self extractPANfromTrack2:track2];
+            }
+        }
+        
+        // pan can still be nil at this point
+        pan = [self sanitizePAN:pan];
+        
         NSDictionary *info = @{@"firstName"         : [WPRoamHelper firstNameFromRUAData:responseData],
                                @"lastName"          : [WPRoamHelper lastNameFromRUAData:responseData],
                                @"paymentDescription": pan ? pan : @"",
@@ -401,6 +411,40 @@ NSString *const kG5XModelName = @"G5X";
     }
 
     return result;
+}
+
+- (NSString *) extractPANfromTrack2:(NSString *)track2
+{
+    if (track2 == nil) {
+        return nil;
+    }
+    
+    // decode track 2 from hex to ascii string
+    NSMutableString * decodedTrack2 = [[NSMutableString alloc] init];
+    int i = 0;
+    while (i < [track2 length])
+    {
+        NSString * hexChar = [track2 substringWithRange: NSMakeRange(i, 2)];
+        if ([hexChar isEqualToString:@"00"]) {
+            hexChar = @"30";
+        }
+        
+        int value = 0;
+        sscanf([hexChar cStringUsingEncoding:NSASCIIStringEncoding], "%x", &value);
+        [decodedTrack2 appendFormat:@"%c", (char)value];
+        i+=2;
+    }
+    
+    // find the PAN
+    NSRange r1 = [decodedTrack2 rangeOfString:@";"];
+    NSRange r2 = [decodedTrack2 rangeOfString:@"="];
+    
+    if (r1.length == 0 || r2.length == 0) {
+        return nil;
+    } else {
+        NSRange rSub = NSMakeRange(r1.location + r1.length, r2.location - r1.location - r1.length);
+        return [decodedTrack2 substringWithRange:rSub];
+    }
 }
 
 

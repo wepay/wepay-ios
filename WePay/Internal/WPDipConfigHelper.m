@@ -344,7 +344,6 @@
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"1010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"2010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"2020" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
-                     [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"3010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_MCRD withLowestSupportedICCApplicationVersion:TAV_MCRD withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"8010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
 
                      // Discover
@@ -449,7 +448,6 @@
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"1010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"2010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"2020" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
-                     [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"3010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_MCRD withLowestSupportedICCApplicationVersion:TAV_MCRD withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
                      [[RUAApplicationIdentifier alloc]initWithRID:AID_VISA withPIX:@"8010" withAID:nil withApplicationLabel:nil withTerminalApplicationVersion:TAV_VISA withLowestSupportedICCApplicationVersion:TAV_VISA withPriorityIndex:@"00" withApplicationSelectionFlags:@"01"],
 
                      // Discover
