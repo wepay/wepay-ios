@@ -53,6 +53,11 @@ FOUNDATION_EXPORT NSString * const kWPErrorCategoryNone;
  */
 FOUNDATION_EXPORT NSString * const kWPErrorCategoryCardReader;
 
+/**
+ *  The value used in the NSError's userInfo dictionary to return the "sdk" error category.
+ */
+FOUNDATION_EXPORT NSString * const kWPErrorCategoryCardSDK;
+
 #pragma mark - Error Codes.
 
 /**
@@ -151,6 +156,26 @@ typedef enum WPErrorCode {
      *  -10031 Auth info not provided.
      */
     WPErrorAuthInfoNotProvided = -10031,
+    
+    /**
+     *  -10032 Payment method cannot be tokenized.
+     */
+    WPErrorPaymentMethodCannotBeTokenized = -10032,
+
+    /**
+     *  -10033 Failed to get battery level.
+     */
+    WPErrorFailedToGetBatteryLevel = -10033,
+    
+    /**
+     *  -10034 Card reader not connected.
+     */
+    WPErrorCardReaderNotConnected = -10034,
+    
+    /**
+     *  -10035 Card reader model not supported.
+     */
+    WPErrorCardReaderModelNotSupported = -10035,
 
 } WPErrorCode;
 
@@ -235,3 +260,23 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorAuthInfoNotProvided, that can be retrieved by calling [error localizedDescription].
  */
 #define WPAuthInfoNotProvidedErrorMessage NSLocalizedStringFromTable(@"Auth info was not provided.", @"WePay",  @"Auth info was not provided.");
+
+/**
+ *  The localizable user facing message for WPErrorPaymentMethodCannotBeTokenized, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPPaymentMethodCannotBeTokenizedErrorMessage NSLocalizedStringFromTable(@"This payment method cannot be tokenized.", @"WePay",  @"This payment method cannot be tokenized.");
+
+/**
+ *  The localizable user facing message for WPErrorFailedToGetBatteryLevel, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPFailedToGetBatteryLevelErrorMessage NSLocalizedStringFromTable(@"Battery level could not be determined.", @"WePay",  @"Battery level could not be determined.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderNotConnected, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPCardReaderNotConnectedErrorMessage NSLocalizedStringFromTable(@"Card reader is not connected.", @"WePay",  @"Card reader is not connected.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderModelNotSupported, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPCardReaderModelNotSupportedErrorMessage NSLocalizedStringFromTable(@"This card reader model is not supported.", @"WePay",  @"This card reader model is not supported.");

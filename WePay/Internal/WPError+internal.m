@@ -13,6 +13,7 @@ NSString * const kWPErrorSDKDomain = @"com.wepay.sdk";
 NSString * const kWPErrorCategoryKey = @"WPErrorCategoryKey";
 NSString * const kWPErrorCategoryNone = @"WPErrorCategoryNone";
 NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
+NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
 
 
 @implementation WPError
@@ -263,5 +264,51 @@ NSString * const kWPErrorCategoryCardReader = @"WPErrorCategoryCardReader";
                              category:kWPErrorCategoryCardReader
                                domain:kWPErrorSDKDomain];
 }
+
++ (NSError *) errorPaymentMethodCannotBeTokenized
+{
+    NSString *errorText = WPPaymentMethodCannotBeTokenizedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorPaymentMethodCannotBeTokenized
+                                 text:errorText
+                             category:kWPErrorCategorySDK
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorFailedToGetBatteryLevel
+{
+    NSString *errorText = WPFailedToGetBatteryLevelErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorFailedToGetBatteryLevel
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardReaderNotConnected
+{
+    NSString *errorText = WPCardReaderNotConnectedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardReaderNotConnected
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardReaderUnknownError
+{
+    NSString *errorText = WPUnexpectedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorUnknown
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardReaderModelNotSupported
+{
+    NSString *errorText = WPCardReaderModelNotSupportedErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardReaderModelNotSupported
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
 
 @end

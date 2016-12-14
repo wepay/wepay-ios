@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 
 #import <Foundation/Foundation.h>
 #import <RUA/RUA.h>
@@ -16,7 +16,6 @@
 #define TIMEOUT_INFINITE_SEC -1
 #define TIMEOUT_WORKAROUND_SEC 112
 
-extern NSString *const kG5XModelName;
 extern NSString *const kRP350XModelName;
 
 @class WPAuthorizationInfo;
@@ -26,14 +25,19 @@ extern NSString *const kRP350XModelName;
 @protocol WPCardReaderDelegate;
 @protocol WPTokenizationDelegate;
 @protocol WPAuthorizationDelegate;
+@protocol WPBatteryLevelDelegate;
 
 @protocol WPDeviceManagerDelegate <NSObject>
 
-- (void) handleSwipeResponse:(NSDictionary *) responseData;
-- (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo;
+- (void) handleSwipeResponse:(NSDictionary *) responseData
+              successHandler:(void (^)(NSDictionary * returnData)) successHandler
+                errorHandler:(void (^)(NSError * error)) errorHandler
+               finishHandler:(void (^)(void)) finishHandler;
 - (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
             successHandler:(void (^)(NSDictionary * returnData)) successHandler
-              errorHandler:(void (^)(NSError * error)) errorHandler;
+              errorHandler:(void (^)(NSError * error)) errorHandler
+             finishHandler:(void (^)(void)) finishHandler;
+
 - (void) issueReversalForCreditCardId:(NSNumber *)creditCardId
                             accountId:(NSNumber *)accountId
                          roamResponse:(NSDictionary *)cardInfo;
@@ -110,11 +114,27 @@ extern NSString *const kRP350XModelName;
 - (void) processCard;
 
 /**
- *  Determines if the card reader should restart after a dip/swipe error/success.
+ *  Determines if the transaction should restart after a dip/swipe error/success.
  *
- *  @param error The error that occured. Can be nil if the operation succeeded.
+ *  @param error            The error that occured. Can be nil if the payment succeeded.
+ *  @param paymentMethod    The payment method used for the payment.
+ *
+ *  @return                 YES if the transaction should be restated, otherwise NO.
  */
-- (BOOL) shouldKeepWaitingForCardAfterError:(NSError *)error forPaymentMethod:(NSString *)paymentMethod;
+- (BOOL) shouldRestartTransactionAfterError:(NSError *)error
+                          forPaymentMethod:(NSString *)paymentMethod;
+
+/**
+ *  Determines if the card reader should be stopped after a transaction.
+ *
+ *  @return     YES if the card reader should be stopped, otherwise NO.
+ */
+- (BOOL) shouldStopCardReaderAfterTransaction;
+
+/**
+ *  Marks the currently running transaction as completed;
+ */
+- (void) transactionCompleted;
 
 @end
 
@@ -123,18 +143,17 @@ extern NSString *const kRP350XModelName;
 
 - (instancetype) initWithConfig:(WPConfig *)config;
 
-- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDlegate;
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDlegate;
 
-- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
-                                                  sessionId:(NSString *)sessionId;
+- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
+                                                   sessionId:(NSString *)sessionId;
 
 - (void) stopCardReader;
 
-- (void) tokenizeSwipedPaymentInfo:(WPPaymentInfo *)paymentInfo
-              tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
-                         sessionId:(NSString *)sessionId;
+- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
+
 @end
 
 #endif

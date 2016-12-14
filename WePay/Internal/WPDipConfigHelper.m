@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 
 #import <CommonCrypto/CommonDigest.h>
 #import <RUA/RUA.h>
@@ -26,7 +26,7 @@
 #define TAV_VISA @"008C"
 #define TAV_DISC @"0001"
 #define TAV_AMEX @"0001"
-#define TAV_JCB  @"0002"
+#define TAV_JCB  @"0200"
 
 // Keys for the Terminal Action Codes Dictionary
 #define TAC_DENIAL_KEY @"denial"

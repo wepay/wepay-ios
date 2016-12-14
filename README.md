@@ -15,16 +15,11 @@ There are two types of payment methods:
 + Merchant payment methods - to be used in apps where merchants collect payments from their customers
  
 The WePay iOS SDK supports the following payment methods
- - Card Swiper (Merchant)
-    Using a Card Swiper, a merchant can accept in-person payments by swiping a consumer's traditional magnetic strip card.
- - Card Dipper (Merchant)
-    Using an Card Dipper, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card.
- - Manual Entry (Consumer/Merchant)
-    The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
+ - Card Swiper: Using a Card Swiper, a merchant can accept in-person payments by swiping a consumer's traditional magnetic strip card.
+ - Card Dipper: Using an Card Dipper, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card.
+ - Manual Entry: The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
 
 ## Installation
-
-Note: Card reader functionality is not available in this SDK by default. If you want to use this SDK with WePay card readers, send an email to mobile@wepay.com.
 
 #### Using [cocoapods](https://cocoapods.org/) (recommended)
 + Add `pod "WePay"` to your podfile
@@ -47,16 +42,18 @@ The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExamp
     - SystemConfiguration.framework
     - UIKit.framework
     - libstdc++.6.0.9.dylib
-+ Also include the framework files you copied:
-    - TrustDefenderMobile.framework
++ Also include the framework file you copied:
     - WePay.framework
 + Done!
+
+Note: Card reader functionality is not available in this SDK by default. If you want to use this SDK with WePay card readers, send an email to mobile@wepay.com.
 
 ## Documentation
 HTML documentation is hosted on our [Github Pages Site](http://wepay.github.io/wepay-ios/).
 
 Pdf documentation is available on the [releases page](https://github.com/wepay/wepay-ios/releases/latest) or as a direct [download](https://github.com/wepay/wepay-ios/raw/master/documentation/wepay-ios.pdf).
 
+General documentation about the WePay mobile point of sale (mPOS) program is available [here](https://developer.wepay.com/mobile/mpos-program-overview).
 ## SDK Organization
 
 ### WePay.h
@@ -68,6 +65,7 @@ Detailed reference documentation is available on the reference page for the `WeP
 The SDK uses delegate protocols to respond to API calls. You must adopt the relevant protocols to receive responses to the API calls you make.
 Detailed reference documentation is available on the reference page for each protocol:
 - `WPAuthorizationDelegate`
+- `WPBatteryLevelDelegate`
 - `WPCardReaderDelegate`
 - `WPCheckoutDelegate`
 - `WPTokenizationDelegate`
@@ -89,7 +87,7 @@ When you are ready, look at the samples below to learn how to interact with the 
 
  See the [WePayExample app](https://github.com/wepay/wepay-ios/tree/master/WePayExample) for a working implementation of all API methods.
 
- See the [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExample) for a working implementation of all API methods in a Swift 2 application.
+ See the [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExample) for a working implementation of all API methods in a Swift 3 application.
  Note: make sure to open the project using `SwiftApp.xcworkspace` and not `SwiftApp.xcodeproj`.
 
 ### Initializing a Bridging Header (for Swift apps)
@@ -124,6 +122,14 @@ WPConfig *config = [[WPConfig alloc] initWithClientId:@"your_client_id" environm
 + Initialize the WePay object and assign it to the property
 ~~~{.m}
 self.wepay = [[WePay alloc] initWithConfig:config];
+~~~
+
+##### Providing permission to use microphone for card reader communication
+
++ Open your app's Info.plist file and add an entry for NSMicrophoneUsageDescription.
+~~~{.xml}
+<key>NSMicrophoneUsageDescription</key>
+<string>Microphone permission is required for operating card reader</string>
 ~~~
 
 #####(optional) Providing permission to use location services for fraud detection
@@ -389,3 +395,51 @@ UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
     1. The SDK will send the obtained signature to WePay's servers
     2. If the operation succeeds, the `didStoreSignature:forCheckoutId:` method will be called
     3. Otherwise, if the operation fails, the `didFailToStoreSignatureImage:forCheckoutId:withError:` method will be called with the appropriate error
+
+### Integrating the the Battery Level API
+
++ Adopt the WPBatteryLevelDelegate protocol
+~~~{.h}
+\@interface MyWePayDelegate : NSObject <WPBatteryLevelDelegate>
+~~~
++ Implement the WPCheckoutDelegate protocol methods
+~~~{.m}
+- (void) didGetBatteryLevel:(int)batteryLevel
+{
+    // success! Show the current level to the user.
+}
+
+- (void) didFailToGetBatteryLevelwithError:(NSError *)error
+{
+    // handle the error
+}
+
+~~~
++ Make the WePay API call, passing in the instance of the class that implemented the WPBatteryLevelDelegate protocol
+~~~{.m}
+[self.wepay getCardReaderBatteryLevelWithBatteryLevelDelegate:self];
+~~~
++ That's it! The following sequence of events will occur:
+    1. The SDK will attempt to read the battery level of the card reader
+    2. If the operation succeeds, WPBatteryLevelDelegate's `didGetBatteryLevel:` method will be called with the result
+    3. Otherwise, if the operation fails, WPBatteryLevelDelegate's `didFailToGetBatteryLevelwithError:` method will be called with the appropriate error
+    4. The card reader must be plugged in before attempting to get battery level, otherwise the process will fail
+
+### Integration tests and unit tests
+All the integration tests and unit tests are located in the `/WePayTests/` directory.
+
+##### From Xcode
+
+From the Tests Navigator tab:
+
++ To run a single test, right-click the test method and select "Test <name>".
++ To run all test methods in a class, right-click the class and select "Run <name>".
++ To run all tests in a directory, right-click the directory and select "Run <name>".
++ To run all tests in the project, use the menu option Product > Test  or press (Cmd + U).
+
+##### From the command line
+
+Go to this repo directory and execute:
+~~~
+xcodebuild test -project WePay.xcodeproj -scheme "Release Framework"  -destination 'platform=iOS Simulator,name=iPhone 7'
+~~~

@@ -6,6 +6,9 @@
 //  Copyright (c) 2015 WePay. All rights reserved.
 //
 
+#if defined(__has_include)
+#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+
 #import <Foundation/Foundation.h>
 #import <TrustDefenderMobile/TrustDefenderMobile.h>
 
@@ -31,3 +34,6 @@
 - (NSString *) sessionId;
 
 @end
+
+#endif
+#endif

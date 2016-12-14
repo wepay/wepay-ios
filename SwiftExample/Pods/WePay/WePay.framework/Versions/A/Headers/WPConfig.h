@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WePay/WPMockConfig.h>
 
 /**
  * The configuration object used for initializing a \ref WePay instance.
@@ -39,19 +40,29 @@
 @property (nonatomic, assign) BOOL callDelegateMethodsOnMainThread;
 
 /**
- *  Determines if the card reader should automatically restart after a successful swipe. The card reader is not restarted after a successful dip. Defaults to NO.
+ *  Determines if the transaction should automatically restart after a successful swipe. The transaction is not restarted after a successful dip. Defaults to NO.
  */
-@property (nonatomic, assign) BOOL restartCardReaderAfterSuccess;
+@property (nonatomic, assign) BOOL restartTransactionAfterSuccess;
 
 /**
- *  Determines if the card reader should automatically restart after a swipe/dip general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError). Defaults to YES.
+ *  Determines if the transaction should automatically restart after a swipe/dip general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError). Defaults to YES.
  */
-@property (nonatomic, assign) BOOL restartCardReaderAfterGeneralError;
+@property (nonatomic, assign) BOOL restartTransactionAfterGeneralError;
 
 /**
- *  Determines if the card reader should automatically restart after a swipe/dip error other than general error. Defaults to NO.
+ *  Determines if the transaction should automatically restart after a swipe/dip error other than general error. Defaults to NO.
  */
-@property (nonatomic, assign) BOOL restartCardReaderAfterOtherErrors;
+@property (nonatomic, assign) BOOL restartTransactionAfterOtherErrors;
+
+/**
+ *  Determines if the card reader should automatically stop after a transaction is completed. Defaults to YES.
+ */
+@property (nonatomic, assign) BOOL stopCardReaderAfterTransaction;
+
+/**
+ *  The configuration for using mock card reader and/or mock WepayClient implementation
+ */
+@property (nonatomic, strong) WPMockConfig* mockConfig;
 
 /**
  *  A convenience initializer
@@ -72,9 +83,10 @@
  *  @param useLocation                          Flag to determine if we should use location services.
  *  @param useTestEMVCards                      Flag to determine if we should use test EMV cards.
  *  @param callDelegateMethodsOnMainThread      Flag to determine if delegate methods should be called on the main(UI) thread.
- *  @param restartCardReaderAfterSuccess        Flag to determine if the card reader should automatically restart after a successful read.
- *  @param restartCardReaderAfterGeneralError   Flag to determine if the card reader should automatically restart after a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError).
- *  @param restartCardReaderAfterOtherErrors    Flag to determine if the card reader should automatically restart after an error other than general error.
+ *  @param restartTransactionAfterSuccess       Flag to determine if the transaction should automatically restart after a successful read.
+ *  @param restartTransactionAfterGeneralError  Flag to determine if the transaction should automatically restart after a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError).
+ *  @param restartTransactionAfterOtherErrors   Flag to determine if the transaction should automatically restart after an error other than general error.
+ *  @param stopCardReaderAfterTransaction       Flag to determine if the card reader should automatically stop after a transaction is completed.
  *
  *  @return A \ref WPConfig instance which can be used to initialize a \ref WePay instance.
  */
@@ -83,8 +95,9 @@
                       useLocation:(BOOL)useLocation
                   useTestEMVCards:(BOOL)useTestEMVCards
   callDelegateMethodsOnMainThread:(BOOL)callDelegateMethodsOnMainThread
-    restartCardReaderAfterSuccess:(BOOL)restartCardReaderAfterSuccess
-restartCardReaderAfterGeneralError:(BOOL)restartCardReaderAfterGeneralError
-restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors;
+    restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
+restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
+restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
+   stopCardReaderAfterTransaction:(BOOL)stopCardReaderAfterTransaction;
 
 @end

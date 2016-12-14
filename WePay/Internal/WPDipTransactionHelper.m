@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 
 #import "WePay.h"
 #import "WePay_CardReader.h"
@@ -68,31 +68,20 @@
     return self;
 }
 
-
 #pragma mark - TransactionStartCommand
 
-- (NSDictionary *)getEMVStartTransactionParameters {
+- (NSDictionary *)getEMVStartTransactionParameters
+{
     NSMutableDictionary *transactionParameters = [[NSMutableDictionary alloc] init];
-    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc]init];
-    [dateFormat setDateFormat:@"yyMMdd"];
-    [dateFormat setLocale:enUSPOSIXLocale];
-
-    NSDateFormatter *timeFormat = [[NSDateFormatter alloc]init];
-    [timeFormat setDateFormat:@"HHmmss"];
-    [timeFormat setLocale:enUSPOSIXLocale];
-
-    NSString *dateStr = [dateFormat stringFromDate:[NSDate date]];
-
+    
     // // // // // // //
     // Required params:
     // // // // // // //
 
-    [transactionParameters setObject:[self convertToEMVCurrencyCode:self.currencyCode] forKey:[NSNumber numberWithInt:RUAParameterTransactionCurrencyCode]];
+    [transactionParameters setObject:[self getEMVCurrencyCode] forKey:[NSNumber numberWithInt:RUAParameterTransactionCurrencyCode]];
     [transactionParameters setObject:@"00" forKey:[NSNumber numberWithInt:RUAParameterTransactionType]];
 
-    [transactionParameters setObject:dateStr forKey:[NSNumber numberWithInt:RUAParameterTransactionDate]];
+    [transactionParameters setObject:[self getEMVTransactionDate] forKey:[NSNumber numberWithInt:RUAParameterTransactionDate]];
     [transactionParameters setObject:@"E028C8" forKey:[NSNumber numberWithInt:RUAParameterTerminalCapabilities]];
     [transactionParameters setObject:@"22" forKey:[NSNumber numberWithInt:RUAParameterTerminalType]];
     [transactionParameters setObject:@"6000008001" forKey:[NSNumber numberWithInt:RUAParameterAdditionalTerminalCapabilities]];
@@ -138,6 +127,7 @@
     self.isFallbackSwipe = NO;
     self.shouldIssueReversal = NO;
 
+    self.paymentInfo = nil;
     self.selectedAID = nil;
     self.authCode = nil;
     self.issuerAuthenticationData = nil;
@@ -204,10 +194,16 @@
                      [responseData setObject:self.currencyCode forKey:@"CurrencyCode"];
                      [responseData setObject:self.amount forKey:@"Amount"];
 
-                     [self.managerDelegate handleSwipeResponse:responseData];
-
-                     NSError *error = [self.managerDelegate validateSwiperInfoForTokenization:responseData];
-                     [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
+                     [self.managerDelegate handleSwipeResponse:responseData
+                                                successHandler:^(NSDictionary *returnData) {
+                                                    [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                }
+                                                  errorHandler:^(NSError * error) {
+                                                      [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
+                                                  }
+                                                 finishHandler:^{
+                                                     [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                 }];
 
                  } else if ([ruaResponse responseType] == RUAResponseTypeListOfApplicationIdentifiers) {
                      NSArray *appIds = [ruaResponse listOfApplicationIdentifiers];
@@ -360,7 +356,10 @@
     [responseData setObject:kRP350XModelName forKey:@"Model"];
     [responseData setObject:@(self.accountId) forKey:@"AccountId"];
 
-
+    //Some older roam test readers seem to be messing up these values, so we overwrite them with known good values
+    [responseData setObject:[self getEMVCurrencyCode] forKey:@"TransactionCurrencyCode"];
+    [responseData setObject:[self getEMVTransactionDate] forKey:@"TransactionDate"];
+    
     NSError *error = [self validateEMVResponse:responseData];
 
     if (error != nil) {
@@ -428,7 +427,11 @@
                                            [self consumeIssuerAuthenticationData:nil
                                                                 authResponseCode:nil
                                                                     creditCardId:nil];
-                                       }];
+                                       }
+                                      finishHandler:^{
+                                          self.authorizationError = nil;
+                                          [self reactToError:nil];
+                                      }];
 
         } else {
             NSLog(@"[performEMVTransactionDataCommand] Stopping, unhandled response");
@@ -715,12 +718,14 @@
 {
     // stop(end) transaction, then either restart transaction or stop reader
     [self stopTransactionWithCompletion:^{
-        if ([self.delegate shouldKeepWaitingForCardAfterError:error forPaymentMethod:paymentMethod]) {
+        if ([self.delegate shouldRestartTransactionAfterError:error forPaymentMethod:paymentMethod]) {
             // restart transaction
             [self startTransaction];
-        } else {
-            // stop reader
+        } else if ([self.delegate shouldStopCardReaderAfterTransaction]) {
             [self.delegate stopDevice];
+        } else {
+            // mark transaction completed, but leave reader running
+            [self.delegate transactionCompleted];
         }
     }];
 }
@@ -757,6 +762,23 @@
     
     return result;
 }
+
+- (NSString *)getEMVCurrencyCode
+{
+    return [self convertToEMVCurrencyCode:self.currencyCode];
+}
+
+- (NSString *)getEMVTransactionDate
+{
+    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc]init];
+    [dateFormat setDateFormat:@"yyMMdd"];
+    [dateFormat setLocale:enUSPOSIXLocale];
+    
+    return [dateFormat stringFromDate:[NSDate date]];
+}
+
 
 @end
 

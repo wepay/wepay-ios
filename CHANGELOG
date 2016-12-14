@@ -1,4 +1,17 @@
-2016-04-14
+2016-12-13
+* Released version 6.0.0
+* Added APIs for fetching card reader battery levels
+* Implemented card reader mocking for use during development and testing
+* Added integration and unit tests
+* Separated card reader lifecycle from restarting transactions:
+	* Added WPConfig.stopCardReaderAfterTransaction to control if the card reader stops or stays on after a transaction
+	* Replaced WPConfig.restartCardReaderAfterSuccess with restartTransactionAfterSuccess
+	* Replaced WPConfig.restartCardReaderAfterGeneralError with restartTransactionAfterGeneralError
+	* Replaced WPConfig.restartCardReaderAfterOtherErrors with restartTransactionAfterOtherErrors
+	* Renamed WePay.startCardReaderForReading to startTransactionForReading
+	* Renamed WePay.startCardReaderForTokenizing to startTransactionForTokenizing
+
+2016-04-14 
 * Released version 5.0.1
 * Fixed rare crash on cancelling or ending transactions
 * Fixed PaymentInfo.paymentDescription being blank for some swiped cards

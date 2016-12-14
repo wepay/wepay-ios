@@ -7,7 +7,6 @@
 //
 
 #import "WPClientHelper.h"
-#import "WPConfig.h"
 
 @implementation WPClientHelper
 
@@ -67,6 +66,8 @@
     if (fallback != nil && ![fallback isEqual:[NSNull null]]) {
         [requestParams setObject:fallback forKey:@"emv_fallback"];
     }
+    
+    NSLog(@"%@", requestParams);
     
     return requestParams;
 }
@@ -147,8 +148,8 @@
     ////////////////////////////
 
     NSString *panSequenceNumber = [cardInfo objectForKey:@"PANSequenceNumber"];
-    if (panSequenceNumber != nil && ![panSequenceNumber isEqualToString:@"00"]) {
-        // if panSequenceNumber is present and not 00, send it
+    if (panSequenceNumber != nil && ![panSequenceNumber isEqualToString:@"00"] && ![panSequenceNumber isEqualToString:@"FF"]) {
+        // if panSequenceNumber is present and not 00/FF, send it
         // this is a Vantiv-specific param name
         [emvParams setObject:panSequenceNumber forKey:@"card_sequence_terminal_number"];
     }

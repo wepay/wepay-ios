@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 
 #import "WePay_CardReader.h"
 #import "WePay.h"
@@ -16,12 +16,11 @@
 #import "WPRP350XManager.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
-#import "WPG5XManager.h"
 #import "WPExternalCardReaderHelper.h"
 #import "WPClientHelper.h"
+#import "WPBatteryHelper.h"
 
 NSString *const kRP350XModelName = @"RP350X";
-NSString *const kG5XModelName = @"G5X";
 
 #define READ_AMOUNT [NSDecimalNumber one]
 #define READ_CURRENCY @"USD"
@@ -62,13 +61,8 @@ NSString *const kG5XModelName = @"G5X";
         NSString *lastDeviceType = [defaults objectForKey:WEPAY_LAST_DEVICE_KEY];
         
         // initialize a device manager
-        // TODO: Implement Roam ReaderSearchListener, instead of trying each device ourselves
-        if ([kG5XModelName isEqualToString:lastDeviceType]) {
-            [self startSwiperManager];
-        } else {
-            [self startEMVManager];
-        }
-
+        [self startEMVManager];
+        
         // configure RUA
         #ifdef DEBUG
             // Log response only when in debug builds
@@ -81,13 +75,6 @@ NSString *const kG5XModelName = @"G5X";
     return self;
 }
 
-- (void) startSwiperManager
-{
-    self.deviceManager = [[WPG5XManager alloc] initWithConfig:self.config];
-    [self.deviceManager setManagerDelegate:self
-                          externalDelegate:self.externalHelper];
-}
-
 - (void) startEMVManager
 {
     self.deviceManager = [[WPRP350XManager alloc] initWithConfig:self.config];
@@ -95,7 +82,7 @@ NSString *const kG5XModelName = @"G5X";
                           externalDelegate:self.externalHelper];
 }
 
-- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
     self.externalHelper.externalTokenizationDelegate = nil;
     self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
@@ -105,10 +92,10 @@ NSString *const kG5XModelName = @"G5X";
    [self.deviceManager processCard];
 }
 
-- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
-                                                  sessionId:(NSString *)sessionId
+- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
+                                                   sessionId:(NSString *)sessionId
 {
     self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
     self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
@@ -121,7 +108,9 @@ NSString *const kG5XModelName = @"G5X";
 
 - (void) tokenizeSwipedPaymentInfo:(WPPaymentInfo *)paymentInfo
               tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
-                         sessionId:(NSString *)sessionId;
+                         sessionId:(NSString *)sessionId
+                    successHandler:(void (^)(NSDictionary * returnData)) successHandler
+                      errorHandler:(void (^)(NSError * error)) errorHandler;
 {
     self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
 
@@ -141,10 +130,16 @@ NSString *const kG5XModelName = @"G5X";
                                NSNumber *credit_card_id = [returnData objectForKey:@"credit_card_id"];
                                WPPaymentToken *token = [[WPPaymentToken alloc] initWithId:[credit_card_id stringValue]];
                                [self.externalHelper informExternalTokenizerSuccess:token forPaymentInfo:paymentInfo];
+                               if (successHandler) {
+                                   successHandler(returnData);
+                               }
                            }
                            errorHandler:^(NSError * error) {
                                // Call error handler with error returned.
                                [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+                               if (errorHandler) {
+                                   errorHandler(error);
+                               }
                            }
          ];
     }
@@ -158,50 +153,50 @@ NSString *const kG5XModelName = @"G5X";
     [self.deviceManager stopDevice];
 }
 
+- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+{
+    WPBatteryHelper *bh = [[WPBatteryHelper alloc] init];
+    [bh getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate config:self.config];
+    NSLog(@"WePay_CardReader: checking battery");
+}
+
 #pragma mark WPDeviceManagerDelegate methods
 
 - (void) handleSwipeResponse:(NSDictionary *) responseData
+              successHandler:(void (^)(NSDictionary * returnData)) successHandler
+                errorHandler:(void (^)(NSError * error)) errorHandler
+               finishHandler:(void (^)(void)) finishHandler
 {
-    NSError *error = [self validateSwiperInfoForTokenization:responseData];
-
-    if (error != nil) {
-        // we found an error, return it
-        [self.externalHelper informExternalCardReaderFailure:error];
-    } else {
-        // extract useful non-encrypted data
-        NSString *pan = [responseData objectForKey:@"PAN"];
-        if (pan == nil) {
-            NSString *track2 = [responseData objectForKey:@"Track2Data"];
-            if (track2 != nil) {
-                pan = [self extractPANfromTrack2:track2];
-            }
+    // extract useful non-encrypted data
+    NSString *pan = [responseData objectForKey:@"PAN"];
+    if (pan == nil) {
+        NSString *track2 = [responseData objectForKey:@"Track2Data"];
+        if (track2 != nil) {
+            pan = [self extractPANfromTrack2:track2];
         }
-        
-        // pan can still be nil at this point
-        pan = [self sanitizePAN:pan];
-        
-        NSDictionary *info = @{@"firstName"         : [WPRoamHelper firstNameFromRUAData:responseData],
-                               @"lastName"          : [WPRoamHelper lastNameFromRUAData:responseData],
-                               @"paymentDescription": pan ? pan : @"",
-                               @"swiperInfo"        : responseData
-                            };
-
-        WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithSwipedInfo:info];
-
-        // return payment info to delegate
-        [self handlePaymentInfo:paymentInfo];
     }
-}
-
-
-- (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
-{
-    [self handlePaymentInfo:paymentInfo successHandler:nil errorHandler:nil];
+    
+    // pan can still be nil at this point
+    pan = [self sanitizePAN:pan];
+    
+    NSDictionary *info = @{@"firstName"         : [WPRoamHelper firstNameFromRUAData:responseData],
+                           @"lastName"          : [WPRoamHelper lastNameFromRUAData:responseData],
+                           @"paymentDescription": pan ? pan : @"",
+                           @"swiperInfo"        : responseData
+                           };
+    
+    WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithSwipedInfo:info];
+    
+    [self handlePaymentInfo:paymentInfo
+             successHandler:successHandler
+               errorHandler:errorHandler
+              finishHandler:finishHandler];
 }
 
 - (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
             successHandler:(void (^)(NSDictionary * returnData)) successHandler
               errorHandler:(void (^)(NSError * error)) errorHandler
+             finishHandler:(void (^)(void)) finishHandler
 {
     [self.externalHelper informExternalTokenizerEmailCompletion:^(NSString *email) {
         if (email) {
@@ -212,39 +207,46 @@ NSString *const kG5XModelName = @"G5X";
         [self.externalHelper informExternalCardReaderSuccess:paymentInfo];
 
         // tokenize if requested
-        if(self.swiperShouldTokenize && self.externalHelper.externalTokenizationDelegate) {
-            if (paymentInfo.swiperInfo) {
+        if (self.swiperShouldTokenize && self.externalHelper.externalTokenizationDelegate) {
+            
+            NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
+            if (error) {
+                // invalid payment info, return error
+                [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+                if (errorHandler != nil) {
+                    errorHandler(error);
+                }
+            } else if (paymentInfo.swiperInfo) {
                 // inform external
                 [self.externalHelper informExternalCardReader:kWPCardReaderStatusTokenizing];
 
                 // tokenize
                 [self tokenizeSwipedPaymentInfo:paymentInfo
                            tokenizationDelegate:self.externalHelper.externalTokenizationDelegate
-                                      sessionId:self.sessionId];
+                                      sessionId:self.sessionId
+                                 successHandler:successHandler
+                                   errorHandler:errorHandler];
+                
             } else if (paymentInfo.emvInfo) {
                 
-                NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
-                if (error) {
-                    // invalid payment info, return error
-                    [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
-                    errorHandler(error);
-                    
-                } else {
-                    // inform external
-                    [self.externalHelper informExternalCardReader:kWPCardReaderStatusAuthorizing];
-                    
-                    // make params
-                    NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
-                                                                                        clientId:self.config.clientId
-                                                                                       sessionId:self.sessionId];
-                    // execute api call
-                    [WPClient creditCardCreateEMV:params
-                                     successBlock:successHandler
-                                     errorHandler:errorHandler];
-                }
+                // inform external
+                [self.externalHelper informExternalCardReader:kWPCardReaderStatusAuthorizing];
+                
+                // make params
+                NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
+                                                                                    clientId:self.config.clientId
+                                                                                   sessionId:self.sessionId];
+                // execute api call
+                [WPClient creditCardCreateEMV:params
+                                 successBlock:successHandler
+                                 errorHandler:errorHandler];
+            }
+        } else {
+            // done with tranaction, call finish
+            if (finishHandler != nil) {
+                finishHandler();
             }
         }
-
     }];
 }
 
@@ -307,12 +309,9 @@ NSString *const kG5XModelName = @"G5X";
     [self.deviceManager setManagerDelegate:nil externalDelegate:nil];
     [self.deviceManager stopDevice];
 
-    if ([@"Connected Device is not G4x" isEqualToString:message]) {
-        [self startEMVManager];
-        [self.deviceManager processCard];
-    } else if ([@"Landi OpenDevice Error::-3" isEqualToString:message] || [@"Connected Device is not RP350x" isEqualToString:message]) {
-        [self startSwiperManager];
-        [self.deviceManager processCard];
+    if ([@"Landi OpenDevice Error::-3" isEqualToString:message] || [@"Connected Device is not RP350x" isEqualToString:message]) {
+        NSError *error = [WPError errorCardReaderModelNotSupported];
+        [self.externalHelper informExternalCardReaderFailure:error];
     } else {
         NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
         [self.externalHelper informExternalCardReaderFailure:error];

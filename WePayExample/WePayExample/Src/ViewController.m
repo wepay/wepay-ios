@@ -17,6 +17,8 @@
 #define EMV_READER_SHOULD_RESET NO
 #define EMV_SELECT_APP_INDEX 0
 
+#define USE_MOCK NO
+
 @interface ViewController ()
 
 @property (nonatomic, strong) WePay *wepay;
@@ -26,6 +28,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *stopReaderBtn;
 @property (nonatomic, weak) IBOutlet UIButton *manualEntryBtn;
 @property (nonatomic, weak) IBOutlet UIButton *submitSignatureBtn;
+@property (nonatomic, weak) IBOutlet UIButton *batteryLevelBtn;
 
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
 @property (nonatomic, weak) IBOutlet UITextView *textView;
@@ -46,9 +49,26 @@
     NSString *environment = [self fetchSetting:SETTINGS_ENVIRONMENT_KEY withDefault:kWPEnvironmentStage];
     self.accountId = (long)[[self fetchSetting:SETTINGS_ACCOUNT_ID_KEY withDefault:@"1170640190"] longLongValue];
     WPConfig *config = [[WPConfig alloc] initWithClientId:clientId environment:environment];
-
+    
     // Allow WePay to use location services
     config.useLocation = YES;
+    config.stopCardReaderAfterTransaction = NO;
+    config.restartTransactionAfterOtherErrors = YES;
+    
+    if (USE_MOCK) {
+        // To use mock card reader and/or WPClient implementation
+        WPMockConfig *mockConfig = [[WPMockConfig alloc] init];
+        mockConfig.useMockCardReader = YES;
+        mockConfig.useMockWepayClient = YES;
+        mockConfig.batteryLevelError = YES;
+        mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe;
+        config.mockConfig = mockConfig;
+        
+        // Print config to screen
+        NSAttributedString *str = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"using mock config:\n%@", mockConfig]
+                                                                  attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}];
+        [self consoleLog:str];
+    }
 
     // Initialize WePay
     self.wepay = [[WePay alloc] initWithConfig:config];
@@ -104,6 +124,9 @@
     self.submitSignatureBtn.layer.borderWidth = 1.0;
     self.submitSignatureBtn.layer.cornerRadius = 8;
     
+    self.batteryLevelBtn.layer.borderWidth = 1.0;
+    self.batteryLevelBtn.layer.cornerRadius = 8;
+    
     self.statusLabel.layer.borderWidth = 1.0;
     self.statusLabel.layer.cornerRadius = 8;
     
@@ -125,7 +148,7 @@
     [self consoleLog:str];
 
     // Make WePay API call
-    [self.wepay startCardReaderForReadingWithCardReaderDelegate:self];
+    [self.wepay startTransactionForReadingWithCardReaderDelegate:self];
 }
 
 - (IBAction) swipeTokenButtonPressed:(id)sender
@@ -140,7 +163,7 @@
     [self consoleLog:str];
 
     // Make WePay API call
-    [self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self
+    [self.wepay startTransactionForTokenizingWithCardReaderDelegate:self
                                               tokenizationDelegate:self
                                              authorizationDelegate:self];
 }
@@ -212,7 +235,23 @@
 
     NSString *checkoutId = @"12345678";
     [self.wepay storeSignatureImage:signature forCheckoutId:checkoutId checkoutDelegate:self];
+
 }
+
+- (IBAction) batteryLevelButtonPressed:(id)sender
+{
+    // Change status label
+    [self showStatus:@"Checking Battery"];
+    
+    // Print message to screen
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"Check battery selected"
+                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
+                               ];
+    [self consoleLog:str];
+    
+    [self.wepay getCardReaderBatteryLevelWithBatteryLevelDelegate:self];
+}
+
 
 - (void) consoleLog:(NSAttributedString *)data
 {
@@ -469,6 +508,40 @@ didFailAuthorization:(NSError *)error
 
     // Change status label
     [self showStatus:@"Authorization failed"];
+}
+
+#pragma mark - WPBatteryLevelDelegate methods
+
+- (void) didGetBatteryLevel:(int)batteryLevel
+{
+    // Print message to screen
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"didGetBatteryLevel: \n"];
+    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[@(batteryLevel) description]
+                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
+                                ];
+    
+    [str appendAttributedString:info];
+    [self consoleLog:str];
+    
+    
+    // Change status label
+    [self showStatus:[NSString stringWithFormat:@"Battery Level: %d", batteryLevel]];
+}
+
+- (void) didFailToGetBatteryLevelwithError:(NSError *)error
+{
+    // Print message to screen
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"didFailToGetBatteryLevelwithError: \n"];
+    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[error localizedDescription]
+                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:1 green:0 blue:0 alpha:1]}
+                                ];
+    
+    [str appendAttributedString:info];
+    
+    [self consoleLog:str];
+    
+    // Change status label
+    [self showStatus:@"Battery Level error"];
 }
 
 @end

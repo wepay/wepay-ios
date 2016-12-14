@@ -9,15 +9,23 @@
 #import "WePay.h"
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 #import <WePay_CardReader.h>
 #endif
+
+#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+#import "WPRiskHelper.h"
+#endif
+
 #endif
 
 #import <WePay_Manual.h>
 #import "WePay_Checkout.h"
-#import "WPRiskHelper.h"
+#import "WPError+internal.h"
 
+// forward-class declaration for optional classes
+@class WePay_CardReader;
+@class WPRiskHelper;
 
 // Environments
 NSString * const kWPEnvironmentStage = @"stage";
@@ -82,59 +90,48 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
             [self.wePayManual tokenizeManualPaymentInfo:paymentInfo
                                    tokenizationDelegate:tokenizationDelegate
                                               sessionId:[self getSessionId]];
-        } else if ([kWPPaymentMethodSwipe isEqualToString:paymentInfo.paymentMethod]) {
-            
-#if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
-            
-            if (!self.wePayCardReader) {
-                self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
-            }
-            
-            [self.wePayCardReader tokenizeSwipedPaymentInfo:paymentInfo
-                                       tokenizationDelegate:tokenizationDelegate
-                                                  sessionId:[self getSessionId]];
-#else
-            NSLog(@"This functionality is not available");
-#endif // has_include
-#endif // defined
-            
-            
+        } else {
+            NSError *error = [WPError errorPaymentMethodCannotBeTokenized];
+            dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+                // If the external delegate is listening for error, send it
+                if (tokenizationDelegate && [tokenizationDelegate respondsToSelector:@selector(paymentInfo:didFailTokenization:)]) {
+                    [tokenizationDelegate paymentInfo:paymentInfo didFailTokenization:error];
+                }
+            });
         }
     });
 }
 
-
-#pragma mark -
-#pragma mark Card Reader - Swipe
-
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
 
-- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#pragma mark - Card Reader available
+
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
 
-        [self.wePayCardReader startCardReaderForReadingWithCardReaderDelegate:cardReaderDelegate];
+        [self.wePayCardReader startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
     });
 }
 
-- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
+- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (!self.wePayCardReader) {
             self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
         }
 
-        [self.wePayCardReader startCardReaderForTokenizingWithCardReaderDelegate:cardReaderDelegate
-                                                            tokenizationDelegate:tokenizationDelegate
-                                                           authorizationDelegate:authorizationDelegate
-                                                                       sessionId:[self getSessionId]];
+        [self.wePayCardReader startTransactionForTokenizingWithCardReaderDelegate:cardReaderDelegate
+                                                             tokenizationDelegate:tokenizationDelegate
+                                                            authorizationDelegate:authorizationDelegate
+                                                                        sessionId:[self getSessionId]];
     });
 }
 
@@ -145,16 +142,29 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
     });
 }
 
-#else
+- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!self.wePayCardReader) {
+            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        }
+        
+        [self.wePayCardReader getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate];
+    });
+}
 
-- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+
+#else
+#pragma mark - Card Reader not available
+
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
     NSLog(@"This functionality is not available");
 }
 
-- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
+- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
     NSLog(@"This functionality is not available");
 }
@@ -164,12 +174,39 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
     NSLog(@"This functionality is not available");
 }
 
-#endif // has_include
+- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+{
+    NSLog(@"This functionality is not available");
+}
+
+
+#endif // has_include RUA
+
+#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+#pragma mark - TrustDefenderMobile available
+
+- (NSString *) getSessionId
+{
+    if (!self.riskHelper) {
+        self.riskHelper = [[WPRiskHelper alloc] initWithConfig:self.config];
+    }
+    
+    return [self.riskHelper sessionId];
+}
+
+#else
+#pragma mark - TrustDefenderMobile not available
+
+- (NSString *) getSessionId
+{
+    return nil;
+}
+
+#endif // has_include TrustDefenderMobile
 #endif // defined
 
 
-#pragma mark -
-#pragma mark Checkout
+#pragma mark - Checkout
 
 
 - (void) storeSignatureImage:(UIImage *)image
@@ -186,19 +223,5 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
                                checkoutDelegate:checkoutDelegate];
     });
 }
-
-
-#pragma mark -
-#pragma mark Helpers
-
-- (NSString *) getSessionId
-{
-    if (!self.riskHelper) {
-        self.riskHelper = [[WPRiskHelper alloc] initWithConfig:self.config];
-    }
-    
-    return [self.riskHelper sessionId];
-}
-
 
 @end

@@ -16,10 +16,10 @@ let EMV_AMOUNT_STRING = "22.61" // Magic success amount
 let EMV_READER_SHOULD_RESET = false
 let EMV_SELECT_APP_INDEX = 0
 
-class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate {
+class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate , WPBatteryLevelDelegate {
     
     var wepay = WePay()
-    let userDefaults = NSUserDefaults.standardUserDefaults()
+    let userDefaults = UserDefaults.standard
     
     @IBOutlet var containerView: UIView!
     @IBOutlet var textView: UITextView!
@@ -30,6 +30,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
     @IBOutlet var stopReaderBtn: UIButton!
     @IBOutlet var manualEntryBtn: UIButton!
     @IBOutlet var submitSignatureBtn: UIButton!
+    @IBOutlet var batteryBtn: UIButton!
     
     var accountId = Int()
     
@@ -75,12 +76,12 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         super.didReceiveMemoryWarning()
     }
     
-    func fetchSetting(key: String, withDefault value: String) -> String {
+    func fetchSetting(_ key: String, withDefault value: String) -> String {
         userDefaults.synchronize()
-        var settings: String? = userDefaults.stringForKey(key)
+        var settings: String? = userDefaults.string(forKey: key)
         if settings == nil || settings!.isEmpty {
             settings = value
-            userDefaults.setObject(settings, forKey: key)
+            userDefaults.set(settings, forKey: key)
             userDefaults.synchronize()
         }
         return settings!
@@ -90,7 +91,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         self.showStatus("Choose a payment method")
     }
     
-    @IBAction func swipeInfoBtnPressed(sender: AnyObject) {
+    @IBAction func swipeInfoBtnPressed(_ sender: AnyObject) {
         // Change status label
         self.showStatus("Please wait...")
         
@@ -102,10 +103,10 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         self.consoleLog(str)
         
         // Make WePay API call
-        self.wepay.startCardReaderForReadingWithCardReaderDelegate(self)
+        self.wepay.startTransactionForReading(with: self)
     }
     
-    @IBAction func swipeTokenButtonPressed(sender: AnyObject) {
+    @IBAction func swipeTokenButtonPressed(_ sender: AnyObject) {
         // Change status label
         self.showStatus("Please wait...")
         
@@ -117,10 +118,10 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         self.consoleLog(str)
         
         // Make WePay API call
-        self.wepay.startCardReaderForTokenizingWithCardReaderDelegate(self, tokenizationDelegate: self, authorizationDelegate: self)
+        self.wepay.startTransactionForTokenizing(with: self, tokenizationDelegate: self, authorizationDelegate: self)
     }
     
-    @IBAction func stopCardReaderButtonPressed(sender: AnyObject) {
+    @IBAction func stopCardReaderButtonPressed(_ sender: AnyObject) {
         // Change status label
         self.showStatus("Stopping Card Reader")
         
@@ -135,7 +136,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         self.wepay.stopCardReader()
     }
     
-    @IBAction func manualEntryButtonPressed(sender: AnyObject) {
+    @IBAction func manualEntryButtonPressed(_ sender: AnyObject) {
         // Obtain card information
         let paymentInfo: WPPaymentInfo = WPPaymentInfo(
             firstName: "WPiOS",
@@ -162,14 +163,14 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: paymentInfo.description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Make WePay API call
         self.wepay.tokenizePaymentInfo(paymentInfo, tokenizationDelegate: self)
     }
     
-    @IBAction func storeSignatureButtonPressed(sender: AnyObject) {
+    @IBAction func storeSignatureButtonPressed(_ sender: AnyObject) {
         // Change status label
         self.showStatus("Storing Signature")
         
@@ -193,18 +194,32 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         )
     }
     
-    @IBAction func consoleLog(data: NSAttributedString) {
+    @IBAction func batteryLevelButtonPressed(_ sender: AnyObject) {
+        // Change status label
+        self.showStatus("Checking Battery")
+        
+        // Print message to screen
+        let str: NSAttributedString = NSAttributedString(
+            string: "Check battery selected",
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str)
+        
+        self.wepay.getCardReaderBatteryLevel(with: self)
+    }
+    
+    @IBAction func consoleLog(_ data: NSAttributedString) {
         // Fetch current text
         let text: NSMutableAttributedString = self.textView.attributedText.mutableCopy() as! NSMutableAttributedString
         
         // Create and append date string
-        let format: NSDateFormatter = NSDateFormatter()
-        format.dateStyle = .MediumStyle
-        let dateStr: String = format.stringFromDate(NSDate())
-        text.appendAttributedString(NSAttributedString(string: "\n[\(dateStr)] "))
+        let format: DateFormatter = DateFormatter()
+        format.dateStyle = .medium
+        let dateStr: String = format.string(from: Date())
+        text.append(NSAttributedString(string: "\n[\(dateStr)] "))
         
         // Append new string
-        text.appendAttributedString(data)
+        text.append(data)
         self.textView.attributedText = text
         
         // Scroll the text view to the bottom
@@ -214,48 +229,48 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         NSLog("%@", data.string)
     }
     
-    func showStatus(message: String) {
+    func showStatus(_ message: String) {
         self.statusLabel.text = message
     }
     
     // MARK: WPCardReaderDelegate methods
     
-    func didReadPaymentInfo(paymentInfo: WPPaymentInfo) {
+    func didRead(_ paymentInfo: WPPaymentInfo) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didReadPaymentInfo: \n")
         let info: NSAttributedString = NSAttributedString(
             string: paymentInfo.description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Change status label
         self.showStatus("Got payment info!")
     }
     
-    func didFailToReadPaymentInfoWithError(error: NSError) {
+    func didFailToReadPaymentInfoWithError(_ error: Error) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didFailToReadPaymentInfoWithError: \n")
         let info: NSAttributedString = NSAttributedString(
             string: error.localizedDescription,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Change status label
         self.showStatus("Card Reader error")
     }
     
-    func cardReaderDidChangeStatus(status: AnyObject) {
+    func cardReaderDidChangeStatus(_ status: Any) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "cardReaderDidChangeStatus: ")
         let info: NSAttributedString = NSAttributedString(
-            string: status.description,
+            string: (status as! String).description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Change status label
@@ -271,16 +286,16 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             case kWPCardReaderStatusStopped:
                 self.showStatus("Card Reader Stopped")
             default:
-                self.showStatus(status.description)
+                self.showStatus((status as! String).description)
         }
     }
     
-    @objc func shouldResetCardReaderWithCompletion(completion: (Bool) -> Void) {
+    @objc func shouldResetCardReader(completion: ((Bool) -> Void)!) {
         // Change this to true if you want to reset the card reader
         completion(EMV_READER_SHOULD_RESET)
     }
     
-    func authorizeAmountWithCompletion(completion: ((NSDecimalNumber!, String!, Int) -> Void)!) {
+    func authorizeAmount(completion: ((NSDecimalNumber?, String?, Int) -> Void)!) {
         let amount: NSDecimalNumber = NSDecimalNumber(string: EMV_AMOUNT_STRING)
         let currencyCode: String = kWPCurrencyCodeUSD
         
@@ -290,7 +305,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         // Print message to console
         let infoString: String = "amount: \(amount), currency: \(currencyCode), accountId: \(self.accountId)"
         let str: NSAttributedString = NSAttributedString(
-            string: "Providing auth info: ".stringByAppendingString(infoString),
+            string: "Providing auth info: " + infoString,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
         )
         self.consoleLog(str)
@@ -301,7 +316,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
     
     // MARK: WPTokenizationDelegate methods
     
-    func paymentInfo(paymentInfo: WPPaymentInfo, didTokenize paymentToken: WPPaymentToken) {
+    func paymentInfo(_ paymentInfo: WPPaymentInfo, didTokenize paymentToken: WPPaymentToken) {
         // Change status label
         self.showStatus("Tokenized!")
         
@@ -311,11 +326,11 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: paymentToken.description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
     }
     
-    func paymentInfo(paymentInfo: WPPaymentInfo, didFailTokenization error: NSError) {
+    func paymentInfo(_ paymentInfo: WPPaymentInfo, didFailTokenization error: Error) {
         // Change status label
         self.showStatus("Tokenization error")
         
@@ -325,13 +340,13 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: error.localizedDescription,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
     }
     
     // MARK: WPCheckoutDelegate methods
     
-    func didStoreSignature(signatureUrl: String, forCheckoutId checkoutId: String) {
+    func didStoreSignature(_ signatureUrl: String, forCheckoutId checkoutId: String) {
         // Change status label
         self.showStatus("Signature success!")
         
@@ -341,11 +356,11 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: signatureUrl,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
     }
     
-    func didFailToStoreSignatureImage(image: UIImage, forCheckoutId checkoutId: String, withError error: NSError) {
+    func didFail(toStoreSignatureImage image: UIImage, forCheckoutId checkoutId: String, withError error: Error) {
         // Change status label
         self.showStatus("Signature error")
         
@@ -355,13 +370,13 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: error.localizedDescription,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
     }
     
     // MARK: WPAuthorizationDelegate methods
     
-    func selectEMVApplication(applications: [AnyObject]!, completion: ((Int) -> Void)!) -> Void {
+    public func selectEMVApplication(_ applications: [Any]!, completion: ((Int) -> Void)!) {
         // In production apps, the payer must choose the application they want to use.
         // Here, we always select the first application in the array
         let selectedIndex: Int = Int(EMV_SELECT_APP_INDEX)
@@ -372,7 +387,7 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             string: applications.description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         str = NSMutableAttributedString(string: "Selected App Id index: \(selectedIndex)")
@@ -382,12 +397,12 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         completion(selectedIndex)
     }
     
-    func insertPayerEmailWithCompletion(completion: ((String!) -> Void)!) {
+    func insertPayerEmail(completion: ((String?) -> Void)!) {
         let email: String = "emv@example.com"
         
         // Print message to console
         let str: NSAttributedString = NSAttributedString(
-            string: "Providing email: ".stringByAppendingString(email),
+            string: "Providing email: " + email,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
         )
         self.consoleLog(str)
@@ -395,31 +410,61 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         completion(email)
     }
     
-    func paymentInfo(paymentInfo: WPPaymentInfo, didAuthorize authorizationInfo: WPAuthorizationInfo) {
+    func paymentInfo(_ paymentInfo: WPPaymentInfo, didAuthorize authorizationInfo: WPAuthorizationInfo) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didAuthorize: \n")
         let info: NSAttributedString = NSAttributedString(
             string: authorizationInfo.description,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Change status label
         self.showStatus("Authorized")
     }
     
-    func paymentInfo(paymentInfo: WPPaymentInfo, didFailAuthorization error: NSError) {
+    func paymentInfo(_ paymentInfo: WPPaymentInfo, didFailAuthorization error: Error) {
         // Print message to screen
         let str: NSMutableAttributedString = NSMutableAttributedString(string: "didFailAuthorization: \n")
         let info: NSAttributedString = NSAttributedString(
             string: error.localizedDescription,
             attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
         )
-        str.appendAttributedString(info)
+        str.append(info)
         self.consoleLog(str)
         
         // Change status label
         self.showStatus("Authorization failed")
+    }
+    
+    // MARK: WPBatteryLevelDelegate methods
+    
+    func didGetBatteryLevel(_ batteryLevel: Int32) {
+        // Print message to screen
+        let str: NSMutableAttributedString = NSMutableAttributedString(string: "didGetBatteryLevel: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: batteryLevel.description,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
+        )
+        str.append(info)
+        self.consoleLog(str)
+        
+        // Change status label
+        self.showStatus("Battery Level: \(batteryLevel)")
+    }
+    
+    func didFail(toGetBatteryLevelwithError error: Error!) {
+        // Print message to screen
+        let str: NSMutableAttributedString = NSMutableAttributedString(string: "didFailToGetBatteryLevelwithError: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: error.localizedDescription,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 0, blue: 0, alpha: 1)]
+        )
+        str.append(info)
+        self.consoleLog(str)
+        
+        // Change status label
+        self.showStatus("Battery Level error")
     }
 }

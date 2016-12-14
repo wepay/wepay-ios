@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name              = "WePay"
-  s.version           = "5.0.1"
+  s.version           = "6.0.0"
   s.summary           = "WePay binary for both simulator and iOS devices"
   s.description       = "A library that helps WePay partners develop their own iOS apps aimed at merchants and/or consumers for collection of payments via various payment methods"
   s.homepage          = "http://github.com/wepay/wepay-ios"
@@ -13,8 +13,9 @@ Pod::Spec.new do |s|
   s.ios.requires_arc = true  
 
   s.ios.preserve_paths   = '**'
+  s.source_files = 'WePay.framework/**/*.h'
   s.public_header_files = 'WePay.framework/**/*.h'
-  s.vendored_frameworks  = 'WePay.framework', 'TrustDefenderMobile.framework'
+  s.vendored_frameworks  = 'WePay.framework'
 
 
   s.ios.frameworks = 'AudioToolbox', 'AVFoundation', 'CoreBluetooth', 'CoreTelephony', 'MediaPlayer', 'SystemConfiguration'

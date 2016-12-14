@@ -16,17 +16,17 @@
 /**
  *  The amount that was authorized.
  */
-@property (nonatomic, readonly) double amount;
+@property (nonatomic, strong, readonly) NSDecimalNumber *amount;
 
 /**
  *  The currency code that the amount is specified in.
  */
-@property (nonatomic, strong, readonly) NSString* currencyCode;
+@property (nonatomic, strong, readonly) NSString *currencyCode;
 
 /**
  *  The transaction token that certifies the transaction.
  */
-@property (nonatomic, strong, readonly) NSString* transactionToken;
+@property (nonatomic, strong, readonly) NSString *transactionToken;
 
 /**
  *  Initializes a \ref WPAuthorizationInfo with the info provided.
@@ -38,7 +38,7 @@
  *
  *  @return A \ref WPAuthorizationInfo object initialized with the info provided.
  */
-- (instancetype) initWithAmount:(double) amount
+- (instancetype) initWithAmount:(NSDecimalNumber *)amount
                    currencyCode:(NSString *)currencyCode
                transactionToken:(NSString *)transactionToken
                         tokenId:(NSString* )tokenId;

@@ -7,16 +7,18 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") && __has_include("G4XSwiper/SwiperController.h")
+#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
 
 #import <RUA/RUA.h>
 #import "WPRP350XManager.h"
 #import "WePay.h"
 #import "WPConfig.h"
+#import "WPMockConfig.h"
 #import "WPDipConfighelper.h"
 #import "WPDipTransactionHelper.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
+#import "WPMockRoamDeviceManager.h"
 
 #define RP350X_CONNECTION_TIME_SEC 5
 
@@ -28,17 +30,13 @@
 @property (nonatomic, strong) id<RUADeviceManager> roamDeviceManager;
 @property (nonatomic, strong) WPDipConfigHelper *dipConfigHelper;
 @property (nonatomic, strong) WPDipTransactionHelper *dipTransactionHelper;
+@property (nonatomic, strong) WPConfig *config;
 
 @property (nonatomic, assign) BOOL readerShouldWaitForCard;
 @property (nonatomic, assign) BOOL readerIsWaitingForCard;
 @property (nonatomic, assign) BOOL readerIsConnected;
 
 @property (nonatomic, strong) NSString *deviceSerialNumber;
-
-@property (nonatomic, assign) BOOL restartCardReaderAfterSuccess;
-@property (nonatomic, assign) BOOL restartCardReaderAfterGeneralError;
-@property (nonatomic, assign) BOOL restartCardReaderAfterOtherErrors;
-@property (nonatomic, strong) NSString *wepayEnvironment;
 
 @end
 
@@ -47,19 +45,15 @@
 
 - (instancetype) initWithConfig:(WPConfig *)config
 {
-    if (self = [super init]) {
-        // set the reader restart options
-        self.restartCardReaderAfterSuccess = config.restartCardReaderAfterSuccess;
-        self.restartCardReaderAfterGeneralError = config.restartCardReaderAfterGeneralError;
-        self.restartCardReaderAfterOtherErrors = config.restartCardReaderAfterOtherErrors;
-        self.wepayEnvironment = config.environment;
+    self.config = config;
 
+    if (self = [super init]) {
         self.dipConfigHelper = [[WPDipConfigHelper alloc] initWithConfig:config];
         self.dipTransactionHelper = [[WPDipTransactionHelper alloc] initWithConfigHelper:self.dipConfigHelper
                                                                                 delegate:self
-                                                                             environment:self.wepayEnvironment];
+                                                                             environment:self.config.environment];
     }
-
+    
     // store a weak instance for using inside blocks
     processor = self;
     return processor;
@@ -93,8 +87,17 @@
 - (BOOL) startDevice
 {
     NSLog(@"startDevice: RUADeviceTypeRP350x");
-    self.roamDeviceManager = [RUA getDeviceManager:RUADeviceTypeRP350x];
-
+    
+    WPMockConfig *mockConfig = self.config.mockConfig;
+    if (mockConfig == nil) {
+        // to use the real card reader
+        self.roamDeviceManager = [RUA getDeviceManager:RUADeviceTypeRP350x];
+    } else {
+        // to use the mock implementation of card reader
+        self.roamDeviceManager = [WPMockRoamDeviceManager getDeviceManager];
+        ((WPMockRoamDeviceManager *) self.roamDeviceManager).mockConfig = mockConfig;
+    }
+    
     BOOL init = [self.roamDeviceManager initializeDevice:self];
     if (init) {
         [[self.roamDeviceManager getConfigurationManager] setCommandTimeout:TIMEOUT_WORKAROUND_SEC];
@@ -123,8 +126,14 @@
         // inform delegate
         [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
     });
+}
 
-
+- (void) transactionCompleted
+{
+    self.readerShouldWaitForCard = NO;
+    
+    // stop waiting for card and cancel all pending notifications
+    [self stopWaitingForCard];
 }
 
 /**
@@ -134,23 +143,29 @@
  *  For successful transactions we dont restart the transaction.
  *
  */
-- (BOOL) shouldKeepWaitingForCardAfterError:(NSError *)error forPaymentMethod:(NSString *)paymentMethod;
+- (BOOL) shouldRestartTransactionAfterError:(NSError *)error
+                           forPaymentMethod:(NSString *)paymentMethod;
 {
     if (error != nil) {
         // if the error code was a general error
         if (error.domain == kWPErrorSDKDomain && error.code == WPErrorCardReaderGeneralError) {
             // return whether or not we're configured to restart on general error
-            return self.restartCardReaderAfterGeneralError;
+            return self.config.restartTransactionAfterGeneralError;
         }
         // return whether or not we're configured to restart on other errors
-        return self.restartCardReaderAfterOtherErrors;
+        return self.config.restartTransactionAfterOtherErrors;
     } else if ([paymentMethod isEqualToString:kWPPaymentMethodSwipe]) {
         // return whether or not we're configured to restart on successful swipe
-        return self.restartCardReaderAfterSuccess;
+        return self.config.restartTransactionAfterSuccess;
     } else {
         // dont restart on successful dip
         return NO;
     }
+}
+
+- (BOOL) shouldStopCardReaderAfterTransaction
+{
+    return self.config.stopCardReaderAfterTransaction;
 }
 
 
@@ -217,8 +232,10 @@
 
                                // Check and wait - the delay is to let the reader get charged
                                [self performSelector:@selector(checkAndWaitForEMVCard) withObject:nil afterDelay:1.0];
+                           } else if (!self.config.stopCardReaderAfterTransaction) {
+                               // Inform external delegate
+                               [self.externalDelegate informExternalCardReader:kWPCardReaderStatusConnected];
                            }
-
                        }];
 }
 
@@ -422,6 +439,9 @@
     if (self.readerShouldWaitForCard && self.readerIsConnected) {
         [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
         [self stopWaitingForCard];
+    } else if (!self.config.stopCardReaderAfterTransaction) {
+        // Inform external delegate
+        [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
     }
 
     self.readerIsConnected = NO;

@@ -144,4 +144,39 @@
  */
 + (NSError *) errorAuthInfoNotProvided;
 
+/**
+ *  Creates an NSError object representing payment method cannot be tokenized error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorPaymentMethodCannotBeTokenized;
+
+/**
+ *  Creates an NSError object representing failed to get battery level error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorFailedToGetBatteryLevel;
+
+/**
+ *  Creates an NSError object representing card reader not connected error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderNotConnected;
+
+/**
+ *  Creates an NSError object representing card reader unknown error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderUnknownError;
+
+/**
+ *  Creates an NSError object representing card reader model not supported error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderModelNotSupported;
+
 @end

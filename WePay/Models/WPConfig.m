@@ -26,9 +26,10 @@
                       useLocation:NO
                   useTestEMVCards:NO
   callDelegateMethodsOnMainThread:YES
-    restartCardReaderAfterSuccess:NO
-restartCardReaderAfterGeneralError:YES
-restartCardReaderAfterOtherErrors: NO];
+    restartTransactionAfterSuccess:NO
+restartTransactionAfterGeneralError:YES
+restartTransactionAfterOtherErrors: NO
+   stopCardReaderAfterTransaction:YES];
 }
 
 
@@ -37,9 +38,10 @@ restartCardReaderAfterOtherErrors: NO];
                       useLocation:(BOOL)useLocation
                   useTestEMVCards:(BOOL)useTestEMVCards
   callDelegateMethodsOnMainThread:(BOOL)callDelegateMethodsOnMainThread
-    restartCardReaderAfterSuccess:(BOOL)restartCardReaderAfterSuccess
-restartCardReaderAfterGeneralError:(BOOL)restartCardReaderAfterGeneralError
-restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors;
+   restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
+restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
+restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
+   stopCardReaderAfterTransaction:(BOOL)stopCardReaderAfterTransaction
 {
     if (self = [super init])
     {
@@ -48,9 +50,10 @@ restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors;
         self.useLocation = useLocation;
         self.useTestEMVCards = useTestEMVCards;
         self.callDelegateMethodsOnMainThread = callDelegateMethodsOnMainThread;
-        self.restartCardReaderAfterSuccess = restartCardReaderAfterSuccess;
-        self.restartCardReaderAfterGeneralError = restartCardReaderAfterGeneralError;
-        self.restartCardReaderAfterOtherErrors = restartCardReaderAfterOtherErrors;
+        self.restartTransactionAfterSuccess = restartTransactionAfterSuccess;
+        self.restartTransactionAfterGeneralError = restartTransactionAfterGeneralError;
+        self.restartTransactionAfterOtherErrors = restartTransactionAfterOtherErrors;
+        self.stopCardReaderAfterTransaction = stopCardReaderAfterTransaction;
     }
     
     return self;
@@ -64,9 +67,9 @@ restartCardReaderAfterOtherErrors:(BOOL)restartCardReaderAfterOtherErrors;
     [dict setValue:self.environment ? self.environment : [NSNull null] forKey:@"environment"];
     [dict setValue:@(self.useLocation) forKey:@"useLocation"];
     [dict setValue:@(self.useTestEMVCards) forKey:@"useTestEMVCards"];
-    [dict setValue:@(self.restartCardReaderAfterSuccess) forKey:@"restartCardReaderAfterSuccess"];
-    [dict setValue:@(self.restartCardReaderAfterGeneralError) forKey:@"restartCardReaderAfterGeneralError"];
-    [dict setValue:@(self.restartCardReaderAfterOtherErrors) forKey:@"restartCardReaderAfterOtherErrors"];
+    [dict setValue:@(self.restartTransactionAfterSuccess) forKey:@"restartCardReaderAfterSuccess"];
+    [dict setValue:@(self.restartTransactionAfterGeneralError) forKey:@"restartCardReaderAfterGeneralError"];
+    [dict setValue:@(self.restartTransactionAfterOtherErrors) forKey:@"restartCardReaderAfterOtherErrors"];
     
     return dict;
 }

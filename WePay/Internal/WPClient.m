@@ -13,7 +13,7 @@
 
 @implementation WPClient
 
-static NSString * const SDK_VERSION = @"v5.0.1";
+static NSString * const SDK_VERSION = @"v6.0.0";
 static NSString * const WEPAY_API_VERSION = @"2016-03-30";
 
 #pragma mark config class property
@@ -121,6 +121,11 @@ static WPConfig *config;
                   successBlock: (void (^)(NSDictionary * returnData)) successHandler
                   errorHandler: (void (^)(NSError * error)) errorHandler
 {
+    WPMockConfig *mockConfig = config.mockConfig;
+    if (mockConfig != nil && mockConfig.useMockWepayClient) {
+        [self mockRequestToEndpoint:endpoint mockConfig:mockConfig successBlock:successHandler errorHandler:errorHandler];
+        return;
+    }
     
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL: endpoint];
     
@@ -206,6 +211,47 @@ static WPConfig *config;
         // if the request returned an error, pass it on
         errorHandler(error);
     }
+}
+
++ (void) mockRequestToEndpoint: (NSURL *) endpoint
+                    mockConfig:(WPMockConfig *) mockConfig
+                  successBlock: (void (^)(NSDictionary * returnData)) successHandler
+                  errorHandler: (void (^)(NSError * error)) errorHandler
+{
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] init];
+    NSData *data = nil;
+    NSString *dataStr = nil;
+    BOOL isSuccess = YES;
+    if ([@"/v2/credit_card/create" isEqualToString:endpoint.path]) {
+        if (mockConfig.cardTokenizationFailure) {
+            isSuccess = NO;
+            dataStr = @"{ \"error\" : \"invalid_request\", \"error_code\" : 1003, \"error_description\" : \"Invalid credit card number\" }";
+        } else {
+            dataStr = @"{ \"credit_card_id\": 1234567890, \"state\" : \"new\" }";
+        }
+    } else if ([@"/v2/credit_card/create_swipe" isEqualToString:endpoint.path]) {
+        if (mockConfig.cardTokenizationFailure) {
+            isSuccess = NO;
+            dataStr = @"{ \"error\" : \"invalid_request\", \"error_code\" : 1003, \"error_description\" : \"Invalid credit card number\" }";
+        } else {
+            dataStr = @"{ \"credit_card_id\": 1234567890, \"state\" : \"new\" }";
+        }
+    } else if ([@"/v2/credit_card/create_emv" isEqualToString:endpoint.path]) {
+        if (mockConfig.EMVAuthFailure) {
+            isSuccess = NO;
+            [self processResponse:nil
+                             data:nil
+                            error:nil
+                     successBlock:successHandler
+                     errorHandler:errorHandler];
+            return;
+        }
+    } else if ([@"/v2/checkout/signature/create" isEqualToString:endpoint.path]) {
+        dataStr = @"{ \"signature_url\": \"<signature url>\" }";
+    }
+    response = [[NSHTTPURLResponse alloc] initWithURL:endpoint statusCode:(isSuccess ? 200 : 400) HTTPVersion:nil headerFields:nil];
+    data = [dataStr dataUsingEncoding:NSUTF8StringEncoding];
+    [self processResponse:response data:data error:nil successBlock:successHandler errorHandler:errorHandler];
 }
 
 @end

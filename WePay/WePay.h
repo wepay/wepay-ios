@@ -15,8 +15,6 @@
 #import "WPPaymentToken.h"
 #import "WPAuthorizationInfo.h"
 
-@class WePay_CardReader;
-
 @class WPConfig;
 @class WPPaymentInfo;
 @class WPPaymentToken;
@@ -219,6 +217,27 @@ didFailAuthorization:(NSError *)error;
                         forCheckoutId:(NSString *)checkoutId
                             withError:(NSError *)error;
 
+@end
+
+
+/** \protocol WPBatteryLevelDelegate
+ *  This delegate protocol has to be adopted by any class that handles Battery Level responses.
+ */
+@protocol WPBatteryLevelDelegate <NSObject>
+
+/**
+ *  Called when the card reader's battery level is determined.
+ *
+ *  @param batteryLevel The card reader's battery charge level (0-100%).
+ */
+- (void) didGetBatteryLevel:(int)batteryLevel;
+
+/**
+ *  Called when we fail to determine the card reader's battery level.
+ *
+ *  @param error    The error which caused the failure.
+ */
+- (void) didFailToGetBatteryLevelwithError:(NSError *)error;
 
 @end
 
@@ -276,7 +295,7 @@ didFailAuthorization:(NSError *)error;
 ///@{
 
 /**
- *  Initializes the card reader for reading card info.
+ *  Initializes the transaction for reading card info.
  *
  *  The card reader will wait 60 seconds for a card, and then return a timout error if a card is not detected.
  *  The card reader will automatically stop waiting for card if:
@@ -291,7 +310,7 @@ didFailAuthorization:(NSError *)error;
  *
  *  @param cardReaderDelegate   The delegate class which will receive the response(s) for this call.
  */
-- (void) startCardReaderForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate;
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate;
 
 /**
  *  Initializes the card reader for reading and then automatically tokenizing card info. If an EMV card is dipped into a connected EMV reader, the card will automatically be authorized.
@@ -311,21 +330,15 @@ didFailAuthorization:(NSError *)error;
  *  @param tokenizationDelegate  The delegate class which will receive the tokenization response(s) for this call.
  *  @param authorizationDelegate The delegate class which will receive the authorization response(s) for this call.
  */
-- (void) startCardReaderForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                       tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                      authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate;
+- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
+                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate;
 
 /**
  *  Stops the card reader. In response, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusStopped.
  *  Any tokenization in progress will not be stopped, and its result will be delivered to the WPTokenizationDelegate.
  */
 - (void) stopCardReader;
-
-///**
-// *  Fetches information about the card reader that is currently connected.
-// */
-//- (void) fetchCardReaderInfoWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate;
-
 
 ///@}
 
@@ -349,6 +362,22 @@ didFailAuthorization:(NSError *)error;
 - (void) storeSignatureImage:(UIImage *)image
                forCheckoutId:(NSString *)checkoutId
             checkoutDelegate:(id<WPCheckoutDelegate>) checkoutDelegate;
+
+///@}
+
+#pragma mark -
+#pragma mark Battery Level
+
+/** @name Battery Level related methods
+ */
+///@{
+
+/**
+ *  Gets the current battery level of the card reader.
+ *
+ *  @param batteryLevelDelegate the delegate class which will receive the battery level response(s) for this call.
+ */
+- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
 
 ///@}
 

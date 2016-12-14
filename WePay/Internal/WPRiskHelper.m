@@ -6,6 +6,9 @@
 //  Copyright (c) 2015 WePay. All rights reserved.
 //
 
+#if defined(__has_include)
+#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+
 #import "WPRiskHelper.h"
 #import "WPConfig.h"
 
@@ -143,3 +146,6 @@ static NSString * const WEPAY_THREATMETRIX_ORG_ID = @"ncwzrc4k";
 
 
 @end
+
+#endif
+#endif
