@@ -310,5 +310,32 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
                                domain:kWPErrorSDKDomain];
 }
 
++ (NSError *) errorInvalidTransactionAmount
+{
+    NSString *errorText = WPErrorInvalidTransactionAmountErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidTransactionAmount
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorInvalidTransactionCurrencyCode
+{
+    NSString *errorText = WPErrorInvalidTransactionCurrencyCodeErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidTransactionCurrencyCode
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorInvalidTransactionAccountID
+{
+    NSString *errorText = WPErrorInvalidTransactionAccountIDErrorMessage
+    return [WPError makeErrorWithCode:WPErrorInvalidTransactionAccountID
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
 
 @end

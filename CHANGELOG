@@ -1,3 +1,8 @@
+2016-12-22
+* Released version 7.0.0-beta-1
+* Added support for Moby 3000 bluetooth card reader
+* Replaced WPErrorInvalidAuthInfo with more explicit error codes
+
 2016-12-13
 * Released version 6.0.0
 * Added APIs for fetching card reader battery levels

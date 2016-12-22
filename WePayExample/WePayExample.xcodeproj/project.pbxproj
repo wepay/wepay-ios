@@ -29,14 +29,17 @@
 		57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD01A1AEB050092B3AA /* UIKit.framework */; };
 		57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */; };
 		57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
+		57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */; };
 		57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */; };
 		57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */; };
-		7E4C03E71E00BD2C00E4B95F /* G4XSwiper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4C03E31E00BD2C00E4B95F /* G4XSwiper.framework */; };
-		7E4C03E81E00BD2C00E4B95F /* RPx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4C03E41E00BD2C00E4B95F /* RPx.framework */; };
-		7E4C03E91E00BD2C00E4B95F /* RUA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4C03E51E00BD2C00E4B95F /* RUA.framework */; };
-		7E4C03EA1E00BD2D00E4B95F /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4C03E61E00BD2C00E4B95F /* TrustDefenderMobile.framework */; };
+		7E5BFAE01DF23E1700AB77D8 /* G4XSwiper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */; };
+		7E5BFAE11DF23E1700AB77D8 /* RKI_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */; };
+		7E5BFAE21DF23E1700AB77D8 /* RPx_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */; };
+		7E5BFAE31DF23E1700AB77D8 /* RUA_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */; };
+		7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */; };
+		7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */; };
+		7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */; };
 		9C2FFCFC1D401F5D00294BB0 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
-		9C2FFCFE1D401FA300294BB0 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C2FFCFD1D401FA300294BB0 /* libstdc++.6.0.9.tbd */; };
 		D77FBA191D9D781B0078961A /* card_reader_battery.png in Resources */ = {isa = PBXBuildFile; fileRef = D77FBA181D9D781B0078961A /* card_reader_battery.png */; };
 /* End PBXBuildFile section */
 
@@ -79,13 +82,16 @@
 		57664BD01A1AEB050092B3AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		57C45AC21B4E04120007E918 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WePay.framework; sourceTree = "<group>"; };
+		57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
 		57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		7E4C03E31E00BD2C00E4B95F /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = G4XSwiper.framework; path = WePayExample/libs/G4XSwiper.framework; sourceTree = SOURCE_ROOT; };
-		7E4C03E41E00BD2C00E4B95F /* RPx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RPx.framework; path = WePayExample/libs/RPx.framework; sourceTree = SOURCE_ROOT; };
-		7E4C03E51E00BD2C00E4B95F /* RUA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RUA.framework; path = WePayExample/libs/RUA.framework; sourceTree = SOURCE_ROOT; };
-		7E4C03E61E00BD2C00E4B95F /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TrustDefenderMobile.framework; path = WePayExample/libs/TrustDefenderMobile.framework; sourceTree = SOURCE_ROOT; };
-		9C2FFCFD1D401FA300294BB0 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = G4XSwiper.framework; sourceTree = "<group>"; };
+		7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RKI_MFI.framework; sourceTree = "<group>"; };
+		7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx_MFI.framework; sourceTree = "<group>"; };
+		7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA_MFI.framework; sourceTree = "<group>"; };
+		7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		D77FBA181D9D781B0078961A /* card_reader_battery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_reader_battery.png; path = Resources/card_reader_battery.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,18 +100,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E4C03E71E00BD2C00E4B95F /* G4XSwiper.framework in Frameworks */,
-				9C2FFCFE1D401FA300294BB0 /* libstdc++.6.0.9.tbd in Frameworks */,
+				7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */,
+				7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */,
+				7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */,
+				7E5BFAE21DF23E1700AB77D8 /* RPx_MFI.framework in Frameworks */,
+				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
 				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
-				7E4C03E91E00BD2C00E4B95F /* RUA.framework in Frameworks */,
 				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
-				7E4C03E81E00BD2C00E4B95F /* RPx.framework in Frameworks */,
 				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
-				7E4C03EA1E00BD2D00E4B95F /* TrustDefenderMobile.framework in Frameworks */,
+				7E5BFAE31DF23E1700AB77D8 /* RUA_MFI.framework in Frameworks */,
 				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
 				57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */,
 				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
 				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
+				7E5BFAE01DF23E1700AB77D8 /* G4XSwiper.framework in Frameworks */,
+				7E5BFAE11DF23E1700AB77D8 /* RKI_MFI.framework in Frameworks */,
 				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
 				57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */,
 				57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */,
@@ -126,6 +135,8 @@
 		570693A41A02FF3800182EA2 = {
 			isa = PBXGroup;
 			children = (
+				7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */,
+				7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */,
 				570693AF1A02FF3800182EA2 /* WePayExample */,
 				570693C91A02FF3800182EA2 /* WePayExampleTests */,
 				570693AE1A02FF3800182EA2 /* Products */,
@@ -188,11 +199,11 @@
 		570693D81A0300AA00182EA2 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				7E4C03E31E00BD2C00E4B95F /* G4XSwiper.framework */,
-				7E4C03E41E00BD2C00E4B95F /* RPx.framework */,
-				7E4C03E51E00BD2C00E4B95F /* RUA.framework */,
-				7E4C03E61E00BD2C00E4B95F /* TrustDefenderMobile.framework */,
-				9C2FFCFD1D401FA300294BB0 /* libstdc++.6.0.9.tbd */,
+				7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */,
+				7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */,
+				7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */,
+				7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */,
+				7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */,
 				57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */,
 				57664BC61A1AE9060092B3AA /* AVFoundation.framework */,
 				57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */,
@@ -201,6 +212,7 @@
 				57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */,
 				57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */,
 				57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */,
+				57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */,
 				57664BD01A1AEB050092B3AA /* UIKit.framework */,
 				57C45AC21B4E04120007E918 /* WePay.framework */,
 			);
@@ -470,6 +482,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-DRUA_MFI";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wepay.WePayExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -494,6 +508,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-DRUA_MFI";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wepay.WePayExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

@@ -1,5 +1,5 @@
 //
-//  UnitTestWePay_CardReader.m
+//  UnitTestWePay_CardReaderDirector.m
 //  WePay
 //
 //  Created by Jianxin Gao on 8/3/16.
@@ -7,29 +7,29 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h")
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
 
 #import <XCTest/XCTest.h>
-#import "WePay_CardReader.h"
+#import "WePay_CardReaderDirector.h"
 
-@interface UnitTestWePay_CardReader : XCTestCase
+@interface UnitTestWePay_CardReaderDirector : XCTestCase
 
-@property WePay_CardReader *cardReader;
+@property WePay_CardReaderDirector *cardReader;
 
 @end
 
-@interface WePay_CardReader (UnitTest)
+@interface WePay_CardReaderDirector (UnitTest)
 
 - (NSString *) extractPANfromTrack2:(NSString *)track2;
 
 @end
 
-@implementation UnitTestWePay_CardReader
+@implementation UnitTestWePay_CardReaderDirector
 
 - (void)setUp {
     [super setUp];
-    self.cardReader = [[WePay_CardReader alloc] init];
+    self.cardReader = [[WePay_CardReaderDirector alloc] init];
 }
 
 - (void) testExtractPANfromTrack2

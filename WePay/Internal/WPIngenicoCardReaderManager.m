@@ -1,5 +1,5 @@
 //
-//  WPRP350XManager.m
+//  WPIngenicoCardReaderManager.m
 //  WePay
 //
 //  Created by Chaitanya Bagaria on 8/4/15.
@@ -7,10 +7,10 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
-#import <RUA/RUA.h>
-#import "WPRP350XManager.h"
+#import <RUA_MFI/RUA.h>
+#import "WPIngenicoCardReaderManager.h"
 #import "WePay.h"
 #import "WPConfig.h"
 #import "WPMockConfig.h"
@@ -20,50 +20,59 @@
 #import "WPRoamHelper.h"
 #import "WPMockRoamDeviceManager.h"
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 
-@interface WPRP350XManager () {
+#define READ_AMOUNT [NSDecimalNumber one]
+#define READ_CURRENCY @"USD"
+#define READ_ACCOUNT_ID 12345
+
+@interface WPIngenicoCardReaderManager () {
     int _currentPublicKeyIndex;
-    __block WPRP350XManager *processor;
+    __block WPIngenicoCardReaderManager *processor;
+    NSTimer *readerInformNotConnectedTimer;
 }
 
 @property (nonatomic, strong) id<RUADeviceManager> roamDeviceManager;
 @property (nonatomic, strong) WPDipConfigHelper *dipConfigHelper;
 @property (nonatomic, strong) WPDipTransactionHelper *dipTransactionHelper;
 @property (nonatomic, strong) WPConfig *config;
+@property (nonatomic, strong) NSObject<WPExternalCardReaderDelegate> *externalDelegate;
 
 @property (nonatomic, assign) BOOL readerShouldWaitForCard;
 @property (nonatomic, assign) BOOL readerIsWaitingForCard;
 @property (nonatomic, assign) BOOL readerIsConnected;
+@property (nonatomic, assign) CardReaderRequest cardReaderRequest;
 
 @property (nonatomic, strong) NSString *deviceSerialNumber;
+@property (nonatomic, strong) NSString *connectedDeviceType;
+
 
 @end
 
-@implementation WPRP350XManager
+@implementation WPIngenicoCardReaderManager
 
 
 - (instancetype) initWithConfig:(WPConfig *)config
-{
-    self.config = config;
+     externalCardReaderDelegate:(NSObject<WPExternalCardReaderDelegate> *)delegate
 
+{
     if (self = [super init]) {
+        self.config = config;
         self.dipConfigHelper = [[WPDipConfigHelper alloc] initWithConfig:config];
+        self.externalDelegate = delegate;
         self.dipTransactionHelper = [[WPDipTransactionHelper alloc] initWithConfigHelper:self.dipConfigHelper
                                                                                 delegate:self
-                                                                             environment:self.config.environment];
+                                                              externalCardReaderDelegate:self.externalDelegate
+                                                                                  config:self.config
+                                     ];
     }
+    
+    WPIngenicoCardReaderDetector *detector = [[WPIngenicoCardReaderDetector alloc] init];
+    [detector findFirstAvailableDeviceWithConfig:self.config deviceDetectionDelegate:self];
     
     // store a weak instance for using inside blocks
     processor = self;
     return processor;
-}
-
-- (void) setManagerDelegate:(NSObject<WPDeviceManagerDelegate> *)managerDelegate
-           externalDelegate:(NSObject<WPExternalCardReaderDelegate> *)externalDelegate
-{
-    self.managerDelegate = managerDelegate;
-    self.externalDelegate = externalDelegate;
 }
 
 - (void) processCard
@@ -73,10 +82,6 @@
     // clear any pending actions
     [self stopWaitingForCard];
 
-    if (self.roamDeviceManager == nil) {
-        [self startDevice];
-    }
-
     // set options
     self.readerShouldWaitForCard = YES;
 
@@ -84,51 +89,32 @@
     [self checkAndWaitForEMVCard];
 }
 
-- (BOOL) startDevice
+- (void) startCardReader
 {
-    NSLog(@"startDevice: RUADeviceTypeRP350x");
-    
-    WPMockConfig *mockConfig = self.config.mockConfig;
-    if (mockConfig == nil) {
-        // to use the real card reader
-        self.roamDeviceManager = [RUA getDeviceManager:RUADeviceTypeRP350x];
-    } else {
-        // to use the mock implementation of card reader
-        self.roamDeviceManager = [WPMockRoamDeviceManager getDeviceManager];
-        ((WPMockRoamDeviceManager *) self.roamDeviceManager).mockConfig = mockConfig;
-    }
-    
-    BOOL init = [self.roamDeviceManager initializeDevice:self];
-    if (init) {
-        [[self.roamDeviceManager getConfigurationManager] setCommandTimeout:TIMEOUT_WORKAROUND_SEC];
-    } else {
-        self.roamDeviceManager = nil;
-    }
-
-    return init;
+    [self startWaitingForReader];
+    self.readerShouldWaitForCard = YES;
 }
 
-- (void) stopDevice
+- (void) stopCardReader
 {
-    NSLog(@"stopDevice");
+    NSLog(@"stopCardReader");
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        self.readerShouldWaitForCard = NO;
-
-        // stop waiting for card and cancel all pending notifications
-        [self stopWaitingForCard];
-
-        // release and delete the device manager
-        [self.roamDeviceManager releaseDevice];
-        self.roamDeviceManager = nil;
-        NSLog(@"released device manager");
+        [self endTransaction];
 
         // inform delegate
         [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
+        
+        if (self.roamDeviceManager) {
+            // release and delete the device manager
+            [self.roamDeviceManager releaseDevice];
+            self.roamDeviceManager = nil;
+            NSLog(@"released device manager");
+        }
     });
 }
 
-- (void) transactionCompleted
+- (void) endTransaction
 {
     self.readerShouldWaitForCard = NO;
     
@@ -136,36 +122,13 @@
     [self stopWaitingForCard];
 }
 
-/**
- *  Determines if we should restart transaction based on the response and the configuration.
- *  We may restart waiting if a CardReaderGeneralError was returned by the reader (and we're configured to wait). This usually happens due to a bad swipe.
- *  For unknown errors, we stop/restart waiting depending on the configuration.
- *  For successful transactions we dont restart the transaction.
- *
- */
-- (BOOL) shouldRestartTransactionAfterError:(NSError *)error
-                           forPaymentMethod:(NSString *)paymentMethod;
-{
-    if (error != nil) {
-        // if the error code was a general error
-        if (error.domain == kWPErrorSDKDomain && error.code == WPErrorCardReaderGeneralError) {
-            // return whether or not we're configured to restart on general error
-            return self.config.restartTransactionAfterGeneralError;
-        }
-        // return whether or not we're configured to restart on other errors
-        return self.config.restartTransactionAfterOtherErrors;
-    } else if ([paymentMethod isEqualToString:kWPPaymentMethodSwipe]) {
-        // return whether or not we're configured to restart on successful swipe
-        return self.config.restartTransactionAfterSuccess;
-    } else {
-        // dont restart on successful dip
-        return NO;
-    }
-}
-
 - (BOOL) shouldStopCardReaderAfterTransaction
 {
     return self.config.stopCardReaderAfterTransaction;
+}
+
+- (BOOL) isConnected {
+    return self.readerIsConnected && self.roamDeviceManager != nil;
 }
 
 
@@ -198,12 +161,22 @@
 
     } else {
         // Wait a few seconds for the reader to be detected, otherwise announce not connected
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.externalDelegate performSelector:@selector(informExternalCardReader:)
-                                withObject:kWPCardReaderStatusNotConnected
-                                afterDelay:RP350X_CONNECTION_TIME_SEC];
-        });
+        [self startWaitingForReader];
     }
+}
+
+- (void) startWaitingForReader {
+    if (readerInformNotConnectedTimer) {
+        [readerInformNotConnectedTimer invalidate];
+    }
+    
+    readerInformNotConnectedTimer = [NSTimer timerWithTimeInterval:CONNECTION_TIME_SEC
+                                                           repeats:NO
+                                                             block:^(NSTimer * _Nonnull timer) {
+                                                                 readerInformNotConnectedTimer = nil;
+                                                                 [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
+                                                             }];
+    [[NSRunLoop mainRunLoop] addTimer:readerInformNotConnectedTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void) resetDevice
@@ -258,9 +231,8 @@
                                                object:nil];
 
     // cancel any scheduled notifications - kWPCardReaderStatusNotConnected
-    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(informExternalCardReader:)
-                                               object:kWPCardReaderStatusNotConnected];
+    [readerInformNotConnectedTimer invalidate];
+    readerInformNotConnectedTimer = nil;
 
 
     // cancel transaction in case it is running
@@ -271,8 +243,8 @@
 - (void) fetchAuthInfoForTransaction
 {
     // fetch Tx info from delegate
-    [processor.managerDelegate fetchAuthInfo:^(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId) {
-        NSError *error = [self.managerDelegate validateAuthInfoImplemented:implemented amount:amount currencyCode:currencyCode accountId:accountId];
+    void (^amountCallback)(BOOL, NSDecimalNumber*, NSString*, long) = ^(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId) {
+        NSError *error = [self validateAuthInfoImplemented:implemented amount:amount currencyCode:currencyCode accountId:accountId];
         if (error != nil) {
             // we found an error, return it
             [self.externalDelegate informExternalCardReaderFailure:error];
@@ -285,10 +257,41 @@
                                                                            currencyCode:currencyCode
                                                                               accountid:accountId
                                                                       roamDeviceManager:self.roamDeviceManager
-                                                                        managerDelegate:self.managerDelegate
-                                                                       externalDelegate:self.externalDelegate];
+                                                                      cardReaderRequest:self.cardReaderRequest];
         }
-    }];
+    };
+    
+    if (self.cardReaderRequest == CardReaderForTokenizing) {
+        [self.externalDelegate informExternalCardReaderAmountCompletion:amountCallback];
+    }
+    else {
+        amountCallback(YES, READ_AMOUNT, READ_CURRENCY, READ_ACCOUNT_ID);
+    }
+}
+
+
+- (NSError *) validateAuthInfoImplemented:(BOOL)implemented
+                                   amount:(NSDecimalNumber *)amount
+                             currencyCode:(NSString *)currencyCode
+                                accountId:(long)accountId
+{
+    NSArray *allowedCurrencyCodes = @[kWPCurrencyCodeUSD];
+    
+    if (!implemented) {
+        return [WPError errorAuthInfoNotProvided];
+    } else if (amount == nil
+               || [amount isEqual:[NSNull null]]
+               || [[amount decimalNumberByMultiplyingByPowerOf10:2] intValue] < 99 // amount is less than 0.99
+               || ([currencyCode isEqualToString:kWPCurrencyCodeUSD] && amount.decimalValue._exponent < -2)) { // USD amount has more than 2 places after decimal point
+        return [WPError errorInvalidTransactionAmount];
+    } else if (![allowedCurrencyCodes containsObject:currencyCode]) {
+        return [WPError errorInvalidTransactionCurrencyCode];
+    } else if (accountId <= 0) {
+        return [WPError errorInvalidTransactionAccountID];
+    }
+    
+    // no validation errors
+    return nil;
 }
 
 #pragma mark - EMV Reader Setup
@@ -411,37 +414,68 @@
     }
 }
 
+#pragma mark WPTransactionDelegate
 
+/**
+ *  Marks the currently running transaction as completed;
+ */
+- (void) transactionCompleted {
+    [self endTransaction];
+    
+    if ([self shouldStopCardReaderAfterTransaction]) {
+        [self stopCardReader];
+    }
+}
+
+#pragma mark WPCardReaderDetectionDelegate
+- (void)onCardReaderManagerDetected:(id<RUADeviceManager>)manager {
+    self.roamDeviceManager = manager;
+    [self.roamDeviceManager initializeDevice:self];
+}
+
+- (void)onCardReaderDetectionTimeout {
+    NSLog(@"onCardReaderDetectionTimeout");
+}
+
+- (void)onCardReaderDetectionFailed:(NSString *)message {
+    NSLog(@"device detection failed with message %@", message);
+}
 
 #pragma mark ReaderStatusHandler
 
 - (void)onConnected
 {
     NSLog(@"onConnected");
-    [self.managerDelegate connectedDevice:kRP350XModelName];
+    NSLog(@"is device ready? %@", [self.roamDeviceManager isReady] ? @"YES":@"NO");
 
-    if (!self.readerIsConnected) {
+    if (!self.roamDeviceManager) {
+        [self startCardReader];
+    } else if (!self.readerIsConnected) {
         [processor fetchDeviceSerialNumber];
-
+        
         // Cancel any scheduled calls for reader not connected
+        if (readerInformNotConnectedTimer) [readerInformNotConnectedTimer invalidate];
         [NSObject cancelPreviousPerformRequestsWithTarget:self.externalDelegate
                                                  selector:@selector(informExternalCardReader:)
                                                    object:kWPCardReaderStatusNotConnected];
     }
+    
+    self.readerIsConnected = YES;
 }
 
 - (void)onDisconnected
 {
     NSLog(@"onDisconnected");
-    [self.managerDelegate disconnectedDevice];
 
-    // Inform external delegate if we should wait for card, and the reader was previously connected
-    if (self.readerShouldWaitForCard && self.readerIsConnected) {
-        [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
-        [self stopWaitingForCard];
-    } else if (!self.config.stopCardReaderAfterTransaction) {
-        // Inform external delegate
-        [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
+    if (self.readerIsConnected) {
+        // Inform external delegate if we should wait for card, and the reader was previously connected
+        if (self.readerShouldWaitForCard) {
+            [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
+            [self stopWaitingForCard];
+        } else if (!self.config.stopCardReaderAfterTransaction) {
+            // Inform external delegate
+            [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
+        }
     }
 
     self.readerIsConnected = NO;
@@ -451,13 +485,17 @@
 - (void)onError:(NSString *)message
 {
     // gets called when wrong reader type is connected
-    NSLog(@"onError");
-    self.readerIsConnected = NO;
-
-    // inform delegate
-    [self.managerDelegate handleDeviceStatusError:message];
+    NSLog(@"onError: %@", message);
+    if (self.readerIsConnected) {
+        if (self.readerIsWaitingForCard) {
+            NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
+            [self.externalDelegate informExternalCardReaderFailure:error];
+            [self stopCardReader];
+        }
+        
+        self.readerIsConnected = NO;
+    }
 }
-
 
 @end
 

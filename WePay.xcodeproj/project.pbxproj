@@ -40,8 +40,8 @@
 		574174191A4A604C00B73D95 /* WPError+internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 574174171A4A604C00B73D95 /* WPError+internal.m */; };
 		57769AF71B718A7C007BE0FA /* WPRoamHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 57769AF51B718A7C007BE0FA /* WPRoamHelper.h */; };
 		57769AF81B718A7C007BE0FA /* WPRoamHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 57769AF61B718A7C007BE0FA /* WPRoamHelper.m */; };
-		57769AFB1B7190F8007BE0FA /* WPRP350XManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 57769AF91B7190F8007BE0FA /* WPRP350XManager.h */; };
-		57769AFC1B7190F8007BE0FA /* WPRP350XManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 57769AFA1B7190F8007BE0FA /* WPRP350XManager.m */; };
+		57769AFB1B7190F8007BE0FA /* WPIngenicoCardReaderManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 57769AF91B7190F8007BE0FA /* WPIngenicoCardReaderManager.h */; };
+		57769AFC1B7190F8007BE0FA /* WPIngenicoCardReaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 57769AFA1B7190F8007BE0FA /* WPIngenicoCardReaderManager.m */; };
 		57C2DD8D1B59B5F10048F046 /* WPAuthorizationInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 57C2DD8B1B59B5F10048F046 /* WPAuthorizationInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		57C2DD8E1B59B5F10048F046 /* WPAuthorizationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C2DD8C1B59B5F10048F046 /* WPAuthorizationInfo.m */; };
 		57C2DD8F1B59B5F10048F046 /* WPAuthorizationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C2DD8C1B59B5F10048F046 /* WPAuthorizationInfo.m */; };
@@ -51,8 +51,8 @@
 		57CB38281ACCCE2800C8A6B2 /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38271ACCCE2800C8A6B2 /* TrustDefenderMobile.framework */; };
 		57CB382B1ACCCF4C00C8A6B2 /* WPRiskHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 57CB38291ACCCF4C00C8A6B2 /* WPRiskHelper.h */; };
 		57CB382C1ACCCF4C00C8A6B2 /* WPRiskHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 57CB382A1ACCCF4C00C8A6B2 /* WPRiskHelper.m */; };
-		57CBBD661B3908250095E2DD /* WePay_CardReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 57CBBD641B3908250095E2DD /* WePay_CardReader.m */; };
-		57CBBD671B3908250095E2DD /* WePay_CardReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 57CBBD651B3908250095E2DD /* WePay_CardReader.h */; };
+		57CBBD661B3908250095E2DD /* WePay_CardReaderDirector.m in Sources */ = {isa = PBXBuildFile; fileRef = 57CBBD641B3908250095E2DD /* WePay_CardReaderDirector.m */; };
+		57CBBD671B3908250095E2DD /* WePay_CardReaderDirector.h in Headers */ = {isa = PBXBuildFile; fileRef = 57CBBD651B3908250095E2DD /* WePay_CardReaderDirector.h */; };
 		57D0841F1B0181CC00CD35CE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570694001A0306FB00182EA2 /* SystemConfiguration.framework */; };
 		57D084251B0181CC00CD35CE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57D084201B0181CC00CD35CE /* AudioToolbox.framework */; };
 		57D084261B0181CC00CD35CE /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57D084211B0181CC00CD35CE /* CoreBluetooth.framework */; };
@@ -64,15 +64,23 @@
 		57FF3CAF1A0D9BA600D460E7 /* WPConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 57FF3CAD1A0D9BA600D460E7 /* WPConfig.m */; };
 		57FF3CBA1A0DB55500D460E7 /* WPPaymentToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 57FF3CB81A0DB55500D460E7 /* WPPaymentToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		57FF3CBB1A0DB55500D460E7 /* WPPaymentToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 57FF3CB91A0DB55500D460E7 /* WPPaymentToken.m */; };
-		9C12C3F21D52935E00CE63C5 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9C12C3FD1D52B06400CE63C5 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		7E2B01591DF237D00054EB1B /* RKI_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E2B01581DF237D00054EB1B /* RKI_MFI.framework */; };
+		7E2B015C1DF23A460054EB1B /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E2B015B1DF23A460054EB1B /* ExternalAccessory.framework */; };
+		7E4C03D01DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E4C03CE1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.h */; };
+		7E4C03D11DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C03CF1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m */; };
+		7E4C03D21DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C03CF1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m */; };
+		7ECF64601DF60B0500C88051 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ECF645F1DF60B0500C88051 /* libstdc++.tbd */; };
+		7ECF64611DF60B3700C88051 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E2B015B1DF23A460054EB1B /* ExternalAccessory.framework */; };
+		7ECF64691DF86C2100C88051 /* WPTransactionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ECF64671DF86C2100C88051 /* WPTransactionUtilities.h */; };
+		7ECF646A1DF86C2100C88051 /* WPTransactionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ECF64681DF86C2100C88051 /* WPTransactionUtilities.m */; };
+		7ECF646B1DF86C2100C88051 /* WPTransactionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ECF64681DF86C2100C88051 /* WPTransactionUtilities.m */; };
 		9C3288971D4FC34A0026AF58 /* TestAuthorizationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3288961D4FC34A0026AF58 /* TestAuthorizationDelegate.m */; };
-		9C59540E1D67BE5D008F7596 /* UnitTestWePay_CardReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C59540C1D67BE5D008F7596 /* UnitTestWePay_CardReader.m */; };
-		9C59540F1D67BE5D008F7596 /* UnitTestWPTransactionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C59540D1D67BE5D008F7596 /* UnitTestWPTransactionHelper.m */; };
+		9C59540E1D67BE5D008F7596 /* UnitTestWPTransactionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C59540C1D67BE5D008F7596 /* UnitTestWPTransactionUtilities.m */; };
+		9C59540F1D67BE5D008F7596 /* UnitTestWPDipTransactionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C59540D1D67BE5D008F7596 /* UnitTestWPDipTransactionHelper.m */; };
 		9CB0B8E91D3EEC62004B7347 /* WPMockConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CB0B8E71D3EEC62004B7347 /* WPMockConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CB0B8EA1D3EEC62004B7347 /* WPMockConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB0B8E81D3EEC62004B7347 /* WPMockConfig.m */; };
-		9CCEFD061D3966F400CABD00 /* RPx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CCEFD031D3966F400CABD00 /* RPx.framework */; };
-		9CCEFD071D3966F400CABD00 /* RUA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CCEFD041D3966F400CABD00 /* RUA.framework */; };
+		9CCEFD061D3966F400CABD00 /* RPx_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CCEFD031D3966F400CABD00 /* RPx_MFI.framework */; };
+		9CCEFD071D3966F400CABD00 /* RUA_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CCEFD041D3966F400CABD00 /* RUA_MFI.framework */; };
 		9CCEFD0E1D3991F300CABD00 /* WPMockRoamDeviceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CCEFD0C1D3991F300CABD00 /* WPMockRoamDeviceManager.h */; };
 		9CCEFD0F1D3991F300CABD00 /* WPMockRoamDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CCEFD0D1D3991F300CABD00 /* WPMockRoamDeviceManager.m */; };
 		9CD9E3DB1D39A5A4006EA1E8 /* WPMockRoamTransactionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CD9E3D91D39A5A4006EA1E8 /* WPMockRoamTransactionManager.h */; };
@@ -155,8 +163,8 @@
 		574174171A4A604C00B73D95 /* WPError+internal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WPError+internal.m"; path = "Internal/WPError+internal.m"; sourceTree = "<group>"; };
 		57769AF51B718A7C007BE0FA /* WPRoamHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = WPRoamHelper.h; path = Internal/WPRoamHelper.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		57769AF61B718A7C007BE0FA /* WPRoamHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = WPRoamHelper.m; path = Internal/WPRoamHelper.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		57769AF91B7190F8007BE0FA /* WPRP350XManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = WPRP350XManager.h; path = Internal/WPRP350XManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		57769AFA1B7190F8007BE0FA /* WPRP350XManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = WPRP350XManager.m; path = Internal/WPRP350XManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		57769AF91B7190F8007BE0FA /* WPIngenicoCardReaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = WPIngenicoCardReaderManager.h; path = Internal/WPIngenicoCardReaderManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		57769AFA1B7190F8007BE0FA /* WPIngenicoCardReaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = WPIngenicoCardReaderManager.m; path = Internal/WPIngenicoCardReaderManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		57C2DD8B1B59B5F10048F046 /* WPAuthorizationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPAuthorizationInfo.h; path = Models/WPAuthorizationInfo.h; sourceTree = "<group>"; };
 		57C2DD8C1B59B5F10048F046 /* WPAuthorizationInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPAuthorizationInfo.m; path = Models/WPAuthorizationInfo.m; sourceTree = "<group>"; };
 		57C754BC1B44DE9C007E5650 /* WePay_Checkout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WePay_Checkout.h; path = Internal/WePay_Checkout.h; sourceTree = "<group>"; };
@@ -164,8 +172,8 @@
 		57CB38271ACCCE2800C8A6B2 /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
 		57CB38291ACCCF4C00C8A6B2 /* WPRiskHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPRiskHelper.h; path = Internal/WPRiskHelper.h; sourceTree = "<group>"; };
 		57CB382A1ACCCF4C00C8A6B2 /* WPRiskHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPRiskHelper.m; path = Internal/WPRiskHelper.m; sourceTree = "<group>"; };
-		57CBBD641B3908250095E2DD /* WePay_CardReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = WePay_CardReader.m; path = Internal/WePay_CardReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		57CBBD651B3908250095E2DD /* WePay_CardReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = WePay_CardReader.h; path = Internal/WePay_CardReader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		57CBBD641B3908250095E2DD /* WePay_CardReaderDirector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = WePay_CardReaderDirector.m; path = Internal/WePay_CardReaderDirector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		57CBBD651B3908250095E2DD /* WePay_CardReaderDirector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = WePay_CardReaderDirector.h; path = Internal/WePay_CardReaderDirector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		57D084201B0181CC00CD35CE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		57D084211B0181CC00CD35CE /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		57D084221B0181CC00CD35CE /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -176,14 +184,21 @@
 		57FF3CAD1A0D9BA600D460E7 /* WPConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPConfig.m; path = Models/WPConfig.m; sourceTree = "<group>"; };
 		57FF3CB81A0DB55500D460E7 /* WPPaymentToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WPPaymentToken.h; path = Models/WPPaymentToken.h; sourceTree = "<group>"; };
 		57FF3CB91A0DB55500D460E7 /* WPPaymentToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WPPaymentToken.m; path = Models/WPPaymentToken.m; sourceTree = "<group>"; };
+		7E2B01581DF237D00054EB1B /* RKI_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RKI_MFI.framework; sourceTree = "<group>"; };
+		7E2B015B1DF23A460054EB1B /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		7E4C03CE1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPIngenicoCardReaderDetector.h; sourceTree = "<group>"; };
+		7E4C03CF1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPIngenicoCardReaderDetector.m; sourceTree = "<group>"; };
+		7ECF645F1DF60B0500C88051 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		7ECF64671DF86C2100C88051 /* WPTransactionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPTransactionUtilities.h; sourceTree = "<group>"; };
+		7ECF64681DF86C2100C88051 /* WPTransactionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPTransactionUtilities.m; sourceTree = "<group>"; };
 		9C3288951D4FC34A0026AF58 /* TestAuthorizationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAuthorizationDelegate.h; sourceTree = "<group>"; };
 		9C3288961D4FC34A0026AF58 /* TestAuthorizationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAuthorizationDelegate.m; sourceTree = "<group>"; };
-		9C59540C1D67BE5D008F7596 /* UnitTestWePay_CardReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTestWePay_CardReader.m; sourceTree = "<group>"; };
-		9C59540D1D67BE5D008F7596 /* UnitTestWPTransactionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTestWPTransactionHelper.m; sourceTree = "<group>"; };
+		9C59540C1D67BE5D008F7596 /* UnitTestWPTransactionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTestWPTransactionUtilities.m; sourceTree = "<group>"; };
+		9C59540D1D67BE5D008F7596 /* UnitTestWPDipTransactionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitTestWPDipTransactionHelper.m; sourceTree = "<group>"; };
 		9CB0B8E71D3EEC62004B7347 /* WPMockConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPMockConfig.h; sourceTree = "<group>"; };
 		9CB0B8E81D3EEC62004B7347 /* WPMockConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPMockConfig.m; sourceTree = "<group>"; };
-		9CCEFD031D3966F400CABD00 /* RPx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx.framework; sourceTree = "<group>"; };
-		9CCEFD041D3966F400CABD00 /* RUA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA.framework; sourceTree = "<group>"; };
+		9CCEFD031D3966F400CABD00 /* RPx_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx_MFI.framework; sourceTree = "<group>"; };
+		9CCEFD041D3966F400CABD00 /* RUA_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA_MFI.framework; sourceTree = "<group>"; };
 		9CCEFD0C1D3991F300CABD00 /* WPMockRoamDeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPMockRoamDeviceManager.h; sourceTree = "<group>"; };
 		9CCEFD0D1D3991F300CABD00 /* WPMockRoamDeviceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WPMockRoamDeviceManager.m; sourceTree = "<group>"; };
 		9CD9E3D91D39A5A4006EA1E8 /* WPMockRoamTransactionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WPMockRoamTransactionManager.h; sourceTree = "<group>"; };
@@ -220,11 +235,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CCEFD071D3966F400CABD00 /* RUA.framework in Frameworks */,
+				7E2B015C1DF23A460054EB1B /* ExternalAccessory.framework in Frameworks */,
+				9CCEFD071D3966F400CABD00 /* RUA_MFI.framework in Frameworks */,
 				D77FBA1B1D9D87A90078961A /* G4XSwiper.framework in Frameworks */,
+				7E2B01591DF237D00054EB1B /* RKI_MFI.framework in Frameworks */,
 				57CB38281ACCCE2800C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
 				570694011A0306FB00182EA2 /* SystemConfiguration.framework in Frameworks */,
-				9CCEFD061D3966F400CABD00 /* RPx.framework in Frameworks */,
+				9CCEFD061D3966F400CABD00 /* RPx_MFI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +249,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ECF64611DF60B3700C88051 /* ExternalAccessory.framework in Frameworks */,
+				7ECF64601DF60B0500C88051 /* libstdc++.tbd in Frameworks */,
 				9CE3E9301D481EC200C3A134 /* libstdc++.6.0.9.tbd in Frameworks */,
 				57D0842D1B01825000CD35CE /* AVFoundation.framework in Frameworks */,
 				57D0842B1B0181F300CD35CE /* CoreLocation.framework in Frameworks */,
@@ -251,9 +270,11 @@
 			isa = PBXGroup;
 			children = (
 				9CE3E92F1D481EC200C3A134 /* libstdc++.6.0.9.tbd */,
+				7E2B015B1DF23A460054EB1B /* ExternalAccessory.framework */,
+				7E2B01581DF237D00054EB1B /* RKI_MFI.framework */,
 				D77FBA1A1D9D87A90078961A /* G4XSwiper.framework */,
-				9CCEFD031D3966F400CABD00 /* RPx.framework */,
-				9CCEFD041D3966F400CABD00 /* RUA.framework */,
+				9CCEFD031D3966F400CABD00 /* RPx_MFI.framework */,
+				9CCEFD041D3966F400CABD00 /* RUA_MFI.framework */,
 				57D0842C1B01825000CD35CE /* AVFoundation.framework */,
 				57D0842A1B0181F300CD35CE /* CoreLocation.framework */,
 				57D084201B0181CC00CD35CE /* AudioToolbox.framework */,
@@ -291,6 +312,7 @@
 				573054B61A02F4DD00EA5FEE /* WePay */,
 				573054C31A02F4DD00EA5FEE /* WePayTests */,
 				573054B51A02F4DD00EA5FEE /* Products */,
+				7ECF645E1DF60B0500C88051 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -324,8 +346,8 @@
 				9CE3E9441D494EF400C3A134 /* IntegrationTest.m */,
 				D7765B831DFF6B0A0030CDCA /* IntegrationTestCardReader.m */,
 				D74B4B171DF7A939002416D5 /* IntegrationTestConfig.m */,
-				9C59540C1D67BE5D008F7596 /* UnitTestWePay_CardReader.m */,
-				9C59540D1D67BE5D008F7596 /* UnitTestWPTransactionHelper.m */,
+				9C59540C1D67BE5D008F7596 /* UnitTestWPTransactionUtilities.m */,
+				9C59540D1D67BE5D008F7596 /* UnitTestWPDipTransactionHelper.m */,
 			);
 			path = WePayTests;
 			sourceTree = "<group>";
@@ -343,6 +365,8 @@
 			children = (
 				9CCEFCE91D3832F600CABD00 /* mock */,
 				57C6BB231B7417DD00B3F347 /* Card Reader */,
+				57CBBD651B3908250095E2DD /* WePay_CardReaderDirector.h */,
+				57CBBD641B3908250095E2DD /* WePay_CardReaderDirector.m */,
 				57C754BC1B44DE9C007E5650 /* WePay_Checkout.h */,
 				57C754BD1B44DE9C007E5650 /* WePay_Checkout.m */,
 				574173FC1A3F8A4B00B73D95 /* WePay_Manual.h */,
@@ -362,12 +386,28 @@
 		57C6BB231B7417DD00B3F347 /* Card Reader */ = {
 			isa = PBXGroup;
 			children = (
-				57CBBD651B3908250095E2DD /* WePay_CardReader.h */,
-				57CBBD641B3908250095E2DD /* WePay_CardReader.m */,
-				D7E572D31BFD740700D92827 /* DeviceHelpers */,
-				D7E572D21BFD73EA00D92827 /* DeviceManagers */,
+				7ECF64661DF86C0400C88051 /* Utilities */,
+				D7E572D31BFD740700D92827 /* Helpers */,
+				D7E572D21BFD73EA00D92827 /* Managers */,
 			);
 			name = "Card Reader";
+			sourceTree = "<group>";
+		};
+		7ECF645E1DF60B0500C88051 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7ECF645F1DF60B0500C88051 /* libstdc++.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7ECF64661DF86C0400C88051 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7ECF64671DF86C2100C88051 /* WPTransactionUtilities.h */,
+				7ECF64681DF86C2100C88051 /* WPTransactionUtilities.m */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 		9CCEFCE91D3832F600CABD00 /* mock */ = {
@@ -400,16 +440,16 @@
 			name = "Test Delegates";
 			sourceTree = "<group>";
 		};
-		D7E572D21BFD73EA00D92827 /* DeviceManagers */ = {
+		D7E572D21BFD73EA00D92827 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				57769AF91B7190F8007BE0FA /* WPRP350XManager.h */,
-				57769AFA1B7190F8007BE0FA /* WPRP350XManager.m */,
+				57769AF91B7190F8007BE0FA /* WPIngenicoCardReaderManager.h */,
+				57769AFA1B7190F8007BE0FA /* WPIngenicoCardReaderManager.m */,
 			);
-			name = DeviceManagers;
+			name = Managers;
 			sourceTree = "<group>";
 		};
-		D7E572D31BFD740700D92827 /* DeviceHelpers */ = {
+		D7E572D31BFD740700D92827 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				D7BEAD051D77BC0A0071C023 /* WPBatteryHelper.h */,
@@ -422,8 +462,10 @@
 				D7E572C91BFC0DF900D92827 /* WPExternalCardReaderHelper.m */,
 				57769AF51B718A7C007BE0FA /* WPRoamHelper.h */,
 				57769AF61B718A7C007BE0FA /* WPRoamHelper.m */,
+				7E4C03CE1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.h */,
+				7E4C03CF1DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m */,
 			);
-			name = DeviceHelpers;
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -444,7 +486,7 @@
 				D7E572CF1BFD690300D92827 /* WPClientHelper.h in Headers */,
 				9CD9E3DB1D39A5A4006EA1E8 /* WPMockRoamTransactionManager.h in Headers */,
 				9CD9E3DF1D39A5B8006EA1E8 /* WPMockRoamConfigurationManager.h in Headers */,
-				57CBBD671B3908250095E2DD /* WePay_CardReader.h in Headers */,
+				57CBBD671B3908250095E2DD /* WePay_CardReaderDirector.h in Headers */,
 				57FF3CBA1A0DB55500D460E7 /* WPPaymentToken.h in Headers */,
 				D7E572DD1BFD7E9E00D92827 /* WPDipConfigHelper.h in Headers */,
 				57769AF71B718A7C007BE0FA /* WPRoamHelper.h in Headers */,
@@ -452,10 +494,12 @@
 				57178BA51A0ADD2000C03F13 /* WPPaymentInfo.h in Headers */,
 				D7BEAD071D77BC0A0071C023 /* WPBatteryHelper.h in Headers */,
 				574173FE1A3F8A4C00B73D95 /* WePay_Manual.h in Headers */,
+				7ECF64691DF86C2100C88051 /* WPTransactionUtilities.h in Headers */,
 				57C754BE1B44DE9C007E5650 /* WePay_Checkout.h in Headers */,
 				574174181A4A604C00B73D95 /* WPError+internal.h in Headers */,
-				57769AFB1B7190F8007BE0FA /* WPRP350XManager.h in Headers */,
+				57769AFB1B7190F8007BE0FA /* WPIngenicoCardReaderManager.h in Headers */,
 				9CCEFD0E1D3991F300CABD00 /* WPMockRoamDeviceManager.h in Headers */,
+				7E4C03D01DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.h in Headers */,
 				D7E572CA1BFC0DF900D92827 /* WPExternalCardReaderHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,11 +632,13 @@
 				573054BA1A02F4DD00EA5FEE /* WePay.m in Sources */,
 				9CB0B8EA1D3EEC62004B7347 /* WPMockConfig.m in Sources */,
 				D7E572D01BFD690300D92827 /* WPClientHelper.m in Sources */,
+				7ECF646A1DF86C2100C88051 /* WPTransactionUtilities.m in Sources */,
 				57C754BF1B44DE9C007E5650 /* WePay_Checkout.m in Sources */,
 				574174031A3F8C5400B73D95 /* WPClient.m in Sources */,
 				57769AF81B718A7C007BE0FA /* WPRoamHelper.m in Sources */,
-				57769AFC1B7190F8007BE0FA /* WPRP350XManager.m in Sources */,
+				57769AFC1B7190F8007BE0FA /* WPIngenicoCardReaderManager.m in Sources */,
 				572711381AF05AAA00B45498 /* WPAddress.m in Sources */,
+				7E4C03D11DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m in Sources */,
 				57C2DD8E1B59B5F10048F046 /* WPAuthorizationInfo.m in Sources */,
 				57FF3CAF1A0D9BA600D460E7 /* WPConfig.m in Sources */,
 				57178BA61A0ADD2000C03F13 /* WPPaymentInfo.m in Sources */,
@@ -607,7 +653,7 @@
 				57FF3CBB1A0DB55500D460E7 /* WPPaymentToken.m in Sources */,
 				D7E572CB1BFC0DF900D92827 /* WPExternalCardReaderHelper.m in Sources */,
 				D7E572DB1BFD7E9E00D92827 /* WPDipConfigHelper.m in Sources */,
-				57CBBD661B3908250095E2DD /* WePay_CardReader.m in Sources */,
+				57CBBD661B3908250095E2DD /* WePay_CardReaderDirector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,22 +662,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				57C754C01B44DE9C007E5650 /* WePay_Checkout.m in Sources */,
-				9C59540E1D67BE5D008F7596 /* UnitTestWePay_CardReader.m in Sources */,
-				9C12C3F21D52935E00CE63C5 /* (null) in Sources */,
-				9C12C3FD1D52B06400CE63C5 /* (null) in Sources */,
+				9C59540E1D67BE5D008F7596 /* UnitTestWPTransactionUtilities.m in Sources */,
 				9CE3E9481D495BAC00C3A134 /* TestTokenizationDelegate.m in Sources */,
 				9CE3E94C1D49785400C3A134 /* TestCardReaderDelegate.m in Sources */,
 				D74B4B181DF7A939002416D5 /* IntegrationTestConfig.m in Sources */,
 				57C2DD8F1B59B5F10048F046 /* WPAuthorizationInfo.m in Sources */,
 				D7E572CC1BFC0DF900D92827 /* WPExternalCardReaderHelper.m in Sources */,
+				7E4C03D21DFF5ADF00E4B95F /* WPIngenicoCardReaderDetector.m in Sources */,
 				D7E572E21BFD7F3500D92827 /* WPDipTransactionHelper.m in Sources */,
-				9C59540F1D67BE5D008F7596 /* UnitTestWPTransactionHelper.m in Sources */,
+				9C59540F1D67BE5D008F7596 /* UnitTestWPDipTransactionHelper.m in Sources */,
 				9CF9C2861D51077300DEDC21 /* TestCheckoutDelegate.m in Sources */,
 				D7765B841DFF6B0A0030CDCA /* IntegrationTestCardReader.m in Sources */,
 				9CE3E9451D494EF400C3A134 /* IntegrationTest.m in Sources */,
 				D7E572D11BFD690300D92827 /* WPClientHelper.m in Sources */,
 				9C3288971D4FC34A0026AF58 /* TestAuthorizationDelegate.m in Sources */,
 				D7BEAD091D77BC0A0071C023 /* WPBatteryHelper.m in Sources */,
+				7ECF646B1DF86C2100C88051 /* WPTransactionUtilities.m in Sources */,
 				D7BEAD0E1D8206590071C023 /* TestBatteryLevelDelegate.m in Sources */,
 				D7E572DC1BFD7E9E00D92827 /* WPDipConfigHelper.m in Sources */,
 			);
@@ -762,6 +808,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-DRUA_MFI";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
@@ -786,6 +833,7 @@
 					"$(PROJECT_DIR)/WePay/Libs",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DRUA_MFI";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
@@ -811,6 +859,7 @@
 				INFOPLIST_FILE = WePayTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-DRUA_MFI";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -833,6 +882,7 @@
 				INFOPLIST_FILE = WePayTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = "-DRUA_MFI";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",

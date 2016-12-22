@@ -1,166 +1,47 @@
 //
-//  WePay_CardReader.m
+//  TransactionUtilities.m
 //  WePay
 //
-//  Created by Chaitanya Bagaria on 11/17/14.
-//  Copyright (c) 2014 WePay. All rights reserved.
+//  Created by Cameron Alley on 12/7/16.
+//  Copyright © 2016 WePay. All rights reserved.
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
-#import "WePay_CardReader.h"
+#import "WPTransactionUtilities.h"
 #import "WePay.h"
 #import "WPConfig.h"
 #import "WPClient.h"
-#import "WPRP350XManager.h"
+#import "WPIngenicoCardReaderManager.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
 #import "WPExternalCardReaderHelper.h"
 #import "WPClientHelper.h"
 #import "WPBatteryHelper.h"
 
-NSString *const kRP350XModelName = @"RP350X";
-
-#define READ_AMOUNT [NSDecimalNumber one]
-#define READ_CURRENCY @"USD"
-#define READ_ACCOUNT_ID 12345
-
-@interface WePay_CardReader ()
+@interface WPTransactionUtilities()
 
 @property (nonatomic, strong) WPConfig *config;
+@property (nonatomic, strong) id<WPExternalCardReaderDelegate> externalHelper;
 @property (nonatomic, strong) NSString *sessionId;
 
-@property (nonatomic, strong) id<WPDeviceManager> deviceManager;
-@property (nonatomic, strong) id<WPExternalCardReaderDelegate> externalHelper;
-
-@property (nonatomic, strong) NSString *connectedDeviceType;
-
-@property (nonatomic, assign) BOOL swiperShouldTokenize;
 
 @end
 
-@implementation WePay_CardReader
+@implementation WPTransactionUtilities
 
-#define WEPAY_LAST_DEVICE_KEY @"wepay.last.device.type"
-
-- (instancetype) initWithConfig:(WPConfig *)config
+- (instancetype)initWithConfig:(WPConfig *)config
+      externalCardReaderHelper:(id<WPExternalCardReaderDelegate>) externalHelper
 {
     if (self = [super init]) {
-        // pass the config to the client
-        WPClient.config = config;
-        
-        // save the config
         self.config = config;
-
-        // create the external helper
-        self.externalHelper = [[WPExternalCardReaderHelper alloc] initWithConfig:self.config];
-
-        // fetch saved device type
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *lastDeviceType = [defaults objectForKey:WEPAY_LAST_DEVICE_KEY];
-        
-        // initialize a device manager
-        [self startEMVManager];
-        
-        // configure RUA
-        #ifdef DEBUG
-            // Log response only when in debug builds
-            [RUA enableDebugLogMessages:YES];
-        #else
-            [RUA enableDebugLogMessages:NO];
-        #endif
+        self.externalHelper = externalHelper;
     }
     
     return self;
 }
 
-- (void) startEMVManager
-{
-    self.deviceManager = [[WPRP350XManager alloc] initWithConfig:self.config];
-    [self.deviceManager setManagerDelegate:self
-                          externalDelegate:self.externalHelper];
-}
-
-- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-{
-    self.externalHelper.externalTokenizationDelegate = nil;
-    self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
-    self.sessionId = nil;
-    self.swiperShouldTokenize = NO;
-
-   [self.deviceManager processCard];
-}
-
-- (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
-                                        tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
-                                       authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
-                                                   sessionId:(NSString *)sessionId
-{
-    self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
-    self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
-    self.externalHelper.externalAuthorizationDelegate = authorizationDelegate;
-    self.sessionId = sessionId;
-    self.swiperShouldTokenize = YES;
-
-    [self.deviceManager processCard];
-}
-
-- (void) tokenizeSwipedPaymentInfo:(WPPaymentInfo *)paymentInfo
-              tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
-                         sessionId:(NSString *)sessionId
-                    successHandler:(void (^)(NSDictionary * returnData)) successHandler
-                      errorHandler:(void (^)(NSError * error)) errorHandler;
-{
-    self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
-
-    NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
-
-    if (error) {
-        // invalid payment info, return error
-        [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
-    } else {
-
-        NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
-                                                                            clientId:self.config.clientId
-                                                                           sessionId:self.sessionId];
-
-        [WPClient creditCardCreateSwipe:params
-                           successBlock:^(NSDictionary * returnData) {
-                               NSNumber *credit_card_id = [returnData objectForKey:@"credit_card_id"];
-                               WPPaymentToken *token = [[WPPaymentToken alloc] initWithId:[credit_card_id stringValue]];
-                               [self.externalHelper informExternalTokenizerSuccess:token forPaymentInfo:paymentInfo];
-                               if (successHandler) {
-                                   successHandler(returnData);
-                               }
-                           }
-                           errorHandler:^(NSError * error) {
-                               // Call error handler with error returned.
-                               [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
-                               if (errorHandler) {
-                                   errorHandler(error);
-                               }
-                           }
-         ];
-    }
-}
-
-/**
- *  Stops the Roam device manager completely, and informs the delegate.
- */
-- (void) stopCardReader
-{
-    [self.deviceManager stopDevice];
-}
-
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
-{
-    WPBatteryHelper *bh = [[WPBatteryHelper alloc] init];
-    [bh getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate config:self.config];
-    NSLog(@"WePay_CardReader: checking battery");
-}
-
-#pragma mark WPDeviceManagerDelegate methods
 
 - (void) handleSwipeResponse:(NSDictionary *) responseData
               successHandler:(void (^)(NSDictionary * returnData)) successHandler
@@ -202,12 +83,12 @@ NSString *const kRP350XModelName = @"RP350X";
         if (email) {
             [paymentInfo addEmail:email];
         }
-
+        
         // send paymentInfo to external delegate
         [self.externalHelper informExternalCardReaderSuccess:paymentInfo];
-
+        
         // tokenize if requested
-        if (self.swiperShouldTokenize && self.externalHelper.externalTokenizationDelegate) {
+        if (self.cardReaderRequest == CardReaderForTokenizing && self.externalHelper.externalTokenizationDelegate) {
             
             NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
             if (error) {
@@ -219,7 +100,7 @@ NSString *const kRP350XModelName = @"RP350X";
             } else if (paymentInfo.swiperInfo) {
                 // inform external
                 [self.externalHelper informExternalCardReader:kWPCardReaderStatusTokenizing];
-
+                
                 // tokenize
                 [self tokenizeSwipedPaymentInfo:paymentInfo
                            tokenizationDelegate:self.externalHelper.externalTokenizationDelegate
@@ -250,6 +131,46 @@ NSString *const kRP350XModelName = @"RP350X";
     }];
 }
 
+
+- (void) tokenizeSwipedPaymentInfo:(WPPaymentInfo *)paymentInfo
+              tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
+                         sessionId:(NSString *)sessionId
+                    successHandler:(void (^)(NSDictionary * returnData)) successHandler
+                      errorHandler:(void (^)(NSError * error)) errorHandler
+{
+    self.externalHelper.externalTokenizationDelegate = tokenizationDelegate;
+    
+    NSError *error = [self validatePaymentInfoForTokenization:paymentInfo];
+    
+    if (error) {
+        // invalid payment info, return error
+        [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+    } else {
+        
+        NSDictionary *params = [WPClientHelper createCardRequestParamsForPaymentInfo:paymentInfo
+                                                                            clientId:self.config.clientId
+                                                                           sessionId:self.sessionId];
+        
+        [WPClient creditCardCreateSwipe:params
+                           successBlock:^(NSDictionary * returnData) {
+                               NSNumber *credit_card_id = [returnData objectForKey:@"credit_card_id"];
+                               WPPaymentToken *token = [[WPPaymentToken alloc] initWithId:[credit_card_id stringValue]];
+                               [self.externalHelper informExternalTokenizerSuccess:token forPaymentInfo:paymentInfo];
+                               if (successHandler) {
+                                   successHandler(returnData);
+                               }
+                           }
+                           errorHandler:^(NSError * error) {
+                               // Call error handler with error returned.
+                               [self.externalHelper informExternalTokenizerFailure:error forPaymentInfo:paymentInfo];
+                               if (errorHandler) {
+                                   errorHandler(error);
+                               }
+                           }
+         ];
+    }
+}
+
 - (void) issueReversalForCreditCardId:(NSNumber *)creditCardId
                             accountId:(NSNumber *)accountId
                          roamResponse:(NSDictionary *)cardInfo
@@ -268,78 +189,6 @@ NSString *const kRP350XModelName = @"RP350X";
                        }];
 }
 
-- (void) fetchAuthInfo:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
-{
-    if (self.swiperShouldTokenize) {
-        // ask external for auth info
-        [self.externalHelper informExternalCardReaderAmountCompletion:completion];
-    } else {
-        // this is a read operation, auth a small amount
-        completion(YES, READ_AMOUNT, READ_CURRENCY, READ_ACCOUNT_ID);
-    }
-}
-
-- (NSError *) validateAuthInfoImplemented:(BOOL)implemented
-                                   amount:(NSDecimalNumber *)amount
-                             currencyCode:(NSString *)currencyCode
-                                accountId:(long)accountId
-{
-    NSArray *allowedCurrencyCodes = @[kWPCurrencyCodeUSD];
-    
-    if (!implemented) {
-        return [WPError errorAuthInfoNotProvided];
-    } else if (amount == nil
-               || [amount isEqual:[NSNull null]]
-               || [[amount decimalNumberByMultiplyingByPowerOf10:2] intValue] < 99 // amount is less than 0.99
-               || ([currencyCode isEqualToString:kWPCurrencyCodeUSD] && amount.decimalValue._exponent < -2)) { // USD amount has more than 2 places after decimal point
-        return [WPError errorInvalidAuthInfo];
-    } else if (![allowedCurrencyCodes containsObject:currencyCode]) {
-        return [WPError errorInvalidAuthInfo];
-    } else if (accountId <= 0) {
-        return [WPError errorInvalidAuthInfo];
-    }
-    
-    // no validation errors
-    return nil;
-}
-
-- (void) handleDeviceStatusError:(NSString *)message
-{
-    // stop device silently
-    [self.deviceManager setManagerDelegate:nil externalDelegate:nil];
-    [self.deviceManager stopDevice];
-
-    if ([@"Landi OpenDevice Error::-3" isEqualToString:message] || [@"Connected Device is not RP350x" isEqualToString:message]) {
-        NSError *error = [WPError errorCardReaderModelNotSupported];
-        [self.externalHelper informExternalCardReaderFailure:error];
-    } else {
-        NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
-        [self.externalHelper informExternalCardReaderFailure:error];
-    }
-}
-
-- (void) connectedDevice:(NSString *)deviceType
-{
-    if (![self.connectedDeviceType isEqualToString:deviceType]) {
-        self.connectedDeviceType = deviceType;
-        [self storeLastConnectedDeviceType:deviceType];
-    }
-}
-
-- (void) disconnectedDevice
-{
-    self.connectedDeviceType = nil;
-}
-
-- (void)storeLastConnectedDeviceType:(NSString *)deviceTpe
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:deviceTpe forKey:WEPAY_LAST_DEVICE_KEY];
-    [defaults synchronize];
-}
-
-
-
 - (NSError *) validatePaymentInfoForTokenization:(WPPaymentInfo *)paymentInfo
 {
     if (paymentInfo.swiperInfo) {
@@ -349,7 +198,7 @@ NSString *const kRP350XModelName = @"RP350X";
         NSDictionary *emvInfo = paymentInfo.emvInfo;
         return [self validateEMVInfoForTokenization:emvInfo];
     }
-
+    
     // no issues
     return nil;
 }
@@ -360,7 +209,7 @@ NSString *const kRP350XModelName = @"RP350X";
     if ([swiperInfo objectForKey: @"ErrorCode"] != nil) {
         return [WPError errorWithCardReaderResponseData:swiperInfo];
     }
-
+    
     // check if name exists
     NSString *fullName = [WPRoamHelper fullNameFromRUAData:swiperInfo];
     if (fullName == nil) {
@@ -368,7 +217,7 @@ NSString *const kRP350XModelName = @"RP350X";
         // we expect all supported cards to return a name
         return [WPError errorNameNotFound];
     }
-
+    
     // check if encrypted track exists
     NSString *encryptedTrack = [swiperInfo objectForKey:@"EncryptedTrack"];
     if (encryptedTrack == nil || [@"" isEqualToString:encryptedTrack]) {
@@ -377,15 +226,15 @@ NSString *const kRP350XModelName = @"RP350X";
         NSLog(@"validateSwiperInfoForTokenization: No encrypted track found");
         return [WPError errorInvalidCardData];
     }
-
+    
     // check if KSN exists
     NSString *ksn = [swiperInfo objectForKey:@"KSN"];
     if (ksn == nil || [@"" isEqualToString:ksn]) {
         NSLog(@"validateSwiperInfoForTokenization: No KSN found");
         return [WPError errorInvalidCardData];
     }
-
-
+    
+    
     // no issues
     return nil;
 }
@@ -401,14 +250,14 @@ NSString *const kRP350XModelName = @"RP350X";
     if (pan == nil || [pan isEqual:[NSNull null]]) {
         return pan;
     }
-
+    
     NSString *result = [pan stringByReplacingOccurrencesOfString:@"F" withString:@""];
     NSInteger length = [result length];
-
+    
     if (length > 4) {
         result = [result stringByReplacingCharactersInRange:NSMakeRange(0, length - 4) withString:[@"" stringByPaddingToLength:length - 4 withString: @"X" startingAtIndex:0]];
     }
-
+    
     return result;
 }
 
@@ -446,9 +295,7 @@ NSString *const kRP350XModelName = @"RP350X";
     }
 }
 
-
 @end
 
 #endif
 #endif
-

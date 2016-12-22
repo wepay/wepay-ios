@@ -179,4 +179,25 @@
  */
 + (NSError *) errorCardReaderModelNotSupported;
 
+/**
+ *  Creates an NSError object representing invalid transaction amount error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionAmount;
+
+/**
+ *  Creates an NSError object representing invalid transaction currency code error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionCurrencyCode;
+
+/**
+ *  Creates an NSError object representing invalid transaction account id error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionAccountID;
+
 @end

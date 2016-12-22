@@ -7,10 +7,10 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import "WPRoamHelper.h"
-#import <RUA/RUAEnumerationHelper.h>
+#import <RUA_MFI/RUAEnumerationHelper.h>
 
 #define ROAM_FIRST_NAME_INDEX 1
 #define ROAM_LAST_NAME_INDEX 0
@@ -75,6 +75,11 @@
 + (NSString *)RUAProgressMessage_toString:(RUAProgressMessage)message
 {
     return [RUAEnumerationHelper RUAProgressMessage_toString:message];
+}
+
++ (NSString *)RUADeviceType_toString:(RUADeviceType)type
+{
+    return [RUAEnumerationHelper RUADeviceType_toString:type];
 }
 
 + (NSString *) nameAtIndex:(int)index fromRUAData:(NSDictionary *) ruaData

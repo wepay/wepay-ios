@@ -7,14 +7,14 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import "WPBatteryHelper.h"
 #import "WPMockRoamDeviceManager.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 #define TIMEOUT_DEFAULT_SEC 60
 
 @interface WPBatteryHelper ()
@@ -65,7 +65,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self performSelector:@selector(informExternalError:)
                    withObject:[WPError errorCardReaderNotConnected]
-                   afterDelay:RP350X_CONNECTION_TIME_SEC];
+                   afterDelay:CONNECTION_TIME_SEC];
     });
 }
 

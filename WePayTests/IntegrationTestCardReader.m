@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h")
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
 #import "TestAuthorizationDelegate.h"
 #import "TestBatteryLevelDelegate.h"
@@ -18,7 +18,7 @@
 #import "WPError+internal.h"
 #import <XCTest/XCTest.h>
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 
 @interface IntegrationTestCardReader : XCTestCase
 
@@ -63,7 +63,7 @@
     
     [self.wepay startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
     
-    [self waitForExpectationsWithTimeout:(RP350X_CONNECTION_TIME_SEC + 1.0) handler:nil];
+    [self waitForExpectationsWithTimeout:(CONNECTION_TIME_SEC + 1.0) handler:nil];
     XCTAssertTrue(cardReaderDelegate.cardReaderStatusNotConnectedInvoked);
 }
 
@@ -329,7 +329,7 @@
     
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
     XCTAssertTrue(cardReaderDelegate.failureCallBackInvoked);
-    XCTAssertEqualObjects([WPError errorInvalidAuthInfo], cardReaderDelegate.error);
+    XCTAssertEqualObjects([WPError errorInvalidTransactionAmount], cardReaderDelegate.error);
 }
 
 - (void) testAuthInfoFailureForInvalidAccountId
@@ -349,7 +349,7 @@
     
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
     XCTAssertTrue(cardReaderDelegate.failureCallBackInvoked);
-    XCTAssertEqualObjects([WPError errorInvalidAuthInfo], cardReaderDelegate.error);
+    XCTAssertEqualObjects([WPError errorInvalidTransactionAccountID], cardReaderDelegate.error);
 }
 
 #pragma mark - Tests for Battery Level.

@@ -7,13 +7,17 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
+
+#import <RUA_MFI/RUAEnumerationHelper.h>
 
 #import "WePay.h"
-#import "WePay_CardReader.h"
+#import "WPTransactionUtilities.h"
 #import "WPDipTransactionHelper.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
+
+NSString *const kRP350XModelName = @"RP350X";
 
 @interface WPDipTransactionHelper ()
 
@@ -42,27 +46,30 @@
 @property (nonatomic, strong) NSString *creditCardId;
 @property (nonatomic, strong) NSError *authorizationError;
 
-@property (nonatomic, strong) NSString *wepayEnvironment;
+@property (nonatomic, strong) WPConfig *config;
 @property (nonatomic, strong) WPPaymentInfo *paymentInfo;
 @property (nonatomic, strong) WPDipConfigHelper *dipConfigHelper;
 @property (nonatomic, strong) id<RUADeviceManager> roamDeviceManager;
+@property (nonatomic, strong) WPTransactionUtilities *transactionUtilities;
 
-@property (nonatomic, weak) WPRP350XManager *delegate;
-@property (nonatomic, weak) NSObject<WPDeviceManagerDelegate> *managerDelegate;
-@property (nonatomic, weak) NSObject<WPExternalCardReaderDelegate> *externalDelegate;
+@property (nonatomic, weak) id<WPTransactionDelegate> delegate;
+@property (nonatomic, weak) id<WPExternalCardReaderDelegate> externalDelegate;
 
 @end
 
 @implementation WPDipTransactionHelper
 
 - (instancetype) initWithConfigHelper:(WPDipConfigHelper *)configHelper
-                             delegate:(WPRP350XManager *)delegate
-                          environment:(NSString *)environment
+                             delegate:(id<WPTransactionDelegate>)delegate
+             externalCardReaderDelegate:(id<WPExternalCardReaderDelegate>)externalDelegate
+                               config:(WPConfig *)config
 {
     if (self = [super init]) {
         self.dipConfigHelper = configHelper;
         self.delegate = delegate;
-        self.wepayEnvironment = environment;
+        self.externalDelegate = externalDelegate;
+        self.config = config;
+        self.transactionUtilities = [[WPTransactionUtilities alloc] initWithConfig:self.config externalCardReaderHelper:self.externalDelegate];
     }
 
     return self;
@@ -105,8 +112,7 @@
                                         currencyCode:(NSString *)currencyCode
                                            accountid:(long)accountId
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
-                                     managerDelegate:(id<WPDeviceManagerDelegate>) managerDeletage
-                                    externalDelegate:(id<WPExternalCardReaderDelegate>) externalDelegate
+                                   cardReaderRequest:(CardReaderRequest)request
 
 {
     NSLog(@"performEMVTransactionStartCommand");
@@ -116,8 +122,7 @@
     self.currencyCode = currencyCode;
     self.accountId = accountId;
     self.roamDeviceManager = roamDeviceManager;
-    self.externalDelegate = externalDelegate;
-    self.managerDelegate = managerDeletage;
+    [self.transactionUtilities setCardReaderRequest:request];
     [self startTransaction];
 }
 
@@ -186,24 +191,25 @@
                  if ([ruaResponse responseType] == RUAResponseTypeMagneticCardData) {
                      NSMutableDictionary *responseData = [[WPRoamHelper RUAResponse_toDictionary:ruaResponse] mutableCopy];
                      NSString *fullName = [WPRoamHelper fullNameFromRUAData:responseData];
+                     NSString *modelName = [WPRoamHelper RUADeviceType_toString:[self.roamDeviceManager getType]];
 
                      [responseData setObject:(fullName ? fullName : [NSNull null]) forKey:@"FullName"];
-                     [responseData setObject:kRP350XModelName forKey:@"Model"];
+                     [responseData setObject:modelName forKey:@"Model"];
                      [responseData setObject:@(self.isFallbackSwipe) forKey:@"Fallback"];
                      [responseData setObject:@(self.accountId) forKey:@"AccountId"];
                      [responseData setObject:self.currencyCode forKey:@"CurrencyCode"];
                      [responseData setObject:self.amount forKey:@"Amount"];
 
-                     [self.managerDelegate handleSwipeResponse:responseData
-                                                successHandler:^(NSDictionary *returnData) {
-                                                    [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
-                                                }
-                                                  errorHandler:^(NSError * error) {
-                                                      [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
-                                                  }
-                                                 finishHandler:^{
-                                                     [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
-                                                 }];
+                     [self.transactionUtilities handleSwipeResponse:responseData
+                                                     successHandler:^(NSDictionary *returnData) {
+                                                         [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                     }
+                                                       errorHandler:^(NSError * error) {
+                                                           [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
+                                                       }
+                                                      finishHandler:^{
+                                                          [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                      }];
 
                  } else if ([ruaResponse responseType] == RUAResponseTypeListOfApplicationIdentifiers) {
                      NSArray *appIds = [ruaResponse listOfApplicationIdentifiers];
@@ -351,9 +357,10 @@
 {
     NSMutableDictionary *responseData = [[WPRoamHelper RUAResponse_toDictionary:ruaResponse] mutableCopy];
 
+    NSString *modelName = [WPRoamHelper RUADeviceType_toString:[self.roamDeviceManager getType]];
     NSString *fullName = [WPRoamHelper fullNameFromRUAData:responseData];
     [responseData setObject:(fullName ? fullName : [NSNull null]) forKey:@"FullName"];
-    [responseData setObject:kRP350XModelName forKey:@"Model"];
+    [responseData setObject:modelName forKey:@"Model"];
     [responseData setObject:@(self.accountId) forKey:@"AccountId"];
 
     //Some older roam test readers seem to be messing up these values, so we overwrite them with known good values
@@ -371,7 +378,7 @@
 
             NSString *firstName = [WPRoamHelper firstNameFromRUAData:responseData];
             NSString *lastName = [WPRoamHelper lastNameFromRUAData:responseData];
-            NSString *pan = [self.managerDelegate sanitizePAN:[responseData objectForKey:@"PAN"]];
+            NSString *pan = [self.transactionUtilities sanitizePAN:[responseData objectForKey:@"PAN"]];
 
             // save application cryptogram for later use
             self.applicationCryptogram = [responseData objectForKey:@"ApplicationCryptogram"];
@@ -385,53 +392,53 @@
             self.paymentInfo = [[WPPaymentInfo alloc] initWithEMVInfo:info];
 
             // return payment info to delegate
-            [self.managerDelegate handlePaymentInfo:self.paymentInfo
-                                     successHandler:^(NSDictionary *returnData) {
-                                         NSString *authCode = [returnData objectForKey:@"authorisation_code"];
-                                         if (authCode != nil && ![authCode isEqual:[NSNull null]]) {
-                                             self.authCode = [authCode stringByPaddingToLength:12 withString:@"0" startingAtIndex:0];
-                                         } else {
-                                             // a 12-digit auth code is required, even all-zeros works
-                                             self.authCode = [@"" stringByPaddingToLength:12 withString:@"0" startingAtIndex:0];
-                                         }
-
-                                         NSString *issuerAuthenticationData = [returnData objectForKey:@"issuer_authentication_data"];
-                                         NSString *authResponseCode = [returnData objectForKey:@"authorisation_response_code"];
-                                         if ([@"217" isEqualToString:authResponseCode]) {
-                                             // 217 is an error code that comes back in case of a processor timeout
-                                             // This should be treated as a no-response
-                                             authResponseCode = nil;
-                                         }
-
-
-                                         NSNumber *creditCardId = [returnData objectForKey:@"credit_card_id"] == [NSNull null] ? nil : [returnData objectForKey:@"credit_card_id"];
-
-                                         NSString *issuerScriptTemplate1 = [returnData objectForKey:@"issuer_script_template1"];
-                                         if (issuerScriptTemplate1 != nil && ![issuerScriptTemplate1 isEqual:[NSNull null]]) {
-                                             self.issuerScriptTemplate1 = issuerScriptTemplate1;
-                                         }
-
-                                         NSString *issuerScriptTemplate2 = [returnData objectForKey:@"issuer_script_template2"];
-                                         if (issuerScriptTemplate2 != nil && ![issuerScriptTemplate2 isEqual:[NSNull null]]) {
-                                             self.issuerScriptTemplate2 = issuerScriptTemplate2;
-                                         }
+            [self.transactionUtilities handlePaymentInfo:self.paymentInfo
+                                          successHandler:^(NSDictionary *returnData) {
+                                              NSString *authCode = [returnData objectForKey:@"authorisation_code"];
+                                              if (authCode != nil && ![authCode isEqual:[NSNull null]]) {
+                                                  self.authCode = [authCode stringByPaddingToLength:12 withString:@"0" startingAtIndex:0];
+                                              } else {
+                                                  // a 12-digit auth code is required, even all-zeros works
+                                                  self.authCode = [@"" stringByPaddingToLength:12 withString:@"0" startingAtIndex:0];
+                                              }
+                                              
+                                              NSString *issuerAuthenticationData = [returnData objectForKey:@"issuer_authentication_data"];
+                                              NSString *authResponseCode = [returnData objectForKey:@"authorisation_response_code"];
+                                              if ([@"217" isEqualToString:authResponseCode]) {
+                                                  // 217 is an error code that comes back in case of a processor timeout
+                                                  // This should be treated as a no-response
+                                                  authResponseCode = nil;
+                                              }
 
 
-                                         [self consumeIssuerAuthenticationData:issuerAuthenticationData
-                                                              authResponseCode:authResponseCode
-                                                                  creditCardId:[creditCardId stringValue]];
-                                     }
-                                       errorHandler:^(NSError * error) {
-                                           self.authorizationError = error;
+                                              NSNumber *creditCardId = [returnData objectForKey:@"credit_card_id"] == [NSNull null] ? nil : [returnData objectForKey:@"credit_card_id"];
 
-                                           [self consumeIssuerAuthenticationData:nil
+                                              NSString *issuerScriptTemplate1 = [returnData objectForKey:@"issuer_script_template1"];
+                                              if (issuerScriptTemplate1 != nil && ![issuerScriptTemplate1 isEqual:[NSNull null]]) {
+                                                  self.issuerScriptTemplate1 = issuerScriptTemplate1;
+                                              }
+
+                                              NSString *issuerScriptTemplate2 = [returnData objectForKey:@"issuer_script_template2"];
+                                              if (issuerScriptTemplate2 != nil && ![issuerScriptTemplate2 isEqual:[NSNull null]]) {
+                                                  self.issuerScriptTemplate2 = issuerScriptTemplate2;
+                                              }
+
+
+                                              [self consumeIssuerAuthenticationData:issuerAuthenticationData
+                                                                   authResponseCode:authResponseCode
+                                                                       creditCardId:[creditCardId stringValue]];
+                                          }
+                                            errorHandler:^(NSError * error) {
+                                                self.authorizationError = error;
+
+                                                [self consumeIssuerAuthenticationData:nil
                                                                 authResponseCode:nil
                                                                     creditCardId:nil];
-                                       }
-                                      finishHandler:^{
-                                          self.authorizationError = nil;
-                                          [self reactToError:nil];
-                                      }];
+                                            }
+                                           finishHandler:^{
+                                               self.authorizationError = nil;
+                                               [self reactToError:nil];
+                                           }];
 
         } else {
             NSLog(@"[performEMVTransactionDataCommand] Stopping, unhandled response");
@@ -447,7 +454,7 @@
     BOOL isMagicSuccessAmount = [@[@(21.61), @(121.61), @(22.61), @(122.61), @(24.61), @(124.61), @(25.61), @(125.61)] containsObject:self.amount];
 
     // YES, if not in production and amount is magic amount
-    return (![kWPEnvironmentProduction isEqualToString:self.wepayEnvironment] && isMagicSuccessAmount);
+    return (![kWPEnvironmentProduction isEqualToString:self.config.environment] && isMagicSuccessAmount);
 }
 
 - (void) consumeIssuerAuthenticationData:(NSString *)issuerAuthenticationData
@@ -578,9 +585,9 @@
     if (error != nil) {
         if (self.shouldIssueReversal) {
             // shouldIssueReversal is set inside the validator
-            [self.managerDelegate issueReversalForCreditCardId:@([self.creditCardId longLongValue])
-                                                     accountId:@(self.accountId)
-                                                  roamResponse:responseData];
+            [self.transactionUtilities issueReversalForCreditCardId:@([self.creditCardId longLongValue])
+                                                          accountId:@(self.accountId)
+                                                       roamResponse:responseData];
 
         }
 
@@ -718,16 +725,42 @@
 {
     // stop(end) transaction, then either restart transaction or stop reader
     [self stopTransactionWithCompletion:^{
-        if ([self.delegate shouldRestartTransactionAfterError:error forPaymentMethod:paymentMethod]) {
+        if ([self shouldRestartTransactionAfterError:error forPaymentMethod:paymentMethod]) {
             // restart transaction
             [self startTransaction];
-        } else if ([self.delegate shouldStopCardReaderAfterTransaction]) {
-            [self.delegate stopDevice];
         } else {
             // mark transaction completed, but leave reader running
             [self.delegate transactionCompleted];
         }
     }];
+}
+
+/**
+ *  Determines if the transaction should restart after a dip/swipe error/success.
+ *
+ *  @param error            The error that occured. Can be nil if the payment succeeded.
+ *  @param paymentMethod    The payment method used for the payment.
+ *
+ *  @return                 YES if the transaction should be restated, otherwise NO.
+ */
+- (BOOL) shouldRestartTransactionAfterError:(NSError *)error
+                           forPaymentMethod:(NSString *)paymentMethod {
+    if (error != nil) {
+        // if the error code was a general error
+        if (error.domain == kWPErrorSDKDomain && error.code == WPErrorCardReaderGeneralError) {
+            // return whether or not we're configured to restart on general error
+            return self.config.restartTransactionAfterGeneralError;
+        }
+        // return whether or not we're configured to restart on other errors
+        return self.config.restartTransactionAfterOtherErrors;
+    } else if ([paymentMethod isEqualToString:kWPPaymentMethodSwipe]) {
+        // return whether or not we're configured to restart on successful swipe
+        return self.config.restartTransactionAfterSuccess;
+    } else {
+        // dont restart on successful dip
+        return NO;
+    }
+
 }
 
 - (NSString *) convertToEMVAmount:(NSDecimalNumber *)amount

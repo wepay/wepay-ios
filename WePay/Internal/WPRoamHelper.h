@@ -7,10 +7,10 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import <Foundation/Foundation.h>
-#import <RUA/RUA.h>
+#import <RUA_MFI/RUA.h>
 
 @interface WPRoamHelper : NSObject
 
@@ -78,6 +78,15 @@
  *  @return The progress message as a string
  */
 + (NSString *) RUAProgressMessage_toString:(RUAProgressMessage)message;
+
+/**
+ *  Converts Roam's device type into a string
+ *
+ *  @param type The device type from Roam
+ *
+ *  @return The device type as a string
+ */
++ (NSString *) RUADeviceType_toString:(RUADeviceType)type;
 
 /**
  *  Extracts first name from Roam response dictionary

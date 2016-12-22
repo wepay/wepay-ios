@@ -176,6 +176,21 @@ typedef enum WPErrorCode {
      *  -10035 Card reader model not supported.
      */
     WPErrorCardReaderModelNotSupported = -10035,
+    
+    /**
+     *  -10036 Invalid transaction amount.
+     */
+    WPErrorInvalidTransactionAmount = -10036,
+    
+    /**
+     *  -10037 Invalid transaction currency code.
+     */
+    WPErrorInvalidTransactionCurrencyCode = -10037,
+    
+    /**
+     *  -10038 Invalid transaction account id.
+     */
+    WPErrorInvalidTransactionAccountID = -10038
 
 } WPErrorCode;
 
@@ -280,3 +295,18 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorCardReaderModelNotSupported, that can be retrieved by calling [error localizedDescription].
  */
 #define WPCardReaderModelNotSupportedErrorMessage NSLocalizedStringFromTable(@"This card reader model is not supported.", @"WePay",  @"This card reader model is not supported.");
+
+/**
+ * The localizable user facing message for WPErrorInvalidTransactionAmount, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionAmountErrorMessage NSLocalizedStringFromTable(@"The provided transaction amount is invalid.", @"WePay", @"The provided transaction amount is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidTransactionCurrencyCode, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionCurrencyCodeErrorMessage NSLocalizedStringFromTable(@"The provided currency code is invalid.", @"WePay",  @"The provided currency code is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidTransactionAccountID, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionAccountIDErrorMessage NSLocalizedStringFromTable(@"The provided account ID is invalid.", @"WePay",  @"The provided account ID is invalid.");

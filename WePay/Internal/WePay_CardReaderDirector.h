@@ -1,5 +1,5 @@
 //
-//  WePay_CardReader.h
+//  WePay_CardReaderDirector.h
 //  WePay
 //
 //  Created by Chaitanya Bagaria on 11/17/14.
@@ -7,16 +7,21 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
 #import <Foundation/Foundation.h>
-#import <RUA/RUA.h>
+#import <RUA_MFI/RUA.h>
 
 #define TIMEOUT_DEFAULT_SEC 60
 #define TIMEOUT_INFINITE_SEC -1
 #define TIMEOUT_WORKAROUND_SEC 112
 
-extern NSString *const kRP350XModelName;
+#define WEPAY_LAST_DEVICE_KEY @"wepay.last.device.type"
+
+typedef NS_ENUM(NSInteger, CardReaderRequest) {
+    CardReaderForReading,
+    CardReaderForTokenizing
+};
 
 @class WPAuthorizationInfo;
 @class WPConfig;
@@ -26,35 +31,6 @@ extern NSString *const kRP350XModelName;
 @protocol WPTokenizationDelegate;
 @protocol WPAuthorizationDelegate;
 @protocol WPBatteryLevelDelegate;
-
-@protocol WPDeviceManagerDelegate <NSObject>
-
-- (void) handleSwipeResponse:(NSDictionary *) responseData
-              successHandler:(void (^)(NSDictionary * returnData)) successHandler
-                errorHandler:(void (^)(NSError * error)) errorHandler
-               finishHandler:(void (^)(void)) finishHandler;
-- (void) handlePaymentInfo:(WPPaymentInfo *)paymentInfo
-            successHandler:(void (^)(NSDictionary * returnData)) successHandler
-              errorHandler:(void (^)(NSError * error)) errorHandler
-             finishHandler:(void (^)(void)) finishHandler;
-
-- (void) issueReversalForCreditCardId:(NSNumber *)creditCardId
-                            accountId:(NSNumber *)accountId
-                         roamResponse:(NSDictionary *)cardInfo;
-- (void) fetchAuthInfo:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion;
-- (void) handleDeviceStatusError:(NSString *)message;
-- (void) connectedDevice:(NSString *)deviceType;
-- (void) disconnectedDevice;
-
-- (NSError *) validateAuthInfoImplemented:(BOOL)implemented
-                                   amount:(NSDecimalNumber *)amount
-                             currencyCode:(NSString *)currencyCode
-                                accountId:(long)accountId;
-- (NSError *) validatePaymentInfoForTokenization:(WPPaymentInfo *)paymentInfo;
-- (NSError *) validateSwiperInfoForTokenization:(NSDictionary *)swiperInfo;
-- (NSString *) sanitizePAN:(NSString *)pan;
-
-@end
 
 @protocol WPExternalCardReaderDelegate <NSObject>
 
@@ -81,31 +57,20 @@ extern NSString *const kRP350XModelName;
 - (id<WPTokenizationDelegate>) externalTokenizationDelegate;
 - (id<WPAuthorizationDelegate>) externalAuthorizationDelegate;
 
-
 @end
 
-@protocol WPDeviceManager <NSObject>
-
-/**
- *  Sets up the delegates for the device manager.
- *
- *  @param managerDelegate  The manager delegate.
- *  @param externalDelegate The external delegate.
-*/
-- (void) setManagerDelegate:(NSObject<WPDeviceManagerDelegate> *)managerDelegate
-           externalDelegate:(NSObject<WPExternalCardReaderDelegate> *)externalDelegate;
+@protocol WPCardReaderManager <NSObject>
 
 /**
  *  Starts the card reader.
  *
- *  @return YES if initialized, NO otherwise.
  */
-- (BOOL) startDevice;
+- (void) startCardReader;
 
 /**
- *  Completely stops the device.
+ *  Completely stops the card reader.
  */
-- (void) stopDevice;
+- (void) stopCardReader;
 
 /**
  *  Triggers the card reader to wait for card.
@@ -114,22 +79,22 @@ extern NSString *const kRP350XModelName;
 - (void) processCard;
 
 /**
- *  Determines if the transaction should restart after a dip/swipe error/success.
+ *  Sets the CardReaderRequest type to use for the card reader.
  *
- *  @param error            The error that occured. Can be nil if the payment succeeded.
- *  @param paymentMethod    The payment method used for the payment.
- *
- *  @return                 YES if the transaction should be restated, otherwise NO.
  */
-- (BOOL) shouldRestartTransactionAfterError:(NSError *)error
-                          forPaymentMethod:(NSString *)paymentMethod;
+- (void)setCardReaderRequest:(CardReaderRequest)request;
 
 /**
- *  Determines if the card reader should be stopped after a transaction.
- *
- *  @return     YES if the card reader should be stopped, otherwise NO.
+ * Returns whether or not a card reader is connected
+ * 
+ * @return Boolean stating if card reader is connected
  */
-- (BOOL) shouldStopCardReaderAfterTransaction;
+- (BOOL) isConnected;
+
+@end
+
+
+@protocol WPTransactionDelegate <NSObject>
 
 /**
  *  Marks the currently running transaction as completed;
@@ -139,11 +104,11 @@ extern NSString *const kRP350XModelName;
 @end
 
 
-@interface WePay_CardReader : NSObject <WPDeviceManagerDelegate>
+@interface WePay_CardReaderDirector : NSObject
 
 - (instancetype) initWithConfig:(WPConfig *)config;
 
-- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDlegate;
+- (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate;
 
 - (void) startTransactionForTokenizingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
                                         tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate

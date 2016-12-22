@@ -12,7 +12,7 @@
 #import "WPError+internal.h"
 #import <XCTest/XCTest.h>
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 
 @interface IntegrationTest : XCTestCase
 

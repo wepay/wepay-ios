@@ -7,17 +7,18 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import <Foundation/Foundation.h>
 #import "WPDipConfigHelper.h"
-#import "WPRP350XManager.h"
+#import "WPIngenicoCardReaderManager.h"
 
 @interface WPDipTransactionHelper : NSObject
 
 - (instancetype) initWithConfigHelper:(WPDipConfigHelper *)configHelper
-                             delegate:(WPRP350XManager *)delegate
-                          environment:(NSString *)environment;
+                             delegate:(id<WPTransactionDelegate>)delegate
+           externalCardReaderDelegate:(id<WPExternalCardReaderDelegate>)externalDelegate
+                               config:(WPConfig *)config;
 
 /**
  *  Starts the transaction on the card reader
@@ -26,8 +27,9 @@
                                         currencyCode:(NSString *)currencyCode
                                            accountid:(long)accountId
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
-                                     managerDelegate:(id<WPDeviceManagerDelegate>) managerDeletage
-                                    externalDelegate:(id<WPExternalCardReaderDelegate>) externalDelegate;
+                                   cardReaderRequest:(CardReaderRequest)request;
+
+
 @end
 
 #endif

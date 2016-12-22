@@ -1,8 +1,10 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/WePay" "${PODS_ROOT}/WePay"
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/WePay"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/WePay"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_CFLAGS = $(inherited)  -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/WePay"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"stdc++.6.0.9" -framework "AVFoundation" -framework "AudioToolbox" -framework "CoreBluetooth" -framework "CoreTelephony" -framework "MediaPlayer" -framework "SystemConfiguration" -framework "TrustDefenderMobile" -framework "WePay"
-PODS_FRAMEWORK_BUILD_PATH = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Pods-SwiftApp
+OTHER_LDFLAGS = $(inherited) -ObjC -l"stdc++.6.0.9" -framework "AVFoundation" -framework "AudioToolbox" -framework "CoreBluetooth" -framework "CoreTelephony" -framework "MediaPlayer" -framework "SystemConfiguration" -framework "WePay"
+PODS_BUILD_DIR = $BUILD_DIR
+PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}/Pods

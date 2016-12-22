@@ -15,6 +15,8 @@
 #import "WPPaymentToken.h"
 #import "WPAuthorizationInfo.h"
 
+@class WePay_CardReaderDirector;
+
 @class WPConfig;
 @class WPPaymentInfo;
 @class WPPaymentToken;

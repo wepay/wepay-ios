@@ -9,8 +9,8 @@
 #import "WePay.h"
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
-#import <WePay_CardReader.h>
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
+#import <WePay_CardReaderDirector.h>
 #endif
 
 #if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
@@ -57,7 +57,7 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 
 @interface WePay ()
 
-@property(nonatomic, strong) WePay_CardReader *wePayCardReader;
+@property(nonatomic, strong) WePay_CardReaderDirector *wePayCardReaderDirector;
 @property(nonatomic, strong) WePay_Checkout *wePayCheckout;
 @property(nonatomic, strong) WePay_Manual *wePayManual;
 @property(nonatomic, strong) WPRiskHelper *riskHelper;
@@ -105,17 +105,17 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 
 #if defined(__has_include)
 
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 #pragma mark - Card Reader available
 
 - (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (!self.wePayCardReader) {
-            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        if (!self.wePayCardReaderDirector) {
+            self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
 
-        [self.wePayCardReader startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
+        [self.wePayCardReaderDirector startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
     });
 }
 
@@ -124,32 +124,32 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
                                        authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (!self.wePayCardReader) {
-            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        if (!self.wePayCardReaderDirector) {
+            self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
 
-        [self.wePayCardReader startTransactionForTokenizingWithCardReaderDelegate:cardReaderDelegate
-                                                             tokenizationDelegate:tokenizationDelegate
-                                                            authorizationDelegate:authorizationDelegate
-                                                                        sessionId:[self getSessionId]];
+        [self.wePayCardReaderDirector startTransactionForTokenizingWithCardReaderDelegate:cardReaderDelegate
+                                                                     tokenizationDelegate:tokenizationDelegate
+                                                                    authorizationDelegate:authorizationDelegate
+                                                                                sessionId:[self getSessionId]];
     });
 }
 
 - (void) stopCardReader
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self.wePayCardReader stopCardReader];
+        [self.wePayCardReaderDirector stopCardReader];
     });
 }
 
 - (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (!self.wePayCardReader) {
-            self.wePayCardReader = [[WePay_CardReader alloc] initWithConfig:self.config];
+        if (!self.wePayCardReaderDirector) {
+            self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
         
-        [self.wePayCardReader getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate];
+        [self.wePayCardReaderDirector getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate];
     });
 }
 

@@ -38,11 +38,14 @@ The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExamp
     - CoreBluetooth.framework
     - CoreLocation.framework
     - CoreTelephony.framework
+    - ExternalAccessory.framework
     - MediaPlayer.framework
     - SystemConfiguration.framework
     - UIKit.framework
     - libstdc++.6.0.9.dylib
-+ Also include the framework file you copied:
+    - libstdc++.dylib
++ Also include the framework files you copied:
+    - TrustDefenderMobile.framework
     - WePay.framework
 + Done!
 

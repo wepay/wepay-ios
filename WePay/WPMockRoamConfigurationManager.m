@@ -6,7 +6,7 @@
 //  Copyright © 2016 WePay. All rights reserved.
 //
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h")
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
 #import "WPMockRoamConfigurationManager.h"
 
@@ -184,6 +184,28 @@
         response(ruaResponse);
     });
 }
+
+- (void)readKeyMapping:(OnProgress)progress response:(OnResponse)response {}
+
+- (void)readCertificateFilesVersion:(OnProgress)progress response:(OnResponse)response {}
+
+- (void)enableRKIMode:(OnResponse)response {}
+
+- (void)triggerRKIWithGroupName:(NSString *)groupName progress:(OnProgress)progress response:(OnResponse)response {}
+
+- (void)configureContactlessTransactionOptions:(BOOL)supportCVM
+                                   supportAMEX:(BOOL)supportAMEX
+                            enableCryptogram17:(BOOL)enableCryptogram17
+                        enableOnlineCryptogram:(BOOL)enableOnlineCryptogram
+                                  enableOnline:(BOOL)enableOnline
+                               enableMagStripe:(BOOL)enableMagStripe
+                                 enableMagChip:(BOOL)enableMagChip
+                                   enableQVSDC:(BOOL)enableQVSDC
+                                     enableMSD:(BOOL)enableMSD
+                                 enableDPASEMV:(BOOL)enableDPASEMV
+                                 enableDPASMSR:(BOOL)enableDPASMSR
+                 contactlessOutcomeDisplayTime:(int)contactlessOutcomeDisplayTime
+                                      response:(OnResponse)response {}
 
 @end
 
