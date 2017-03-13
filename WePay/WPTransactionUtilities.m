@@ -31,7 +31,7 @@
 
 @implementation WPTransactionUtilities
 
-- (instancetype)initWithConfig:(WPConfig *)config
+- (instancetype) initWithConfig:(WPConfig *)config
       externalCardReaderHelper:(id<WPExternalCardReaderDelegate>) externalHelper
 {
     if (self = [super init]) {

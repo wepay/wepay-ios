@@ -17,6 +17,7 @@
 
 @property id<RUADeviceStatusHandler> deviceStatusHandler;
 @property WPMockConfig* mockConfig;
+@property RUAErrorCode mockCommandErrorCode;
 
 - (void) resetStates;
 

@@ -26,7 +26,7 @@
 
 @implementation UnitTestWPDipTransactionHelper
 
-- (void)setUp {
+- (void) setUp {
     [super setUp];
     self.dipTransactionHelper = [[WPDipTransactionHelper alloc] initWithConfigHelper:nil delegate:nil externalCardReaderDelegate:nil config:nil];
 }

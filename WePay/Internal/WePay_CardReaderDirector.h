@@ -20,7 +20,8 @@
 
 typedef NS_ENUM(NSInteger, CardReaderRequest) {
     CardReaderForReading,
-    CardReaderForTokenizing
+    CardReaderForTokenizing,
+    CardReaderForBatteryLevel
 };
 
 @class WPAuthorizationInfo;
@@ -35,8 +36,11 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
 @protocol WPExternalCardReaderDelegate <NSObject>
 
 - (void) informExternalCardReader:(NSString *)status;
+- (void) informExternalCardReaderApplications:(NSArray *)applications
+                                   completion:(void (^)(NSInteger selectedIndex))completion;
 - (void) informExternalCardReaderSuccess:(WPPaymentInfo *)paymentInfo;
 - (void) informExternalCardReaderFailure:(NSError *)error;
+- (void) informExternalCardReaderSelection:(NSArray *)cardReaderNames completion:(void (^)(NSInteger selectedIndex))completion;
 - (void) informExternalCardReaderResetCompletion:(void (^)(BOOL shouldReset))completion;
 - (void) informExternalCardReaderAmountCompletion:(void (^)(BOOL implemented, NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion;
 
@@ -46,16 +50,19 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
 
 - (void) informExternalAuthorizationSuccess:(WPAuthorizationInfo *)authInfo forPaymentInfo:(WPPaymentInfo *)paymentInfo;
 - (void) informExternalAuthorizationFailure:(NSError *)error forPaymentInfo:(WPPaymentInfo *)paymentInfo;
-- (void) informExternalAuthorizationApplications:(NSArray *)applications
-                                      completion:(void (^)(NSInteger selectedIndex))completion;
 
 - (void) setExternalCardReaderDelegate:(id<WPCardReaderDelegate>) delegate;
 - (void) setExternalTokenizationDelegate:(id<WPTokenizationDelegate>) delegate;
 - (void) setExternalAuthorizationDelegate:(id<WPAuthorizationDelegate>) delegate;
+- (void) setExternalBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) delegate;
+
+- (void) informExternalBatteryLevelSuccess:(int) batteryLevel;
+- (void) informExternalBatteryLevelError:(NSError *)error;
 
 - (id<WPCardReaderDelegate>) externalCardReaderDelegate;
 - (id<WPTokenizationDelegate>) externalTokenizationDelegate;
 - (id<WPAuthorizationDelegate>) externalAuthorizationDelegate;
+- (id<WPBatteryLevelDelegate>) externalBatteryLevelDelegate;
 
 @end
 
@@ -73,16 +80,16 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
 - (void) stopCardReader;
 
 /**
- *  Triggers the card reader to wait for card.
+ *  Triggers the card reader to perform the card reader request operation.
  *
  */
-- (void) processCard;
+- (void) processCardReaderRequest;
 
 /**
  *  Sets the CardReaderRequest type to use for the card reader.
  *
  */
-- (void)setCardReaderRequest:(CardReaderRequest)request;
+- (void) setCardReaderRequest:(CardReaderRequest)request;
 
 /**
  * Returns whether or not a card reader is connected
@@ -90,6 +97,13 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
  * @return Boolean stating if card reader is connected
  */
 - (BOOL) isConnected;
+
+/**
+ * Returns whether or not a card reader is being searched for
+ *
+ * @return Boolean stating if card reader is being searched for
+ */
+- (BOOL) isSearching;
 
 @end
 
@@ -117,7 +131,12 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
 
 - (void) stopCardReader;
 
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
+- (void) getCardReaderBatteryLevelWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                    batteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
+
+- (NSString *) getRememberedCardReader;
+
+- (void) forgetRememberedCardReader;
 
 @end
 

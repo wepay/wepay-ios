@@ -190,7 +190,19 @@ typedef enum WPErrorCode {
     /**
      *  -10038 Invalid transaction account id.
      */
-    WPErrorInvalidTransactionAccountID = -10038
+    WPErrorInvalidTransactionAccountID = -10038,
+    
+    /**
+     *  -10039 Invalid card reader selection.
+     */
+    WPErrorInvalidCardReaderSelection = -10039,
+
+    /**
+     *  -10040 Card reader battery too low.
+     */
+	WPErrorCardReaderBatteryTooLow = -10040
+
+	
 
 } WPErrorCode;
 
@@ -310,3 +322,13 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorInvalidTransactionAccountID, that can be retrieved by calling [error localizedDescription].
  */
 #define WPErrorInvalidTransactionAccountIDErrorMessage NSLocalizedStringFromTable(@"The provided account ID is invalid.", @"WePay",  @"The provided account ID is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidCardReaderSelection, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidCardReaderSelectionErrorMessage NSLocalizedStringFromTable(@"Card reader selection is invalid.", @"WePay",  @"Card reader selection is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderBatteryTooLow, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorCardReaderBatteryTooLowErrorMessage NSLocalizedStringFromTable(@"The card reader battery does not have enough charge. Please charge before using.", @"WePay",  @"The card reader battery does not have enough charge. Please charge before using.");

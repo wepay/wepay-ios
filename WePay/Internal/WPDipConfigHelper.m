@@ -13,6 +13,7 @@
 #import <RUA_MFI/RUA.h>
 #import "WPConfig.h"
 #import "WPDipConfigHelper.h"
+#import "WPUserDefaultsHelper.h"
 
 // Application identifiers
 #define AID_MCRD @"A000000004"
@@ -32,8 +33,6 @@
 #define TAC_DENIAL_KEY @"denial"
 #define TAC_ONLINE_KEY @"online"
 #define TAC_DEFAULT_KEY @"default"
-
-#define WEPAY_CONFIG_HASH_KEY @"wepay.config.hashes"
 
 @interface WPDipConfigHelper ()
 
@@ -68,58 +67,29 @@
     return self;
 }
 
-- (BOOL)compareStoredConfigHashForKey:(NSString *)key
+- (BOOL) compareStoredConfigHashForKey:(NSString *)key
 {
     if (key == nil || [key length] <= 1) {
         return YES;
     }
-
-    // fetch saved hashes
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *configHashes = [defaults objectForKey:WEPAY_CONFIG_HASH_KEY];
-    if (configHashes == nil) {
-        configHashes = @{};
-    }
-
-    // extract hash for current key
-    NSString *storedHash = [configHashes objectForKey:key];
-
+    
+    NSString *storedHash = [WPUserDefaultsHelper getStoredConfigHashForKey:key];
+    
     // determine if hashes are different
     return (storedHash == nil || ![storedHash isEqualToString:self.configHash]);
 }
 
 - (void) storeConfigHashForKey:(NSString *)key
 {
-    [self storeConfigHash:self.configHash forKey:key];
+    [WPUserDefaultsHelper storeConfigHash:self.configHash forKey:key];
 }
 
 - (void) clearConfigHashForKey:(NSString *)key
 {
-    [self storeConfigHash:nil forKey:key];
+    [WPUserDefaultsHelper storeConfigHash:nil forKey:key];
 }
 
-- (void) storeConfigHash:(NSString *)currentHash forKey:(NSString *)key
-{
-    if (key == nil || [key length] <= 1) {
-        return;
-    }
-
-    // fetch hashes
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *configHashes = [defaults objectForKey:WEPAY_CONFIG_HASH_KEY];
-    if (configHashes == nil) {
-        configHashes = @{};
-    }
-
-    // update hash
-    NSMutableDictionary *updatedConfig = [configHashes mutableCopy];
-    [updatedConfig setValue:currentHash forKey:key];
-
-    [defaults setObject:updatedConfig forKey:WEPAY_CONFIG_HASH_KEY];
-    [defaults synchronize];
-}
-
-- (NSArray *)TACsForAID:(NSString* )selectedAID
+- (NSArray *) TACsForAID:(NSString* )selectedAID
 {
     NSString *tacDenial = @"0000000000";
     NSString *tacOnline = @"0000000000";
@@ -143,7 +113,7 @@
 }
 
 
-- (void)setupDOLValues
+- (void) setupDOLValues
 {
     //Initialize the amount data object list (DOL) array
     self.amountDOL = [[NSArray alloc] initWithObjects:
@@ -229,7 +199,7 @@
                         nil];
 }
 
-- (void)setupKeysValuesForTesting
+- (void) setupKeysValuesForTesting
 {
     self.publicKeyList = [[NSArray alloc] initWithObjects:
                           // Mastercard
@@ -362,7 +332,7 @@
                                                    aidsList:self.aidsList];
 }
 
-- (void)setupKeysValuesForProduction
+- (void) setupKeysValuesForProduction
 {
 
     self.publicKeyList = [[NSArray alloc] initWithObjects:
@@ -465,7 +435,7 @@
                                                    aidsList:self.aidsList];
 }
 
-- (void)setupTACsForTesting
+- (void) setupTACsForTesting
 {
     self.tacList = @{
                      AID_MCRD:@{
@@ -496,7 +466,7 @@
                      };
 }
 
-- (void)setupTACsForProduction
+- (void) setupTACsForProduction
 {
     self.tacList = @{
                      AID_MCRD:@{
@@ -527,7 +497,7 @@
                      };
 }
 
-- (NSString *)md5:(NSString *) input
+- (NSString *) md5:(NSString *) input
 {
     const char *cStr = [input UTF8String];
     unsigned char digest[16];
@@ -542,7 +512,7 @@
     return  output;
 }
 
-- (NSString *)constructConfigHashWithKeysList:(NSArray *)publicKeys aidsList:(NSArray *)aidsList
+- (NSString *) constructConfigHashWithKeysList:(NSArray *)publicKeys aidsList:(NSArray *)aidsList
 {
     NSMutableArray *keysArray = [@[] mutableCopy];
     NSMutableArray *aidsArray = [@[] mutableCopy];

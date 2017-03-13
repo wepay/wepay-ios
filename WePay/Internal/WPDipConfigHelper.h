@@ -30,7 +30,7 @@
  *
  *  @return YES if hash is different or not stored, NO otherwise.
  */
-- (BOOL)compareStoredConfigHashForKey:(NSString *)key;
+- (BOOL) compareStoredConfigHashForKey:(NSString *)key;
 
 /**
  *  Stores the current config hash for the given key.
@@ -47,7 +47,7 @@
 - (void) clearConfigHashForKey:(NSString *)key;
 
 
-- (NSArray *)TACsForAID:(NSString* )aid;
+- (NSArray *) TACsForAID:(NSString* )aid;
 
 @end
 

@@ -41,6 +41,15 @@ NSString *terminalCountryCode = nil;
 
 @implementation WPMockRoamTransactionManager
 
+- (instancetype) init
+{
+    if (self = [super init]) {
+        self.mockCommandErrorCode = RUAErrorCodeUnknownError;
+    }
+    
+    return self;
+}
+
 - (void) resetStates
 {
     emvAppAlreadySelected = NO;
@@ -81,7 +90,7 @@ NSString *terminalCountryCode = nil;
                 if (self.mockConfig.cardReadFailure) {
                     ruaResponse.responseCode = RUAResponseCodeError;
                     ruaResponse.responseType = RUAResponseTypeUnknown;
-                    ruaResponse.errorCode = RUAErrorCodeUnknownError;
+                    ruaResponse.errorCode = self.mockCommandErrorCode;
                     break;
                 }
                 

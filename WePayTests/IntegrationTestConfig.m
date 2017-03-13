@@ -53,15 +53,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:NO readOnlyFlag:YES];
     
-    XCTAssertTrue(statuses.count >= 5); // There will be more because in mock the error-restart loop does not stop
+    XCTAssertTrue(statuses.count >= 6); // There will be more because in mock the error-restart loop does not stop
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[5]);
 }
 
 - (void) testRestartTransactionOnOtherErrorFalse_Reading
@@ -72,15 +73,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:NO readOnlyFlag:YES];
     
-    XCTAssertEqual(5, statuses.count);
+    XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
 }
 
 - (void) testRestartTransactionOnSuccessTrueSwipe_Reading
@@ -90,15 +92,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:YES readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:YES];
     
-    XCTAssertTrue(statuses.count >= 5); // There will be more because in mock the error-restart loop does not stop
+    XCTAssertTrue(statuses.count >= 6); // There will be more because in mock the error-restart loop does not stop
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[5]);
 }
 
 - (void) testRestartTransactionOnSuccessTrueDip_Reading
@@ -108,15 +111,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:YES readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:YES];
     
-    XCTAssertEqual(5, statuses.count);
+    XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
 }
 
 - (void) testRestartTransactionOnSuccessFalseSwipe_Reading
@@ -126,15 +130,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:YES readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:YES];
     
-    XCTAssertEqual(5, statuses.count);
+    XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
 }
 
 - (void) testRestartTransactionOnSuccessFalseDip_Reading
@@ -144,85 +149,90 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:YES];
+    
+    XCTAssertEqual(6, statuses.count);
+    
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
+}
+
+- (void) teststopCardReaderAfterOperationFalseDipSuccess_Reading
+{
+    self.config.stopCardReaderAfterOperation = NO;
+    self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
+    
+    NSMutableArray *statuses = [@[] mutableCopy];
+    
     [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:YES readOnlyFlag:YES];
     
     XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
 }
 
-- (void) testStopCardReaderAfterTransactionFalseDipSuccess_Reading
+- (void) teststopCardReaderAfterOperationFalseDipError_Reading
 {
-    self.config.stopCardReaderAfterTransaction = NO;
-    self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
-    
-    NSMutableArray *statuses = [@[] mutableCopy];
-    
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:YES readOnlyFlag:YES];
-    
-    XCTAssertEqual(4, statuses.count);
-    
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-}
-
-- (void) testStopCardReaderAfterTransactionFalseDipError_Reading
-{
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
     self.config.mockConfig.cardReadFailure =  YES;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:NO readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:YES];
     
-    XCTAssertEqual(4, statuses.count);
+    XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
 }
 
-- (void) testStopCardReaderAfterTransactionFalseSwipeSuccess_Reading
+- (void) teststopCardReaderAfterOperationFalseSwipeSuccess_Reading
 {
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:YES readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:YES readOnlyFlag:YES];
     
-    XCTAssertEqual(4, statuses.count);
+    XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
 }
 
-- (void) testStopCardReaderAfterTransactionFalseSwipeError_Reading
+- (void) teststopCardReaderAfterOperationFalseSwipeError_Reading
 {
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe;
     self.config.mockConfig.cardReadFailure =  YES;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:NO readOnlyFlag:YES];
+    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:YES];
     
-    XCTAssertEqual(4, statuses.count);
+    XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
 }
 
 #pragma mark - startTransactionForTokenizing tests
@@ -235,15 +245,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:NO readOnlyFlag:NO];
     
-    XCTAssertTrue(statuses.count >= 5); // There will be more because in mock the error-restart loop does not stop
+    XCTAssertTrue(statuses.count >= 6); // There will be more because in mock the error-restart loop does not stop
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[5]);
 }
 
 - (void) testRestartTransactionOnOtherErrorFalse_Tokenizing
@@ -254,15 +265,16 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:NO readOnlyFlag:NO];
     
-    XCTAssertEqual(5, statuses.count);
+    XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
 }
 
 - (void) testRestartTransactionOnSuccessTrueSwipe_Tokenizing
@@ -272,16 +284,17 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:8 statuses:statuses successFlag:YES readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:9 statuses:statuses successFlag:YES readOnlyFlag:NO];
     
-    XCTAssertTrue(statuses.count >= 6); // There will be more because in mock the error-restart loop does not stop
+    XCTAssertTrue(statuses.count >= 7); // There will be more because in mock the error-restart loop does not stop
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[4]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[6]);
 }
 
 - (void) testRestartTransactionOnSuccessTrueDip_Tokenizing
@@ -291,16 +304,17 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:8 statuses:statuses successFlag:YES readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:9 statuses:statuses successFlag:YES readOnlyFlag:NO];
     
-    XCTAssertEqual(6, statuses.count);
+    XCTAssertEqual(7, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[4]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[6]);
 }
 
 - (void) testRestartTransactionOnSuccessFalseSwipe_Tokenizing
@@ -310,16 +324,17 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:8 statuses:statuses successFlag:YES readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:9 statuses:statuses successFlag:YES readOnlyFlag:NO];
     
-    XCTAssertEqual(6, statuses.count);
+    XCTAssertEqual(7, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[4]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[6]);
 }
 
 - (void) testRestartTransactionOnSuccessFalseDip_Tokenizing
@@ -329,90 +344,94 @@
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
+    [self restartTestHelperWithTicksCount:9 statuses:statuses successFlag:YES readOnlyFlag:NO];
+    
+    XCTAssertEqual(7, statuses.count);
+    
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[6]);
+}
+
+- (void) teststopCardReaderAfterOperationFalseDipSuccess_Tokenizing
+{
+    self.config.stopCardReaderAfterOperation = NO;
+    self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
+    
+    NSMutableArray *statuses = [@[] mutableCopy];
+    
     [self restartTestHelperWithTicksCount:8 statuses:statuses successFlag:YES readOnlyFlag:NO];
     
     XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[4]);
-    XCTAssertEqual(kWPCardReaderStatusStopped, statuses[5]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[5]);
 }
 
-- (void) testStopCardReaderAfterTransactionFalseDipSuccess_Tokenizing
+- (void) teststopCardReaderAfterOperationFalseDipError_Tokenizing
 {
-    self.config.stopCardReaderAfterTransaction = NO;
-    self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
-    
-    NSMutableArray *statuses = [@[] mutableCopy];
-    
-    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:NO];
-    
-    XCTAssertEqual(5, statuses.count);
-    
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusAuthorizing, statuses[4]);
-    
-}
-
-- (void) testStopCardReaderAfterTransactionFalseDipError_Tokenizing
-{
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
     self.config.mockConfig.cardReadFailure =  YES;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:NO readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:NO];
     
-    XCTAssertEqual(4, statuses.count);
+    XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusCardDipped, statuses[4]);
 }
 
-- (void) testStopCardReaderAfterTransactionFalseSwipeSuccess_Tokenizing
+- (void) teststopCardReaderAfterOperationFalseSwipeSuccess_Tokenizing
 {
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:7 statuses:statuses successFlag:YES readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:8 statuses:statuses successFlag:YES readOnlyFlag:NO];
     
-    XCTAssertEqual(5, statuses.count);
+    XCTAssertEqual(6, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
-    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
+    XCTAssertEqual(kWPCardReaderStatusTokenizing, statuses[5]);
     
 }
 
-- (void) testStopCardReaderAfterTransactionFalseSwipeError_Tokenizing
+- (void) teststopCardReaderAfterOperationFalseSwipeError_Tokenizing
 {
-    self.config.stopCardReaderAfterTransaction = NO;
+    self.config.stopCardReaderAfterOperation = NO;
     self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe;
     self.config.mockConfig.cardReadFailure =  YES;
     
     NSMutableArray *statuses = [@[] mutableCopy];
     
-    [self restartTestHelperWithTicksCount:5 statuses:statuses successFlag:NO readOnlyFlag:NO];
+    [self restartTestHelperWithTicksCount:6 statuses:statuses successFlag:NO readOnlyFlag:NO];
     
-    XCTAssertEqual(4, statuses.count);
+    XCTAssertEqual(5, statuses.count);
     
-    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[0]);
-    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[1]);
-    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[2]);
-    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSearching, statuses[0]);
+    XCTAssertEqual(kWPCardReaderStatusConnected, statuses[1]);
+    XCTAssertEqual(kWPCardReaderStatusCheckingReader, statuses[2]);
+    XCTAssertEqual(kWPCardReaderStatusWaitingForCard, statuses[3]);
+    XCTAssertEqual(kWPCardReaderStatusSwipeDetected, statuses[4]);
 }
 
 /**
@@ -438,7 +457,7 @@
             [expectation fulfill];
         }
     };
-    cardReaderDelegate.readFailureBlock = ^(){
+    cardReaderDelegate.readFailureBlock = ^(NSError *error){
         ticks++;
         if (ticks == ticksCount) {
             [expectation fulfill];
@@ -496,7 +515,7 @@
                                                   authorizationDelegate:authorizationDelegate];
     }
     
-    [self waitForExpectationsWithTimeout:3.0 handler:nil];
+    [self waitForExpectationsWithTimeout:4.0 handler:nil];
     
     if (shouldSucceed) {
         XCTAssertTrue(cardReaderDelegate.successCallBackInvoked);

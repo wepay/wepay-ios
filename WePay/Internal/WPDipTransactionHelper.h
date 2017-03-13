@@ -15,6 +15,8 @@
 
 @interface WPDipTransactionHelper : NSObject
 
+@property (nonatomic, assign) BOOL isWaitingForCardRemoval;
+
 - (instancetype) initWithConfigHelper:(WPDipConfigHelper *)configHelper
                              delegate:(id<WPTransactionDelegate>)delegate
            externalCardReaderDelegate:(id<WPExternalCardReaderDelegate>)externalDelegate
@@ -28,7 +30,6 @@
                                            accountid:(long)accountId
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
                                    cardReaderRequest:(CardReaderRequest)request;
-
 
 @end
 

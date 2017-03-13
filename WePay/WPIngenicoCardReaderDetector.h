@@ -15,18 +15,17 @@
 
 @protocol WPCardReaderDetectionDelegate
 
-- (void) onCardReaderManagerDetected:(id<RUADeviceManager>)manager;
-- (void) onCardReaderDetectionTimeout;
-- (void) onCardReaderDetectionFailed:(NSString *)message;
+- (void) onCardReaderDevicesDetected:(NSArray *)devices;
 
 @end
 
 
-@interface WPIngenicoCardReaderDetector : NSObject <RUADeviceStatusHandler, RUADeviceSearchListener>
+@interface WPIngenicoCardReaderDetector : NSObject <RUADeviceSearchListener>
 
 @property (nonatomic, weak) id<WPCardReaderDetectionDelegate> delegate;
 
-- (void) findFirstAvailableDeviceWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate;
+- (void) findAvailablCardReadersWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate;
+- (void) stopFindingCardReaders;
 
 @end
 

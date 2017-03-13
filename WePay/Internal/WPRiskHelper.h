@@ -7,14 +7,14 @@
 //
 
 #if defined(__has_include)
-#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+#if __has_include("TrustDefender/TrustDefender.h")
 
 #import <Foundation/Foundation.h>
-#import <TrustDefenderMobile/TrustDefenderMobile.h>
+#import <TrustDefender/TrustDefender.h>
 
 @class WPConfig;
 
-@interface WPRiskHelper : NSObject <TrustDefenderMobileDelegate, CLLocationManagerDelegate>
+@interface WPRiskHelper : NSObject <CLLocationManagerDelegate>
 
 /**
  *  The designated initializer

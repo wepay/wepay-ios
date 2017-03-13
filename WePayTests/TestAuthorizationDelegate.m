@@ -10,18 +10,6 @@
 
 @implementation TestAuthorizationDelegate
 
-- (void) selectEMVApplication:(NSArray *)applications
-                   completion:(void (^)(NSInteger selectedIndex))completion
-{
-    self.selectEMVApplicationInvoked = YES;
-    
-    if (self.mockEMVApplicationSelectionError) {
-        completion(-1);
-    } else {
-        completion(applications.count - 1);
-    }
-}
-
 - (void) paymentInfo:(WPPaymentInfo *)paymentInfo
         didAuthorize:(WPAuthorizationInfo *)authorizationInfo
 {

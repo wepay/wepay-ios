@@ -1,3 +1,16 @@
+2017-03-13
+* Released version 7.0.0-beta-2
+* Moved selectEMVApplication:completion: from WPAuthorizationDelegate to WPCardReaderDelegate
+* Added selectCardReader:completion: to WPCardReaderDelegate that's called when the SDK finds card readers
+* Added new status (kWPCardReaderStatusSearching) that indicates the SDK is searching for card readers
+* Changed getCardReaderBatteryLevelWithBatteryLevelDelegate: to getCardReaderBatteryLevelWithCardReaderDelegate:batteryLevelDelegate: in WePay.h so the SDK can call back with the appropriate statuses
+* Added getRememberedCardReader in WePay.h to retrieve the name of the most recently connected card reader
+* Added forgetRememberedCardReader in WePay.h to tell the SDK to forget the most recently connected card reader name
+* Renamed WPConfig.stopCardReaderAfterTransaction to WPConfig.stopCardReaderAfterOperation
+* Added WPMockConfig.mockCardReaderIsDetected
+* Added new error codes WPErrorInvalidCardReaderSelection and WPErrorCardReaderBatteryTooLow
+* The most recently connected card reader is now remembered and used when discovered.
+
 2016-12-22
 * Released version 7.0.0-beta-1
 * Added support for Moby 3000 bluetooth card reader

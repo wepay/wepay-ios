@@ -44,8 +44,9 @@ The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExamp
     - UIKit.framework
     - libstdc++.6.0.9.dylib
     - libstdc++.dylib
+    - libz.dylib
 + Also include the framework files you copied:
-    - TrustDefenderMobile.framework
+    - TrustDefender.framework
     - WePay.framework
 + Done!
 
@@ -198,6 +199,16 @@ config.useLocation = YES;
     // Change this to YES if you want to reset the card reader
     completion(NO);
 }
+
+- (void) selectCardReader:(NSArray *)cardReaderNames
+               completion:(void (^)(NSInteger selectedIndex))completion
+{
+    // In production apps, the merchant must choose the card reader they want to use.
+    // Here, we always select the first card reader in the array
+    int selectedIndex = 0;
+    completion(selectedIndex);
+}
+
 ~~~
 + Implement the WPTokenizationDelegate protocol methods
 ~~~{.m}
@@ -218,12 +229,13 @@ config.useLocation = YES;
 // Show UI asking the user to insert the card reader and wait for it to be ready
 ~~~
 + That's it! The following sequence of events will occur:
-    1. The user inserts the card reader (or it is already inserted)
+    1. The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.
     2. The SDK tries to detect the card reader and initialize it.
-        - If the card reader is not detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
-        - If the card reader is successfully detected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
-        - Next, if the card reader is successfully initialized, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForSwipe`
-        - Otherwise, `didFailToReadPaymentInfoWithError:` will be called with the appropriate error, and processing will stop (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusStopped`)
+        - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSearching`
+        - If any card readers are discovered, the `selectCardReader:` method will be called with an array of discovered devices. If anything is plugged into the headphone jack, `"AUDIOJACK"` will be one of the devices discovered.
+        - If no card readers are detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
+        - Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.
+        - If the card reader is successfully connected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
     3. If the card reader successfully initialized, it will wait for the user to swipe a card
     4. If a recoverable error occurs during swiping, the `didFailToReadPaymentInfoWithError:` method will be called. After a few seconds, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForSwipe` and the card reader will again wait for the user to swipe a card
     5. If an unrecoverable error occurs during swiping, or the user does not swipe, the `didFailToReadPaymentInfoWithError:` method will be called, and processing will stop
@@ -289,10 +301,13 @@ didFailAuthorization:(NSError *)error
 // Show UI asking the user to insert the card reader and wait for it to be ready
 ~~~
 + That's it! The following sequence of events will occur:
-    1. The user inserts the card reader (or it is already inserted)
+    1. The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.
     2. The SDK tries to detect the card reader and initialize it.
-        - If the card reader is not detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
-        - If the card reader is successfully detected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
+        - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSearching`
+        - If any card readers are discovered, the `selectCardReader:` method will be called with an array of discovered devices. If anything is plugged into the headphone jack, `"AUDIOJACK"` will be one of the devices discovered.
+        - If no card readers are detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
+        - Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.
+        - If the card reader is successfully connected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
     3. Next, the SDK checks if the card reader is correctly configured (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusCheckingReader`).
         - If the card reader is already configured, the App is given a chance to force configuration. The SDK calls the `shouldResetCardReaderWithCompletion:` method, and the app must execute the completion method, telling the SDK whether or not the reader should be reset.
         - If the reader was not configured, or the app requested a reset, the card reader is configured (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConfiguringReader`)
@@ -418,15 +433,41 @@ UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
 }
 
 ~~~
-+ Make the WePay API call, passing in the instance of the class that implemented the WPBatteryLevelDelegate protocol
++ Make the WePay API call, passing in the instance(s) of the class(es) that implemented the WPCardReaderDelegate and WPBatteryLevelDelegate protocols
 ~~~{.m}
-[self.wepay getCardReaderBatteryLevelWithBatteryLevelDelegate:self];
+[self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
 ~~~
 + That's it! The following sequence of events will occur:
     1. The SDK will attempt to read the battery level of the card reader
     2. If the operation succeeds, WPBatteryLevelDelegate's `didGetBatteryLevel:` method will be called with the result
     3. Otherwise, if the operation fails, WPBatteryLevelDelegate's `didFailToGetBatteryLevelwithError:` method will be called with the appropriate error
-    4. The card reader must be plugged in before attempting to get battery level, otherwise the process will fail
+
+### Configuring the SDK
+
+The experiences described above can be modified by utilizing the configuration options available on the WPConfig object. Detailed descriptions for each configurable property is available in the documentation for WPConfig.
+
+### Test/develop using mock card reader and mock WepayClient
+
++ To use mock card reader implementation instead of using the real reader, instantiate a MockConfig object and pass it to Config:
+~~~{.m}
+WPMockConfig *mockConfig = [[WPMockConfig alloc] init];
+config.mockConfig = mockConfig;
+~~~
++ To use mock WepayClient implementation instead of interacting with the real WePay server, set the corresponding option on the mockConfig object:
+~~~{.m}
+mockConfig.useMockWepayClient = YES;
+~~~
++ Other options are also available:
+~~~{.m}
+mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe; // Payment method to mock; Defaults to SWIPE.
+mockConfig.cardReadTimeOut = YES; // To mock a card reader timeout; Defaults to NO.
+mockConfig.cardReadFailure = YES; // To mock a failure for card reading; Defaults to NO.
+mockConfig.cardTokenizationFailure = YES; // To mock a failure for card tokenization; Defaults to NO.
+mockConfig.EMVAuthFailure = YES; // To mock a failure for EMV authorization; Defaults to NO.
+mockConfig.multipleEMVApplication = YES; // To mock multiple EMV applications on card to choose from; Defaults to NO.
+mockConfig.batteryLevelError = YES; // To mock an error while fetching battery level; Defaults to NO.
+mockConfig.mockCardReaderIsDetected = NO; // To mock a card reader being available for connection; Defaults to YES.
+~~~
 
 ### Integration tests and unit tests
 All the integration tests and unit tests are located in the `/WePayTests/` directory.

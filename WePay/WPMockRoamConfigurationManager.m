@@ -17,7 +17,7 @@
 
 - (BOOL) activateDevice:(RUADevice *)device
 {
-    return NO;
+    return YES;
 }
 
 - (void) clearAIDSList:(OnProgress)progress response:(OnResponse)response
@@ -185,15 +185,15 @@
     });
 }
 
-- (void)readKeyMapping:(OnProgress)progress response:(OnResponse)response {}
+- (void) readKeyMapping:(OnProgress)progress response:(OnResponse)response {}
 
-- (void)readCertificateFilesVersion:(OnProgress)progress response:(OnResponse)response {}
+- (void) readCertificateFilesVersion:(OnProgress)progress response:(OnResponse)response {}
 
-- (void)enableRKIMode:(OnResponse)response {}
+- (void) enableRKIMode:(OnResponse)response {}
 
-- (void)triggerRKIWithGroupName:(NSString *)groupName progress:(OnProgress)progress response:(OnResponse)response {}
+- (void) triggerRKIWithGroupName:(NSString *)groupName progress:(OnProgress)progress response:(OnResponse)response {}
 
-- (void)configureContactlessTransactionOptions:(BOOL)supportCVM
+- (void) configureContactlessTransactionOptions:(BOOL)supportCVM
                                    supportAMEX:(BOOL)supportAMEX
                             enableCryptogram17:(BOOL)enableCryptogram17
                         enableOnlineCryptogram:(BOOL)enableOnlineCryptogram

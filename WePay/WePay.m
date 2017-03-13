@@ -13,7 +13,7 @@
 #import <WePay_CardReaderDirector.h>
 #endif
 
-#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
+#if __has_include("TrustDefender/TrustDefender.h")
 #import "WPRiskHelper.h"
 #endif
 
@@ -24,7 +24,7 @@
 #import "WPError+internal.h"
 
 // forward-class declaration for optional classes
-@class WePay_CardReader;
+@class WePay_CardReaderDirector;
 @class WPRiskHelper;
 
 // Environments
@@ -37,6 +37,7 @@ NSString * const kWPPaymentMethodManual = @"Manual";
 NSString * const kWPPaymentMethodDip = @"Dip";
 
 // Card Reader status
+NSString * const kWPCardReaderStatusSearching = @"searching for reader";
 NSString * const kWPCardReaderStatusNotConnected = @"card reader not connected";
 NSString * const kWPCardReaderStatusConnected = @"card reader connected";
 NSString * const kWPCardReaderStatusCheckingReader = @"checking reader";
@@ -55,7 +56,9 @@ NSString * const kWPCardReaderStatusStopped = @"stopped";
 // Currency Codes
 NSString * const kWPCurrencyCodeUSD = @"USD";
 
-@interface WePay ()
+@interface WePay () {
+    dispatch_queue_t serialQueue;
+}
 
 @property(nonatomic, strong) WePay_CardReaderDirector *wePayCardReaderDirector;
 @property(nonatomic, strong) WePay_Checkout *wePayCheckout;
@@ -72,6 +75,7 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 {
     if (self = [super init]) {
         self.config = config;
+        serialQueue = dispatch_queue_create("com.wepay.StartOperation", NULL);
     }
     
     return self;
@@ -81,7 +85,7 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 - (void) tokenizePaymentInfo:(WPPaymentInfo *)paymentInfo
         tokenizationDelegate:(id<WPTokenizationDelegate>)tokenizationDelegate
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(serialQueue, ^{
         if ([kWPPaymentMethodManual isEqualToString:paymentInfo.paymentMethod]) {
             if (!self.wePayManual) {
                 self.wePayManual = [[WePay_Manual alloc] initWithConfig:self.config];
@@ -110,7 +114,7 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 
 - (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(serialQueue, ^{
         if (!self.wePayCardReaderDirector) {
             self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
@@ -123,7 +127,7 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
                                         tokenizationDelegate:(id<WPTokenizationDelegate>) tokenizationDelegate
                                        authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(serialQueue, ^{
         if (!self.wePayCardReaderDirector) {
             self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
@@ -137,20 +141,40 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 
 - (void) stopCardReader
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(serialQueue, ^{
         [self.wePayCardReaderDirector stopCardReader];
     });
 }
 
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+- (void) getCardReaderBatteryLevelWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                    batteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(serialQueue, ^{
         if (!self.wePayCardReaderDirector) {
             self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
         }
         
-        [self.wePayCardReaderDirector getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate];
+        [self.wePayCardReaderDirector getCardReaderBatteryLevelWithCardReaderDelegate:cardReaderDelegate
+                                                                 batteryLevelDelegate:batteryLevelDelegate];
     });
+}
+
+- (NSString *) getRememberedCardReader
+{
+    if (!self.wePayCardReaderDirector) {
+        self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
+    }
+    
+    return [self.wePayCardReaderDirector getRememberedCardReader];
+}
+
+- (void) forgetRememberedCardReader
+{
+    if (!self.wePayCardReaderDirector) {
+        self.wePayCardReaderDirector = [[WePay_CardReaderDirector alloc] initWithConfig:self.config];
+    }
+    
+    [self.wePayCardReaderDirector forgetRememberedCardReader];
 }
 
 
@@ -174,7 +198,19 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
     NSLog(@"This functionality is not available");
 }
 
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+- (void) getCardReaderBatteryLevelWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                    batteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+{
+    NSLog(@"This functionality is not available");
+}
+
+- (NSString *) getRememberedCardReader
+{
+    NSLog(@"This functionality is not available");
+    return nil;
+}
+
+- (void) forgetRememberedCardReader
 {
     NSLog(@"This functionality is not available");
 }
@@ -182,8 +218,8 @@ NSString * const kWPCurrencyCodeUSD = @"USD";
 
 #endif // has_include RUA
 
-#if __has_include("TrustDefenderMobile/TrustDefenderMobile.h")
-#pragma mark - TrustDefenderMobile available
+#if __has_include("TrustDefender/TrustDefender.h")
+#pragma mark - TrustDefender available
 
 - (NSString *) getSessionId
 {

@@ -16,6 +16,7 @@
     if (self = [super init]) {
         self.useMockCardReader = YES;
         self.useMockWepayClient = YES;
+        self.mockCardReaderIsDetected = YES;
         self.mockPaymentMethod = kWPPaymentMethodSwipe;
     }
     return self;

@@ -140,7 +140,7 @@
 
 #pragma mark - Private helper method
 
-- (WPPaymentInfo *)getPaymentInfoWithCardNumber:(NSString *)cardNumber
+- (WPPaymentInfo *) getPaymentInfoWithCardNumber:(NSString *)cardNumber
 {
     WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
                                                                  lastName:@"Example"
@@ -155,7 +155,7 @@
     return paymentInfo;
 }
 
-- (UIImage *)getImageWithWidth:(CGFloat) width
+- (UIImage *) getImageWithWidth:(CGFloat) width
                      andHeight:(CGFloat) height
 {
     CGSize size = CGSizeMake(width, height);

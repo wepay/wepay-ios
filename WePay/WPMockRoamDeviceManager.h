@@ -20,6 +20,10 @@
 @property id<RUADeviceStatusHandler> deviceStatusHandler;
 @property WPMockConfig* mockConfig;
 
+- (void) mockCardReaderDisconnect;
+- (void) mockCardReaderConnect;
+- (void) mockCardReaderError:(NSString *)message;
+
 @end
 
 #endif

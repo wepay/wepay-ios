@@ -25,7 +25,7 @@
 
 @implementation UnitTestWPTransactionUtilities
 
-- (void)setUp {
+- (void) setUp {
     [super setUp];
     self.transactionUtilities = [[WPTransactionUtilities alloc] initWithConfig:nil externalCardReaderHelper:nil];
 }

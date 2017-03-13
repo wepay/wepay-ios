@@ -14,6 +14,19 @@
 #import "WPMockConfig.h"
 
 #define READER_CONNECTION_TIME_MSEC 200
+#define READER_DISCOVERED_TIME_SEC 0.5
+#define READER_RELEASE_TIME_SEC 0.5
+#define DISCOVERY_COMPLETE_TIME_SEC 1
+
+#define MOCK_DEVICE_NAME @"AUDIOJACK"
+#define MOCK_DEVICE_IDENTIFIER @"RP350MOCK"
+
+@interface WPMockRoamDeviceManager()
+
+@property (nonatomic, strong) NSTimer *discoveredDeviceTimer;
+@property (nonatomic, strong) NSTimer *discoveryCompleteTimer;
+
+@end
 
 @implementation WPMockRoamDeviceManager {
     BOOL isReady;
@@ -95,14 +108,18 @@
 
 - (BOOL) releaseDevice
 {
-    if (self.deviceStatusHandler != nil) {
-        [_deviceStatusHandler onDisconnected];
-    }
+    [self releaseDevice:nil];
     return YES;
 }
 
-- (void)releaseDevice:(id<RUAReleaseHandler>)releaseHandler {
-    
+- (void) releaseDevice:(id<RUAReleaseHandler>)releaseHandler {
+    if (self.deviceStatusHandler != nil) {
+        dispatch_queue_t queue = dispatch_get_main_queue();
+        dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, READER_RELEASE_TIME_SEC * NSEC_PER_SEC);
+        dispatch_after(time, queue, ^{
+            [_deviceStatusHandler onDisconnected];
+        });
+    }
 }
 
 - (void) getBatteryStatus:(OnResponse)response {
@@ -133,13 +150,54 @@
     }
 }
 
-- (void) searchDevices:(id<RUADeviceSearchListener>)searchListener {}
+- (void) searchDevices:(id<RUADeviceSearchListener>)searchListener {
+    [self searchDevicesForDuration:DISCOVERY_COMPLETE_TIME_SEC andListener:searchListener];
+}
 
-- (void) searchDevicesForDuration:(long)duration andListener:(id<RUADeviceSearchListener>)searchListener {}
+- (void) searchDevicesForDuration:(long)duration andListener:(id<RUADeviceSearchListener>)searchListener {
+    
+    
+    self.discoveredDeviceTimer = [NSTimer timerWithTimeInterval:READER_DISCOVERED_TIME_SEC
+                                                         target:self
+                                                       selector:@selector(discoveredDeviceTimeout:)
+                                                       userInfo:@{ @"searchListener" : searchListener }
+                                                        repeats:NO];
+    
+    // Bypassing durationInMilliseconds so that the mock experience is quicker.
+    self.discoveryCompleteTimer = [NSTimer timerWithTimeInterval:DISCOVERY_COMPLETE_TIME_SEC
+                                                          target:searchListener
+                                                        selector:@selector(discoveryComplete)
+                                                        userInfo:nil
+                                                         repeats:NO];
+    
+    if (self.mockConfig.mockCardReaderIsDetected) {
+        [[NSRunLoop mainRunLoop] addTimer:self.discoveredDeviceTimer forMode:NSDefaultRunLoopMode];
+    }
+    [[NSRunLoop mainRunLoop] addTimer:self.discoveryCompleteTimer forMode:NSDefaultRunLoopMode];
+}
+
+- (void) discoveredDeviceTimeout:(NSTimer *) timer {
+    id<RUADeviceSearchListener> searchListener = [timer.userInfo objectForKey:@"searchListener"];
+    RUADevice *device = [[RUADevice alloc] initWithName:MOCK_DEVICE_NAME
+                                         withIdentifier:MOCK_DEVICE_IDENTIFIER
+                             withCommunicationInterface:RUACommunicationInterfaceAudioJack];
+    
+    [searchListener discoveredDevice:device];
+}
 
 - (void) searchDevicesWithLowRSSI:(NSInteger)lowRSSI andHighRSSI:(NSInteger)highRSSI andListener:(id<RUADeviceSearchListener>)searchListener {}
 
-- (void) cancelSearch {}
+- (void) cancelSearch {
+    if (self.discoveredDeviceTimer) {
+        [self.discoveredDeviceTimer invalidate];
+        self.discoveredDeviceTimer = nil;
+    }
+    
+    if (self.discoveryCompleteTimer) {
+        [self.discoveryCompleteTimer invalidate];
+        self.discoveryCompleteTimer = nil;
+    }
+}
 
 - (void) enableFirmwareUpdateMode:(OnResponse)response {}
 
@@ -151,7 +209,35 @@
 
 - (void) confirmPairing:(BOOL)isMatching {}
 
+#pragma mark - Mock methods
 
+- (void) mockCardReaderDisconnect
+{
+    // Only mock disconnect if deviceStatusHandler exists (i.e. this device manager has
+    // been initialized).
+    if (self.deviceStatusHandler) {
+        isReady = NO;
+        [self.deviceStatusHandler onDisconnected];
+    }
+}
+
+- (void) mockCardReaderConnect
+{
+    // Only mock connect if deviceStatusHandler exists (i.e. this device manager has been
+    // initialized).
+    if (self.deviceStatusHandler) {
+        isReady = YES;
+        [self.deviceStatusHandler onConnected];
+    }
+}
+
+- (void) mockCardReaderError:(NSString *)message
+{
+    if (self.deviceStatusHandler) {
+        isReady = NO;
+        [self.deviceStatusHandler onError:message];
+    }
+}
 
 @end
 

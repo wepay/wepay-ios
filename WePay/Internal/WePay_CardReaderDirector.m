@@ -19,6 +19,7 @@
 #import "WPExternalCardReaderHelper.h"
 #import "WPClientHelper.h"
 #import "WPBatteryHelper.h"
+#import "WPUserDefaultsHelper.h"
 
 @interface WePay_CardReaderDirector ()
 
@@ -72,9 +73,9 @@
     self.sessionId = nil;
     self.cardReaderRequest = CardReaderForReading;
     
-    if ([self isCardReaderConnected]) {
+    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
         [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
-        [self.cardReaderManager processCard];
+        [self.cardReaderManager processCardReaderRequest];
     }
     else {
         [self initializeCardReaderManager];
@@ -93,9 +94,9 @@
     self.cardReaderRequest = CardReaderForTokenizing;
 
     
-    if ([self isCardReaderConnected]) {
+    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
         [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
-        [self.cardReaderManager processCard];
+        [self.cardReaderManager processCardReaderRequest];
     }
     else {
         [self initializeCardReaderManager];
@@ -106,23 +107,48 @@
     return self.cardReaderManager != nil && [self.cardReaderManager isConnected];
 }
 
+- (BOOL) isCardReaderSearching {
+    return self.cardReaderManager != nil && [self.cardReaderManager isSearching];
+}
+
 /**
  *  Stops the Roam card reader completely, and informs the delegate.
  */
 - (void) stopCardReader
 {
-    if (![self isCardReaderConnected]) {
+    if (![self isCardReaderConnected] && ![self isCardReaderSearching]) {
         [self.externalHelper informExternalCardReader:kWPCardReaderStatusStopped];
     } else {
         [self.cardReaderManager stopCardReader];
     }
 }
 
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
+
+- (void) getCardReaderBatteryLevelWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                    batteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
 {
-    WPBatteryHelper *bh = [[WPBatteryHelper alloc] init];
-    [bh getCardReaderBatteryLevelWithBatteryLevelDelegate:batteryLevelDelegate config:self.config];
-    NSLog(@"WePay_CardReaderDirector: checking battery");
+    self.externalHelper.externalCardReaderDelegate = cardReaderDelegate;
+    self.externalHelper.externalBatteryLevelDelegate = batteryLevelDelegate;
+    self.cardReaderRequest = CardReaderForBatteryLevel;
+    
+    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
+        [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
+        [self.cardReaderManager processCardReaderRequest];
+    } else {
+        [self initializeCardReaderManager];
+    }
+}
+
+- (NSString *) getRememberedCardReader
+{
+    NSString *rememberedCardReader = [WPUserDefaultsHelper getRememberedCardReader];
+    
+    return rememberedCardReader;
+}
+
+- (void) forgetRememberedCardReader
+{
+    [WPUserDefaultsHelper forgetRememberedCardReader];
 }
 
 

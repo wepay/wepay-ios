@@ -37,6 +37,18 @@
     });
 }
 
+- (void) informExternalCardReaderApplications:(NSArray *)applications
+                                   completion:(void (^)(NSInteger selectedIndex))completion
+{
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for app ID selection, send it
+        if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(selectEMVApplication:completion:)]) {
+            [self.externalCardReaderDelegate selectEMVApplication:applications completion:completion];
+        }
+    });
+}
+
 - (void) informExternalCardReaderSuccess:(WPPaymentInfo *)paymentInfo
 {
     dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -50,10 +62,24 @@
 
 - (void) informExternalCardReaderFailure:(NSError *)error
 {
-    // If the external delegate is listening for errors, send it
-    if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(didFailToReadPaymentInfoWithError:)]) {
-        [self.externalCardReaderDelegate didFailToReadPaymentInfoWithError:error];
-    }
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for errors, send it
+        if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(didFailToReadPaymentInfoWithError:)]) {
+            [self.externalCardReaderDelegate didFailToReadPaymentInfoWithError:error];
+        }
+    });
+}
+
+- (void) informExternalCardReaderSelection:(NSArray *)cardReaderNames completion:(void (^)(NSInteger selectedIndex))completion;
+{
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for card reader selection, ask for it
+        if (self.externalCardReaderDelegate && [self.externalCardReaderDelegate respondsToSelector:@selector(selectCardReader:completion:)]) {
+            [self.externalCardReaderDelegate selectCardReader:cardReaderNames completion:completion];
+        }
+    });
 }
 
 - (void) informExternalCardReaderResetCompletion:(void (^)(BOOL shouldReset))completion
@@ -129,18 +155,6 @@
     });
 }
 
-- (void) informExternalAuthorizationApplications:(NSArray *)applications
-                                      completion:(void (^)(NSInteger selectedIndex))completion
-{
-    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // If the external delegate is listening for app ID selection, send it
-        if (self.externalAuthorizationDelegate && [self.externalAuthorizationDelegate respondsToSelector:@selector(selectEMVApplication:completion:)]) {
-            [self.externalAuthorizationDelegate selectEMVApplication:applications completion:completion];
-        }
-    });
-}
-
 - (void) informExternalTokenizerEmailCompletion:(void (^)(NSString *email))completion
 {
     dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -151,6 +165,26 @@
         } else {
             // execute the completion
             completion(nil);
+        }
+    });
+}
+
+- (void)informExternalBatteryLevelSuccess:(int)batteryLevel {
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for battery level, send it
+        if (self.externalBatteryLevelDelegate && [self.externalBatteryLevelDelegate respondsToSelector:@selector(didGetBatteryLevel:)]) {
+            [self.externalBatteryLevelDelegate didGetBatteryLevel:batteryLevel];
+        }
+    });
+}
+
+- (void)informExternalBatteryLevelError:(NSError *)error {
+    dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // If the external delegate is listening for battery level, send it
+        if (self.externalBatteryLevelDelegate && [self.externalBatteryLevelDelegate respondsToSelector:@selector(didGetBatteryLevel:)]) {
+            [self.externalBatteryLevelDelegate didFailToGetBatteryLevelwithError:error];
         }
     });
 }

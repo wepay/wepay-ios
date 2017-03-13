@@ -55,9 +55,9 @@
 @property (nonatomic, assign) BOOL restartTransactionAfterOtherErrors;
 
 /**
- *  Determines if the card reader should automatically stop after a transaction is completed. Defaults to YES.
+ *  Determines if the card reader should automatically stop after an operation is completed. Defaults to YES.
  */
-@property (nonatomic, assign) BOOL stopCardReaderAfterTransaction;
+@property (nonatomic, assign) BOOL stopCardReaderAfterOperation;
 
 /**
  *  The configuration for using mock card reader and/or mock WepayClient implementation
@@ -86,7 +86,7 @@
  *  @param restartTransactionAfterSuccess       Flag to determine if the transaction should automatically restart after a successful read.
  *  @param restartTransactionAfterGeneralError  Flag to determine if the transaction should automatically restart after a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError).
  *  @param restartTransactionAfterOtherErrors   Flag to determine if the transaction should automatically restart after an error other than general error.
- *  @param stopCardReaderAfterTransaction       Flag to determine if the card reader should automatically stop after a transaction is completed.
+ *  @param stopCardReaderAfterOperation         Flag to determine if the card reader should automatically stop after an operation is completed.
  *
  *  @return A \ref WPConfig instance which can be used to initialize a \ref WePay instance.
  */
@@ -98,6 +98,6 @@
     restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
 restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
 restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
-   stopCardReaderAfterTransaction:(BOOL)stopCardReaderAfterTransaction;
+     stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation;
 
 @end

@@ -19,6 +19,7 @@
 @property (nonatomic, weak) id<WPCardReaderDelegate> externalCardReaderDelegate;
 @property (nonatomic, weak) id<WPTokenizationDelegate> externalTokenizationDelegate;
 @property (nonatomic, weak) id<WPAuthorizationDelegate> externalAuthorizationDelegate;
+@property (nonatomic, weak) id<WPBatteryLevelDelegate> externalBatteryLevelDelegate;
 @property (nonatomic, strong) WPConfig *config;
 
 - (instancetype) initWithConfig:(WPConfig *)config;

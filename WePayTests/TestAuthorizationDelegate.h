@@ -16,8 +16,6 @@ typedef void(^AuthorizationFailureBlock)(void);
 
 @property (nonatomic, assign) BOOL successCallBackInvoked;
 @property (nonatomic, assign) BOOL failureCallBackInvoked;
-@property (nonatomic, assign) BOOL selectEMVApplicationInvoked;
-@property (nonatomic, assign) BOOL mockEMVApplicationSelectionError;
 @property (nonatomic, strong) AuthorizationSuccessBlock authorizationSuccessBlock;
 @property (nonatomic, strong) AuthorizationFailureBlock authorizationFailureBlock;
 @property (nonatomic, strong) WPAuthorizationInfo *authorizationInfo;

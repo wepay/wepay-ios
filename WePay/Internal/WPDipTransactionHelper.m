@@ -55,6 +55,8 @@ NSString *const kRP350XModelName = @"RP350X";
 @property (nonatomic, weak) id<WPTransactionDelegate> delegate;
 @property (nonatomic, weak) id<WPExternalCardReaderDelegate> externalDelegate;
 
+@property (nonatomic, assign) CardReaderRequest cardReaderRequest;
+
 @end
 
 @implementation WPDipTransactionHelper
@@ -65,6 +67,7 @@ NSString *const kRP350XModelName = @"RP350X";
                                config:(WPConfig *)config
 {
     if (self = [super init]) {
+        self.isWaitingForCardRemoval = NO;
         self.dipConfigHelper = configHelper;
         self.delegate = delegate;
         self.externalDelegate = externalDelegate;
@@ -77,7 +80,7 @@ NSString *const kRP350XModelName = @"RP350X";
 
 #pragma mark - TransactionStartCommand
 
-- (NSDictionary *)getEMVStartTransactionParameters
+- (NSDictionary *) getEMVStartTransactionParameters
 {
     NSMutableDictionary *transactionParameters = [[NSMutableDictionary alloc] init];
     
@@ -102,6 +105,7 @@ NSString *const kRP350XModelName = @"RP350X";
     [transactionParameters setObject:@"0840" forKey:[NSNumber numberWithInt:RUAParameterTerminalCountryCode]];
     [transactionParameters setObject:[self convertToEMVAmount:self.amount] forKey:[NSNumber numberWithInt:RUAParameterAmountAuthorizedNumeric]];
     [transactionParameters setObject:@"000000000000" forKey:[NSNumber numberWithInt:RUAParameterAmountOtherNumeric]];
+    [transactionParameters setObject:@"01" forKey:[NSNumber numberWithInt:RUAParameterExtraProgressMessageFlag]];
 
     NSLog(@"getEMVStartTransactionParameters:\n%@", transactionParameters);
 
@@ -123,6 +127,7 @@ NSString *const kRP350XModelName = @"RP350X";
     self.accountId = accountId;
     self.roamDeviceManager = roamDeviceManager;
     [self.transactionUtilities setCardReaderRequest:request];
+    self.cardReaderRequest = request;
     [self startTransaction];
 }
 
@@ -186,55 +191,48 @@ NSString *const kRP350XModelName = @"RP350X";
                  }
              }
              response: ^(RUAResponse *ruaResponse) {
-                 NSLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
-
-                 if ([ruaResponse responseType] == RUAResponseTypeMagneticCardData) {
-                     NSMutableDictionary *responseData = [[WPRoamHelper RUAResponse_toDictionary:ruaResponse] mutableCopy];
-                     NSString *fullName = [WPRoamHelper fullNameFromRUAData:responseData];
-                     NSString *modelName = [WPRoamHelper RUADeviceType_toString:[self.roamDeviceManager getType]];
-
-                     [responseData setObject:(fullName ? fullName : [NSNull null]) forKey:@"FullName"];
-                     [responseData setObject:modelName forKey:@"Model"];
-                     [responseData setObject:@(self.isFallbackSwipe) forKey:@"Fallback"];
-                     [responseData setObject:@(self.accountId) forKey:@"AccountId"];
-                     [responseData setObject:self.currencyCode forKey:@"CurrencyCode"];
-                     [responseData setObject:self.amount forKey:@"Amount"];
-
-                     [self.transactionUtilities handleSwipeResponse:responseData
-                                                     successHandler:^(NSDictionary *returnData) {
-                                                         [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
-                                                     }
-                                                       errorHandler:^(NSError * error) {
-                                                           [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
-                                                       }
-                                                      finishHandler:^{
-                                                          [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
-                                                      }];
-
-                 } else if ([ruaResponse responseType] == RUAResponseTypeListOfApplicationIdentifiers) {
-                     NSArray *appIds = [ruaResponse listOfApplicationIdentifiers];
-                     NSMutableArray *appLabels = [@[] mutableCopy];
-
-                     for (RUAApplicationIdentifier *appID in appIds) {
-                         [appLabels addObject:appID.applicationLabel];
-
+                 NSMutableDictionary *responseData = [[WPRoamHelper RUAResponse_toDictionary:ruaResponse] mutableCopy];
+                 NSError *error = [self validateEMVResponse:responseData];
+                 NSLog(@"RUAResponse: %@", responseData);
+                 
+                 if (error != nil) {
+                     if ([self shouldReactToError:error]) {
+						 self.isWaitingForCardRemoval = NO;
+                         [self reportAuthorizationSuccess:nil orError:error forPaymentInfo:self.paymentInfo];
+                         [self reactToError:error];
+                     } else {
+                         // Nothing to do here, the flow will continue elsewhere.
                      }
-
-                     // call delegate method for app selection
-                     [self.externalDelegate informExternalAuthorizationApplications:appLabels
-                                                                         completion:^(NSInteger selectedIndex) {
-                                                                             if (selectedIndex < 0 || selectedIndex >= [appLabels count]) {
-                                                                                 NSError *error = [WPError errorInvalidApplicationId];
-                                                                                 [self reportAuthorizationSuccess:nil orError:error forPaymentInfo:self.paymentInfo];
-                                                                                 [self reactToError:error];
-                                                                             } else {
-                                                                                 RUAApplicationIdentifier *selectedAppId = [appIds objectAtIndex:selectedIndex];
-                                                                                 [self performSelectAppIdCommand:selectedAppId];
-                                                                             }
-                                                                         }];
-
                  } else {
-                     [self handleEMVStartTransactionResponse:ruaResponse];
+                     if ([ruaResponse responseType] == RUAResponseTypeMagneticCardData) {
+                         NSString *fullName = [WPRoamHelper fullNameFromRUAData:responseData];
+                         NSString *modelName = [WPRoamHelper RUADeviceType_toString:[self.roamDeviceManager getType]];
+                         
+                         [responseData setObject:(fullName ? fullName : [NSNull null]) forKey:@"FullName"];
+                         [responseData setObject:modelName forKey:@"Model"];
+                         [responseData setObject:@(self.isFallbackSwipe) forKey:@"Fallback"];
+                         [responseData setObject:@(self.accountId) forKey:@"AccountId"];
+                         [responseData setObject:self.currencyCode forKey:@"CurrencyCode"];
+                         [responseData setObject:self.amount forKey:@"Amount"];
+                         
+                         [self.transactionUtilities handleSwipeResponse:responseData
+                                                         successHandler:^(NSDictionary *returnData) {
+                                                             [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                         }
+                                                           errorHandler:^(NSError * error) {
+                                                               [self reactToError:error forPaymentMethod:kWPPaymentMethodSwipe];
+                                                           }
+                                                          finishHandler:^{
+                                                              [self reactToError:nil forPaymentMethod:kWPPaymentMethodSwipe];
+                                                          }];
+                         
+                     } else if ([ruaResponse responseType] == RUAResponseTypeListOfApplicationIdentifiers) {
+                         NSArray *appIds = [ruaResponse listOfApplicationIdentifiers];
+                         
+                         [self performApplicationSelectionFromIDs:appIds];
+                     } else {
+                         [self handleEMVStartTransactionResponse:ruaResponse];
+                     }
                  }
              }
      ];
@@ -253,24 +251,41 @@ NSString *const kRP350XModelName = @"RP350X";
 - (void) handleEMVStartTransactionResponse:(RUAResponse *) ruaResponse
 {
     NSDictionary *responseData = [WPRoamHelper RUAResponse_toDictionary:ruaResponse];
-    NSError *error = [self validateEMVResponse:responseData];
-
-    if (error != nil) {
-        [self reportAuthorizationSuccess:nil orError:error forPaymentInfo:self.paymentInfo];
-        [self reactToError:error];
-    } else {
-        NSString *selectedAID = [responseData objectForKey:[WPRoamHelper RUAParameter_toString:RUAParameterApplicationIdentifier]];
-        
-        // RUAParameterApplicationIdentifier can be null if application selection was performed
-        if (selectedAID != nil && ![selectedAID isEqual:[NSNull null]]) {
-            self.selectedAID = selectedAID;
-        }
-        
-        [self performEMVTransactionDataCommand];
+    NSString *selectedAID = [responseData objectForKey:[WPRoamHelper RUAParameter_toString:RUAParameterApplicationIdentifier]];
+    
+    // RUAParameterApplicationIdentifier can be null if application selection was performed
+    if (selectedAID != nil && ![selectedAID isEqual:[NSNull null]]) {
+        self.selectedAID = selectedAID;
     }
+    
+    [self performEMVTransactionDataCommand];
 }
 
 #pragma mark - SelectAppIdCommand
+
+- (void) performApplicationSelectionFromIDs:(NSArray *) appIds
+{
+    NSMutableArray *appLabels = [@[] mutableCopy];
+    
+    for (RUAApplicationIdentifier *appID in appIds) {
+        [appLabels addObject:appID.applicationLabel];
+        
+    }
+    
+    // call delegate method for app selection
+    [self.externalDelegate informExternalCardReaderApplications:appLabels
+                                                     completion:^(NSInteger selectedIndex) {
+                                                         if (selectedIndex < 0 || selectedIndex >= [appLabels count]) {
+                                                             NSError *error = [WPError errorInvalidApplicationId];
+                                                             [self reportAuthorizationSuccess:nil orError:error forPaymentInfo:self.paymentInfo];
+                                                             [self reactToError:error];
+                                                         } else {
+                                                             RUAApplicationIdentifier *selectedAppId = [appIds objectAtIndex:selectedIndex];
+                                                             [self performSelectAppIdCommand:selectedAppId];
+                                                         }
+                                                     }];
+
+}
 
 - (void) performSelectAppIdCommand:(RUAApplicationIdentifier *)selectedAppId {
     if (selectedAppId == nil || [selectedAppId isEqual:[NSNull null]]) {
@@ -301,7 +316,7 @@ NSString *const kRP350XModelName = @"RP350X";
 
 #pragma mark - TransactionDataCommand
 
-- (NSDictionary *)getEMVTransactionDataParameters {
+- (NSDictionary *) getEMVTransactionDataParameters {
     NSMutableDictionary *transactionParameters = [[NSMutableDictionary alloc] init];
 
     // select TACs based on selected AID
@@ -329,7 +344,7 @@ NSString *const kRP350XModelName = @"RP350X";
 }
 
 
-- (void)performEMVTransactionDataCommand {
+- (void) performEMVTransactionDataCommand {
     NSLog(@"performEMVTransactionDataCommand");
 
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
@@ -502,7 +517,7 @@ NSString *const kRP350XModelName = @"RP350X";
 
 #pragma mark - CompleteTransactionCommand
 
-- (NSDictionary *)getEMVCompleteTransactionParameters {
+- (NSDictionary *) getEMVCompleteTransactionParameters {
 
     NSMutableDictionary *transactionParameters = [[NSMutableDictionary alloc] init];
 
@@ -630,12 +645,16 @@ NSString *const kRP350XModelName = @"RP350X";
     [tmgr sendCommand:RUACommandEMVTransactionStop withParameters:nil
              progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
                  NSLog(@"onStopTX RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                 if (messageType == RUAProgressMessagePleaseRemoveCard) {
+                     self.isWaitingForCardRemoval = YES;
+                 }
              }
              response: ^(RUAResponse *ruaResponse) {
                  NSLog(@"onStopTX RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
                  if (completion != nil) {
                      completion();
                  }
+                 self.isWaitingForCardRemoval = NO;
              }
      ];
 }
@@ -661,6 +680,8 @@ NSString *const kRP350XModelName = @"RP350X";
             error = [WPError errorCardBlocked];
         } else if ([errorCode isEqualToString:[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeTimeoutExpired]]) {
             error = [WPError errorForCardReaderTimeout];
+        } else if ([errorCode isEqualToString:[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeBatteryTooLowError]]) {
+            error = [WPError errorCardReaderBatteryTooLow];
         } else {
             // TODO: define more specific errors
             error = [WPError errorForEMVTransactionErrorWithMessage:errorCode];
@@ -708,7 +729,7 @@ NSString *const kRP350XModelName = @"RP350X";
     if (authInfo != nil) {
         [self.externalDelegate informExternalAuthorizationSuccess:authInfo forPaymentInfo:paymentInfo];
     } else if (error != nil) {
-        if (paymentInfo != nil) {
+        if (paymentInfo != nil && self.cardReaderRequest == CardReaderForTokenizing) {
             [self.externalDelegate informExternalAuthorizationFailure:error forPaymentInfo:paymentInfo];
         } else {
             [self.externalDelegate informExternalCardReaderFailure:error];
@@ -763,6 +784,26 @@ NSString *const kRP350XModelName = @"RP350X";
 
 }
 
+- (BOOL) shouldReactToError:(NSError *) error
+{
+    BOOL isWhitelistError = NO;
+    NSArray *const whitelistedMessages = @[[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeReaderDisconnected],
+                                           [WPRoamHelper RUAErrorCode_toString:RUAErrorCodeCommandCancelledUponReceiptOfACancelWaitCommand]];
+    
+    if (error) {
+        for (NSString *message in whitelistedMessages) {
+            NSString *errorMessage = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+            
+            if ([message caseInsensitiveCompare:errorMessage] == NSOrderedSame) {
+                isWhitelistError = YES;
+                break;
+            }
+        }
+    }
+    
+    return !isWhitelistError;
+}
+
 - (NSString *) convertToEMVAmount:(NSDecimalNumber *)amount
 {
     int intAmount = [[amount decimalNumberByMultiplyingByPowerOf10:2] intValue];
@@ -796,12 +837,12 @@ NSString *const kRP350XModelName = @"RP350X";
     return result;
 }
 
-- (NSString *)getEMVCurrencyCode
+- (NSString *) getEMVCurrencyCode
 {
     return [self convertToEMVCurrencyCode:self.currencyCode];
 }
 
-- (NSString *)getEMVTransactionDate
+- (NSString *) getEMVTransactionDate
 {
     NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     

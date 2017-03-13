@@ -15,18 +15,20 @@
 #import "WPIngenicoCardReaderDetector.h"
 #import "WPMockConfig.h"
 #import "WPMockRoamDeviceManager.h"
+#import "WPUserDefaultsHelper.h"
 
-#define TIMEOUT_DEVICE_SEARCH_MS 8000.0
-#define TIMEOUT_DEVICE_SEARCH_SEC 8
+#define TIMEOUT_DEVICE_SEARCH_SEC 6.5
+#define TIMEOUT_ROAM_SEARCH_MS 6000
 
 @interface WPIngenicoCardReaderDetector() {
-    BOOL isDiscovered;
+    int completedDiscoveries;
 }
 
 @property (nonatomic, strong) id<RUADeviceManager> rp350xRoamDeviceManager;
 @property (nonatomic, strong) id<RUADeviceManager> moby3000RoamDeviceManager;
 @property (nonatomic, strong) WPMockRoamDeviceManager *mockRoamDeviceManager;
-@property (nonatomic, strong) NSArray *supportedDeviceManagers;
+@property (nonatomic, strong) NSMutableArray *supportedDeviceManagers;
+@property (nonatomic, strong) NSMutableArray *discoveredDevices;
 @property (nonatomic, strong) WPConfig *config;
 
 @property (nonatomic, strong) NSTimer *timeoutTimer;
@@ -41,77 +43,49 @@
         self.moby3000RoamDeviceManager = [RUA getDeviceManager:RUADeviceTypeMOBY3000];
         self.mockRoamDeviceManager = [WPMockRoamDeviceManager getDeviceManager];
         
-        self.supportedDeviceManagers = @[
-                                         self.rp350xRoamDeviceManager,
-                                         self.moby3000RoamDeviceManager,
-                                         self.mockRoamDeviceManager
-                                        ];
-        isDiscovered = false;
+        self.supportedDeviceManagers = [NSMutableArray array];
+        self.discoveredDevices = [NSMutableArray array];
+        completedDiscoveries = 0;
     }
     return self;
 }
 
-- (void) findFirstAvailableDeviceWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate {
+- (void) findAvailablCardReadersWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate {
+    NSLog(@"findAvailableCardReaders");
     WPMockConfig *mockConfig = config.mockConfig;
     
     self.config = config;
     self.delegate = delegate;
     
     if (mockConfig && mockConfig.useMockCardReader) {
-        [self findFirstAvailableDeviceMockWithConfig:mockConfig];
+        [self.mockRoamDeviceManager setMockConfig:mockConfig];
+        [self.supportedDeviceManagers addObject:self.mockRoamDeviceManager];
     }
     else {
-        [self findFirstAvailableDeviceInternalWithConfig:config deviceDetectionDelegate:delegate];
+        [self.supportedDeviceManagers addObject:self.rp350xRoamDeviceManager];
+        [self.supportedDeviceManagers addObject:self.moby3000RoamDeviceManager];
     }
+    
+    [self beginDetection];
+}
+
+- (void) stopFindingCardReaders {
+    NSLog(@"stopFindingCardReaders");
+    [self stopTimeCounter];
+    [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
+    completedDiscoveries = 0;
+    [self.discoveredDevices removeAllObjects];
 }
 
 #pragma mark - Internal
 
-- (void) findFirstAvailableDeviceInternalWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate {
-    id<RUADeviceManager> existingDeviceManager = [self getReadyDeviceManager:self.supportedDeviceManagers];
-    
-    [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
-    
-    if (!existingDeviceManager) {
-        [self initializeDeviceManager:self.rp350xRoamDeviceManager];
-        [self.moby3000RoamDeviceManager searchDevicesForDuration:TIMEOUT_DEVICE_SEARCH_MS andListener:self];
-        
-        [self stopTimeCounter];
-        [self startTimeCounterForDuration:TIMEOUT_DEVICE_SEARCH_SEC];
+- (void) beginDetection {
+    for (id<RUADeviceManager> manager in self.supportedDeviceManagers) {
+        [manager searchDevicesForDuration:TIMEOUT_ROAM_SEARCH_MS andListener:self];
     }
-    else {
-        // We already have an existing DeviceManager that's ready to go, so pass that to the delegate.
-        [self.delegate onCardReaderManagerDetected:existingDeviceManager];
-    }
-}
-
-- (void) findFirstAvailableDeviceMockWithConfig:(WPMockConfig *)mockConfig {
+    
     [self stopTimeCounter];
     [self startTimeCounterForDuration:TIMEOUT_DEVICE_SEARCH_SEC];
-    
-    [self.mockRoamDeviceManager setMockConfig:mockConfig];
-    [self initializeDeviceManager:self.mockRoamDeviceManager];
-}
-
-- (void) initializeDeviceManager:(id<RUADeviceManager>)manager {
-    [manager initializeDevice:self];
-}
-
-- (id<RUADeviceManager>) getReadyDeviceManager:(NSArray *)possibleDeviceManagers {
-    id <RUADeviceManager> result = nil;
-    
-    for (id<RUADeviceManager> manager in possibleDeviceManagers) {
-        if ([manager isReady]) {
-            result = manager;
-            break;
-        }
-    }
-    
-    return result;
-}
-
-- (BOOL) isAnyDeviceManagerReady {
-    return [self getReadyDeviceManager:self.supportedDeviceManagers] != nil;
 }
 
 - (void) cancelAllDeviceManagerSearches:(NSArray *)possibleDeviceManagers {
@@ -122,69 +96,63 @@
 
 - (void) startTimeCounterForDuration:(NSTimeInterval)interval {
     self.timeoutTimer = [NSTimer timerWithTimeInterval:interval
-                                               repeats:NO
-                                                 block:^(NSTimer * _Nonnull timer) {
-                                                     self.timeoutTimer = nil;
-                                                     [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
-                                                     [self.delegate onCardReaderDetectionTimeout];
-                                                 }];
+                                                target:self
+                                              selector:@selector(detectionComplete)
+                                              userInfo:nil
+                                               repeats:NO];
+    
     [[NSRunLoop mainRunLoop] addTimer:self.timeoutTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void) stopTimeCounter {
-    if (!self.timeoutTimer) {
-        return;
+    if (self.timeoutTimer) {
+        [self.timeoutTimer invalidate];
+        self.timeoutTimer = nil;
     }
+}
+
+- (void) detectionComplete {
+    NSLog(@"detectionComplete");
+    [self stopTimeCounter];
+    [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
     
-    [self.timeoutTimer invalidate];
-    self.timeoutTimer = nil;
-}
-
-#pragma mark - RUADeviceStatusHandler
-
-- (void)onConnected {
-    id<RUADeviceManager> foundDeviceManager = [self getReadyDeviceManager:self.supportedDeviceManagers];
-    
-    if (!foundDeviceManager) {
-        NSLog(@"unknown card reader device connected");
+    if (self.discoveredDevices.count > 0) {
+        // Make a copy to give to the delegate so we can clear the list safely
+        NSMutableArray *callbackDevices = self.discoveredDevices;
+        self.discoveredDevices = [[NSMutableArray alloc] init];
+        [self.delegate onCardReaderDevicesDetected:callbackDevices];
+    } else {
+        [self beginDetection];
     }
-    else {
-        [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
-        [self stopTimeCounter];
-        [self.delegate onCardReaderManagerDetected:foundDeviceManager];
-    }
-}
-
-- (void)onDisconnected {
-    NSLog(@"device detection: onDisconnected");
-}
-
-- (void)onError:(NSString *)message {
-    NSLog(@"device detection: encountered roam error: %@", message);
-    [self.delegate onCardReaderDetectionFailed:message];
 }
 
 #pragma mark - RUADeviceSearchListener
 
-- (void)discoveredDevice:(RUADevice *)reader {
+- (void) discoveredDevice:(RUADevice *)reader {
     NSLog(@"onDeviceDiscovered %@", reader.name);
+    
     BOOL isMoby = reader.name && [reader.name hasPrefix:@"MOB30"];
-    if (isMoby && ![self.moby3000RoamDeviceManager isReady]) {
-        NSLog(@"initializing discovered device");
-        isDiscovered = YES;
-        [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
-        [self stopTimeCounter];
+    BOOL isAudioJack = reader.name && [reader.name isEqualToString:@"AUDIOJACK"];
+    
+    if (isMoby || isAudioJack) {
+        NSLog(@"add device: %@", reader.name);
+        [self.discoveredDevices addObject:reader];
+    }
+    
+    if ([[WPUserDefaultsHelper getRememberedCardReader] isEqualToString:reader.name]) {
+        // Stop searching for a device if we've found the card reader we rememeber.
+        NSLog(@"onDeviceDiscovered: discovered remembered reader %@", reader.name);
         
-        [[self.moby3000RoamDeviceManager getConfigurationManager] activateDevice:reader];
-        [self initializeDeviceManager:self.moby3000RoamDeviceManager];
+        [self discoveryComplete];
     }
 }
 
-- (void)discoveryComplete {
+- (void) discoveryComplete {
     NSLog(@"onDiscoveryComplete");
+    completedDiscoveries++;
     
-    if (!isDiscovered && ![self isAnyDeviceManagerReady]) {
-        [self.delegate onCardReaderDetectionFailed:@"Unable to find any supported Bluetooth devices"];
+    if (completedDiscoveries >= self.supportedDeviceManagers.count) {
+        [self detectionComplete];
     }
 }
 

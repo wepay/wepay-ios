@@ -200,4 +200,18 @@
  */
 + (NSError *) errorInvalidTransactionAccountID;
 
+/**
+ *  Creates an NSError object representing card reader battery too low error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderBatteryTooLow;
+
+/**
+ *  Creates an NSError object representing invalid card reader selection.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidCardReaderSelection;
+
 @end

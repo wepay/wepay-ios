@@ -54,6 +54,11 @@
 @property BOOL batteryLevelError;
 
 /**
+ * Determines if the mock card reader is available for the purpose of establishing a connection. Defaults to YES.
+ */
+@property BOOL mockCardReaderIsDetected;
+
+/**
  * The payment method to mock. Defaults to kWPPaymentMethodSwipe.
  */
 @property NSString *mockPaymentMethod;

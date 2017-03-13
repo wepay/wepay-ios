@@ -29,17 +29,15 @@
 		57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD01A1AEB050092B3AA /* UIKit.framework */; };
 		57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */; };
 		57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
-		57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */; };
 		57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */; };
 		57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */; };
-		7E5BFAE01DF23E1700AB77D8 /* G4XSwiper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */; };
-		7E5BFAE11DF23E1700AB77D8 /* RKI_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */; };
-		7E5BFAE21DF23E1700AB77D8 /* RPx_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */; };
-		7E5BFAE31DF23E1700AB77D8 /* RUA_MFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */; };
 		7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */; };
 		7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */; };
 		7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */; };
 		9C2FFCFC1D401F5D00294BB0 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
+		C33405E81E6DDFAF00CF2C59 /* forget_remembered_reader.png in Resources */ = {isa = PBXBuildFile; fileRef = C33405E61E6DDFAF00CF2C59 /* forget_remembered_reader.png */; };
+		C33405E91E6DDFAF00CF2C59 /* get_remembered_reader.png in Resources */ = {isa = PBXBuildFile; fileRef = C33405E71E6DDFAF00CF2C59 /* get_remembered_reader.png */; };
+		D7378AE21E4E8C9C00CDB7BC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D7378AE11E4E8C9C00CDB7BC /* libz.tbd */; };
 		D77FBA191D9D781B0078961A /* card_reader_battery.png in Resources */ = {isa = PBXBuildFile; fileRef = D77FBA181D9D781B0078961A /* card_reader_battery.png */; };
 /* End PBXBuildFile section */
 
@@ -82,16 +80,14 @@
 		57664BD01A1AEB050092B3AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		57C45AC21B4E04120007E918 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WePay.framework; sourceTree = "<group>"; };
-		57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TrustDefenderMobile.framework; sourceTree = "<group>"; };
 		57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = G4XSwiper.framework; sourceTree = "<group>"; };
-		7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RKI_MFI.framework; sourceTree = "<group>"; };
-		7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RPx_MFI.framework; sourceTree = "<group>"; };
-		7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RUA_MFI.framework; sourceTree = "<group>"; };
 		7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		C33405E61E6DDFAF00CF2C59 /* forget_remembered_reader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forget_remembered_reader.png; path = Resources/forget_remembered_reader.png; sourceTree = "<group>"; };
+		C33405E71E6DDFAF00CF2C59 /* get_remembered_reader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = get_remembered_reader.png; path = Resources/get_remembered_reader.png; sourceTree = "<group>"; };
+		D7378AE11E4E8C9C00CDB7BC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		D77FBA181D9D781B0078961A /* card_reader_battery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_reader_battery.png; path = Resources/card_reader_battery.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,21 +96,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7378AE21E4E8C9C00CDB7BC /* libz.tbd in Frameworks */,
 				7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */,
 				7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */,
 				7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */,
-				7E5BFAE21DF23E1700AB77D8 /* RPx_MFI.framework in Frameworks */,
-				57CB382E1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework in Frameworks */,
 				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
 				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
 				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
-				7E5BFAE31DF23E1700AB77D8 /* RUA_MFI.framework in Frameworks */,
 				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
 				57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */,
 				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
 				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
-				7E5BFAE01DF23E1700AB77D8 /* G4XSwiper.framework in Frameworks */,
-				7E5BFAE11DF23E1700AB77D8 /* RKI_MFI.framework in Frameworks */,
 				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
 				57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */,
 				57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */,
@@ -135,6 +127,7 @@
 		570693A41A02FF3800182EA2 = {
 			isa = PBXGroup;
 			children = (
+				D7378AE11E4E8C9C00CDB7BC /* libz.tbd */,
 				7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */,
 				7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */,
 				570693AF1A02FF3800182EA2 /* WePayExample */,
@@ -200,10 +193,6 @@
 			isa = PBXGroup;
 			children = (
 				7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */,
-				7E5BFADC1DF23E1700AB77D8 /* G4XSwiper.framework */,
-				7E5BFADD1DF23E1700AB77D8 /* RKI_MFI.framework */,
-				7E5BFADE1DF23E1700AB77D8 /* RPx_MFI.framework */,
-				7E5BFADF1DF23E1700AB77D8 /* RUA_MFI.framework */,
 				57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */,
 				57664BC61A1AE9060092B3AA /* AVFoundation.framework */,
 				57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */,
@@ -212,7 +201,6 @@
 				57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */,
 				57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */,
 				57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */,
-				57CB382D1ACCDC7B00C8A6B2 /* TrustDefenderMobile.framework */,
 				57664BD01A1AEB050092B3AA /* UIKit.framework */,
 				57C45AC21B4E04120007E918 /* WePay.framework */,
 			);
@@ -222,6 +210,8 @@
 		574173E11A37F36700B73D95 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C33405E61E6DDFAF00CF2C59 /* forget_remembered_reader.png */,
+				C33405E71E6DDFAF00CF2C59 /* get_remembered_reader.png */,
 				D77FBA181D9D781B0078961A /* card_reader_battery.png */,
 				574173E51A37F39700B73D95 /* swipe info.png */,
 				574173E61A37F39700B73D95 /* swipe tokenize.png */,
@@ -277,7 +267,7 @@
 		570693A51A02FF3800182EA2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = WePay;
 				TargetAttributes = {
 					570693AC1A02FF3800182EA2 = {
@@ -316,7 +306,9 @@
 			files = (
 				570F9FE91B43719B008C96BF /* dd_signature.png in Resources */,
 				D77FBA191D9D781B0078961A /* card_reader_battery.png in Resources */,
+				C33405E91E6DDFAF00CF2C59 /* get_remembered_reader.png in Resources */,
 				570693BC1A02FF3800182EA2 /* Main.storyboard in Resources */,
+				C33405E81E6DDFAF00CF2C59 /* forget_remembered_reader.png in Resources */,
 				570693C11A02FF3800182EA2 /* LaunchScreen.xib in Resources */,
 				570F9FE71B43719B008C96BF /* signature.png in Resources */,
 				570F9FE31B437190008C96BF /* Settings.bundle in Resources */,
@@ -399,15 +391,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -420,9 +416,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -441,8 +437,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -450,13 +448,14 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -531,6 +530,7 @@
 				);
 				INFOPLIST_FILE = WePayExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wepay.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WePayExample.app/WePayExample";
 			};
@@ -546,6 +546,7 @@
 				);
 				INFOPLIST_FILE = WePayExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wepay.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WePayExample.app/WePayExample";
 			};

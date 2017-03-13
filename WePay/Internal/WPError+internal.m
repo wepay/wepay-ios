@@ -337,5 +337,23 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
                                domain:kWPErrorSDKDomain];
 }
 
++ (NSError *) errorCardReaderBatteryTooLow
+{
+    NSString *errorText = WPErrorCardReaderBatteryTooLowErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorCardReaderBatteryTooLow
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorInvalidCardReaderSelection
+{
+    NSString *errorText = WPErrorInvalidCardReaderSelectionErrorMessage;
+    return [WPError makeErrorWithCode:WPErrorInvalidCardReaderSelection
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
 
 @end
