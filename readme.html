@@ -118,12 +118,13 @@
 <li>UIKit.framework</li>
 <li>libstdc++.6.0.9.dylib</li>
 <li>libstdc++.dylib</li>
+<li>libz.dylib</li>
 </ul>
 </li>
 <li>Also include the framework files you copied:
 
 <ul>
-<li>TrustDefenderMobile.framework</li>
+<li>TrustDefender.framework</li>
 <li>WePay.framework</li>
 </ul>
 </li>
@@ -327,6 +328,16 @@ When you are ready, look at the samples below to learn how to interact with the 
     // Change this to YES if you want to reset the card reader
     completion(NO);
 }
+
+- (void) selectCardReader:(NSArray *)cardReaderNames
+               completion:(void (^)(NSInteger selectedIndex))completion
+{
+    // In production apps, the merchant must choose the card reader they want to use.
+    // Here, we always select the first card reader in the array
+    int selectedIndex = 0;
+    completion(selectedIndex);
+}
+
 </code></pre>
 
 <ul>
@@ -357,16 +368,17 @@ When you are ready, look at the samples below to learn how to interact with the 
 <li>That's it! The following sequence of events will occur:
 
 <ol>
-<li>The user inserts the card reader (or it is already inserted)</li>
+<li>The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.</li>
 <li>The SDK tries to detect the card reader and initialize it.
 
 <ul>
-<li>If the card reader is not detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSearching</code>
 </li>
-<li>If the card reader is successfully detected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
-<li>Next, if the card reader is successfully initialized, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusWaitingForSwipe</code>
+<li>If any card readers are discovered, the <code>selectCardReader:</code> method will be called with an array of discovered devices. If anything is plugged into the headphone jack, <code>"AUDIOJACK"</code> will be one of the devices discovered.</li>
+<li>If no card readers are detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
 </li>
-<li>Otherwise, <code>didFailToReadPaymentInfoWithError:</code> will be called with the appropriate error, and processing will stop (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusStopped</code>)</li>
+<li>Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.</li>
+<li>If the card reader is successfully connected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
 </ul>
 </li>
 <li>If the card reader successfully initialized, it will wait for the user to swipe a card</li>
@@ -450,13 +462,17 @@ didFailAuthorization:(NSError *)error
 <li>That's it! The following sequence of events will occur:
 
 <ol>
-<li>The user inserts the card reader (or it is already inserted)</li>
+<li>The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.</li>
 <li>The SDK tries to detect the card reader and initialize it.
 
 <ul>
-<li>If the card reader is not detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSearching</code>
 </li>
-<li>If the card reader is successfully detected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
+<li>If any card readers are discovered, the <code>selectCardReader:</code> method will be called with an array of discovered devices. If anything is plugged into the headphone jack, <code>"AUDIOJACK"</code> will be one of the devices discovered.</li>
+<li>If no card readers are detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
+</li>
+<li>Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.</li>
+<li>If the card reader is successfully connected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
 </ul>
 </li>
 <li>Next, the SDK checks if the card reader is correctly configured (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusCheckingReader</code>).
@@ -645,10 +661,10 @@ didFailAuthorization:(NSError *)error
 </code></pre>
 
 <ul>
-<li>Make the WePay API call, passing in the instance of the class that implemented the WPBatteryLevelDelegate protocol</li>
+<li>Make the WePay API call, passing in the instance(s) of the class(es) that implemented the WPCardReaderDelegate and WPBatteryLevelDelegate protocols</li>
 </ul>
 
-<pre lang="m"><code>[self.wepay getCardReaderBatteryLevelWithBatteryLevelDelegate:self];
+<pre lang="m"><code>[self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
 </code></pre>
 
 <ul>
@@ -658,10 +674,46 @@ didFailAuthorization:(NSError *)error
 <li>The SDK will attempt to read the battery level of the card reader</li>
 <li>If the operation succeeds, WPBatteryLevelDelegate's <code>didGetBatteryLevel:</code> method will be called with the result</li>
 <li>Otherwise, if the operation fails, WPBatteryLevelDelegate's <code>didFailToGetBatteryLevelwithError:</code> method will be called with the appropriate error</li>
-<li>The card reader must be plugged in before attempting to get battery level, otherwise the process will fail</li>
 </ol>
 </li>
 </ul>
+
+<h3>
+<a id="user-content-configuring-the-sdk" class="anchor" href="#configuring-the-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuring the SDK</h3>
+
+<p>The experiences described above can be modified by utilizing the configuration options available on the WPConfig object. Detailed descriptions for each configurable property is available in the documentation for WPConfig.</p>
+
+<h3>
+<a id="user-content-testdevelop-using-mock-card-reader-and-mock-wepayclient" class="anchor" href="#testdevelop-using-mock-card-reader-and-mock-wepayclient" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Test/develop using mock card reader and mock WepayClient</h3>
+
+<ul>
+<li>To use mock card reader implementation instead of using the real reader, instantiate a MockConfig object and pass it to Config:</li>
+</ul>
+
+<pre lang="m"><code>WPMockConfig *mockConfig = [[WPMockConfig alloc] init];
+config.mockConfig = mockConfig;
+</code></pre>
+
+<ul>
+<li>To use mock WepayClient implementation instead of interacting with the real WePay server, set the corresponding option on the mockConfig object:</li>
+</ul>
+
+<pre lang="m"><code>mockConfig.useMockWepayClient = YES;
+</code></pre>
+
+<ul>
+<li>Other options are also available:</li>
+</ul>
+
+<pre lang="m"><code>mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe; // Payment method to mock; Defaults to SWIPE.
+mockConfig.cardReadTimeOut = YES; // To mock a card reader timeout; Defaults to NO.
+mockConfig.cardReadFailure = YES; // To mock a failure for card reading; Defaults to NO.
+mockConfig.cardTokenizationFailure = YES; // To mock a failure for card tokenization; Defaults to NO.
+mockConfig.EMVAuthFailure = YES; // To mock a failure for EMV authorization; Defaults to NO.
+mockConfig.multipleEMVApplication = YES; // To mock multiple EMV applications on card to choose from; Defaults to NO.
+mockConfig.batteryLevelError = YES; // To mock an error while fetching battery level; Defaults to NO.
+mockConfig.mockCardReaderIsDetected = NO; // To mock a card reader being available for connection; Defaults to YES.
+</code></pre>
 
 <h3>
 <a id="user-content-integration-tests-and-unit-tests" class="anchor" href="#integration-tests-and-unit-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integration tests and unit tests</h3>

@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['wpauthinfonotprovidederrormessage',['WPAuthInfoNotProvidedErrorMessage',['../_w_p_error_8h.html#a5deed3605514979e7591597078a76e74',1,'WPError.h']]],
+  ['wpcardblockederrormessage',['WPCardBlockedErrorMessage',['../_w_p_error_8h.html#aff907871980897a20204e51387b2a9b8',1,'WPError.h']]],
+  ['wpcardnotsupportederrormessage',['WPCardNotSupportedErrorMessage',['../_w_p_error_8h.html#ab706ff9e0e4d02adcbedbb641f8d291a',1,'WPError.h']]],
+  ['wpcardreadergeneralerrormessage',['WPCardReaderGeneralErrorMessage',['../_w_p_error_8h.html#add4631bff504f8ba58c863dc3de1d066',1,'WPError.h']]],
+  ['wpcardreaderinitializationerrormessage',['WPCardReaderInitializationErrorMessage',['../_w_p_error_8h.html#a9dc252b4d078aaf9c6a6da36f53fd1d6',1,'WPError.h']]],
+  ['wpcardreadermodelnotsupportederrormessage',['WPCardReaderModelNotSupportedErrorMessage',['../_w_p_error_8h.html#a28c0f42a6b24845d674a70bd92044ddc',1,'WPError.h']]],
+  ['wpcardreadernotconnectederrormessage',['WPCardReaderNotConnectedErrorMessage',['../_w_p_error_8h.html#ab8f322070c76893c0bb7c753278ca248',1,'WPError.h']]],
+  ['wpcardreadertimeouterrormessage',['WPCardReaderTimeoutErrorMessage',['../_w_p_error_8h.html#a9c7c99c3a48c8071776f0d5fb8510424',1,'WPError.h']]],
+  ['wpdeclinedbycarderrormessage',['WPDeclinedByCardErrorMessage',['../_w_p_error_8h.html#a1cf43781fdd49a8d050f52a5e85c69ae',1,'WPError.h']]],
+  ['wpdeclinedbyissuererrormessage',['WPDeclinedByIssuerErrorMessage',['../_w_p_error_8h.html#a908b117cf41f7f86fe37767b0f4ec4fe',1,'WPError.h']]],
+  ['wperrorcardreaderbatterytoolowerrormessage',['WPErrorCardReaderBatteryTooLowErrorMessage',['../_w_p_error_8h.html#ab9e8115bbcf558e34e51e204b1cebd72',1,'WPError.h']]],
+  ['wperrorinvalidcardreaderselectionerrormessage',['WPErrorInvalidCardReaderSelectionErrorMessage',['../_w_p_error_8h.html#a0c25c2e0bd8e5669f79e0a226835bbf7',1,'WPError.h']]],
+  ['wperrorinvalidtransactionaccountiderrormessage',['WPErrorInvalidTransactionAccountIDErrorMessage',['../_w_p_error_8h.html#ae047202243c493eeb39616ccae89b043',1,'WPError.h']]],
+  ['wperrorinvalidtransactionamounterrormessage',['WPErrorInvalidTransactionAmountErrorMessage',['../_w_p_error_8h.html#aad3844db6cd98e6452b04b00ae1000b2',1,'WPError.h']]],
+  ['wperrorinvalidtransactioncurrencycodeerrormessage',['WPErrorInvalidTransactionCurrencyCodeErrorMessage',['../_w_p_error_8h.html#a7e21f44940e4b3e4a29c06e9a637ec3d',1,'WPError.h']]],
+  ['wpfailedtogetbatterylevelerrormessage',['WPFailedToGetBatteryLevelErrorMessage',['../_w_p_error_8h.html#a3b74ee785b9c97e13c6d914e7908f3eb',1,'WPError.h']]],
+  ['wpinvalidapplicationiderrormessage',['WPInvalidApplicationIdErrorMessage',['../_w_p_error_8h.html#ab584bbddc75e8a2ebceec74dc0c3843b',1,'WPError.h']]],
+  ['wpinvalidauthinfoerrormessage',['WPInvalidAuthInfoErrorMessage',['../_w_p_error_8h.html#adbf4e332796fcab53efa44524c1bb6d3',1,'WPError.h']]],
+  ['wpinvalidcarddataerrormessage',['WPInvalidCardDataErrorMessage',['../_w_p_error_8h.html#a92cb6da42ceae40cf7c29c7599d30cbb',1,'WPError.h']]],
+  ['wpissuerunreachableerrormessage',['WPIssuerUnreachableErrorMessage',['../_w_p_error_8h.html#a9740c01930c395184144f8786f848c29',1,'WPError.h']]],
+  ['wpnamenotfounderrormessage',['WPNameNotFoundErrorMessage',['../_w_p_error_8h.html#aedd7f313df5c32bdd2b5de81cbe3ac1b',1,'WPError.h']]],
+  ['wpnodatareturnederrormessage',['WPNoDataReturnedErrorMessage',['../_w_p_error_8h.html#a8f56063a3e18ef898258107557276800',1,'WPError.h']]],
+  ['wppaymentmethodcannotbetokenizederrormessage',['WPPaymentMethodCannotBeTokenizedErrorMessage',['../_w_p_error_8h.html#a74b0ba60282947f24131340107911bc5',1,'WPError.h']]],
+  ['wpsignatureinvalidimageerrormessage',['WPSignatureInvalidImageErrorMessage',['../_w_p_error_8h.html#a8442820a82bf658ea8b823dfaa741a6d',1,'WPError.h']]],
+  ['wpunexpectederrormessage',['WPUnexpectedErrorMessage',['../_w_p_error_8h.html#a454ba76eeb180aecbb330f754c907e0b',1,'WPError.h']]]
+];
