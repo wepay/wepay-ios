@@ -903,18 +903,6 @@
             <Path>_w_p_mock_config_8h_source.html</Path>
            </Node>
            <Node>
-            <Name>WPMockRoamConfigurationManager.h</Name>
-            <Path>_w_p_mock_roam_configuration_manager_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPMockRoamDeviceManager.h</Name>
-            <Path>_w_p_mock_roam_device_manager_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPMockRoamTransactionManager.h</Name>
-            <Path>_w_p_mock_roam_transaction_manager_8h_source.html</Path>
-           </Node>
-           <Node>
             <Name>WPPaymentInfo.h</Name>
             <Path>_w_p_payment_info_8h_source.html</Path>
            </Node>
