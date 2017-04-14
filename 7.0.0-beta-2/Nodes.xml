@@ -969,24 +969,8 @@
             </Subnodes>
            </Node>
            <Node>
-            <Name>WPIngenicoCardReaderDetector.h</Name>
-            <Path>_w_p_ingenico_card_reader_detector_8h_source.html</Path>
-           </Node>
-           <Node>
             <Name>WPMockConfig.h</Name>
             <Path>_w_p_mock_config_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPMockRoamConfigurationManager.h</Name>
-            <Path>_w_p_mock_roam_configuration_manager_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPMockRoamDeviceManager.h</Name>
-            <Path>_w_p_mock_roam_device_manager_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPMockRoamTransactionManager.h</Name>
-            <Path>_w_p_mock_roam_transaction_manager_8h_source.html</Path>
            </Node>
            <Node>
             <Name>WPPaymentInfo.h</Name>
@@ -995,10 +979,6 @@
            <Node>
             <Name>WPPaymentToken.h</Name>
             <Path>_w_p_payment_token_8h_source.html</Path>
-           </Node>
-           <Node>
-            <Name>WPTransactionUtilities.h</Name>
-            <Path>_w_p_transaction_utilities_8h_source.html</Path>
            </Node>
           </Subnodes>
          </Node>
