@@ -31,6 +31,7 @@
     if (self = [super init]) {
         // save location config
         self.useLocation = config.useLocation;
+        self.locationManager = [[CLLocationManager alloc] init];
     }
 
     return self;
@@ -101,9 +102,6 @@
 
 - (void) requestLocationPermission
 {
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-
     // Check required for iOS 8.
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
         [self.locationManager requestWhenInUseAuthorization];
@@ -118,12 +116,8 @@
 
 - (void) cleanupLocationManager
 {
-    
     // stop updating location if still active
     [self.locationManager stopUpdatingLocation];
-
-    self.locationManager.delegate = nil;
-    self.locationManager = nil;
 }
 
 #pragma mark - cleanup

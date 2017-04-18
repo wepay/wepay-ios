@@ -182,10 +182,10 @@
     
     [WPClient creditCardAuthReverse:requestParams
                        successBlock:^(NSDictionary * returnData) {
-                           NSLog(@"creditCardAuthReverse success response: %@", returnData);
+                           WPLog(@"creditCardAuthReverse success response: %@", returnData);
                        }
                        errorHandler:^(NSError * error) {
-                           NSLog(@"creditCardAuthReverse error response: %@", error);
+                           WPLog(@"creditCardAuthReverse error response: %@", error);
                        }];
 }
 
@@ -223,14 +223,14 @@
     if (encryptedTrack == nil || [@"" isEqualToString:encryptedTrack]) {
         // this indicates a bad swipe or an unsupported card.
         // we expect all supported cards to return an encrypted track
-        NSLog(@"validateSwiperInfoForTokenization: No encrypted track found");
+        WPLog(@"validateSwiperInfoForTokenization: No encrypted track found");
         return [WPError errorInvalidCardData];
     }
     
     // check if KSN exists
     NSString *ksn = [swiperInfo objectForKey:@"KSN"];
     if (ksn == nil || [@"" isEqualToString:ksn]) {
-        NSLog(@"validateSwiperInfoForTokenization: No KSN found");
+        WPLog(@"validateSwiperInfoForTokenization: No KSN found");
         return [WPError errorInvalidCardData];
     }
     

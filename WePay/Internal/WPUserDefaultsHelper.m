@@ -63,7 +63,7 @@ NSString * const kWPCardReaderIdentifierEmpty = @"";
     [defaults setObject:entry forKey:WEPAY_REMEMBERED_CARDREADER_KEY];
     
     if (![defaults synchronize]) {
-        NSLog(@"Failed to immediately save card reader with name %@. It may be written to disk at a later time.", name);
+        WPLog(@"Failed to immediately save card reader with name %@. It may be written to disk at a later time.", name);
     }
 }
 

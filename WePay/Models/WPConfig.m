@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong, readwrite) NSString *clientId;
 @property (nonatomic, strong, readwrite) NSString *environment;
+
 @end
 
 
@@ -29,7 +30,8 @@
     restartTransactionAfterSuccess:NO
 restartTransactionAfterGeneralError:YES
 restartTransactionAfterOtherErrors:NO
-     stopCardReaderAfterOperation:YES];
+     stopCardReaderAfterOperation:YES
+                         logLevel:kWPLogLevelAll];
 }
 
 
@@ -41,7 +43,8 @@ restartTransactionAfterOtherErrors:NO
    restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
 restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
 restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
-   stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation
+     stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation
+                         logLevel:(NSString *)logLevel
 {
     if (self = [super init])
     {
@@ -54,6 +57,7 @@ restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
         self.restartTransactionAfterGeneralError = restartTransactionAfterGeneralError;
         self.restartTransactionAfterOtherErrors = restartTransactionAfterOtherErrors;
         self.stopCardReaderAfterOperation = stopCardReaderAfterOperation;
+        self.logLevel = logLevel;
     }
     
     return self;
@@ -65,8 +69,10 @@ restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
     
     [dict setValue:self.clientId ? self.clientId : [NSNull null] forKey:@"clientId"];
     [dict setValue:self.environment ? self.environment : [NSNull null] forKey:@"environment"];
+    [dict setValue:self.logLevel ? self.logLevel : [NSNull null] forKey:@"logLevel"];
     [dict setValue:@(self.useLocation) forKey:@"useLocation"];
     [dict setValue:@(self.useTestEMVCards) forKey:@"useTestEMVCards"];
+    [dict setValue:@(self.callDelegateMethodsOnMainThread) forKey:@"callDelegateMethodsOnMainThread"];
     [dict setValue:@(self.restartTransactionAfterSuccess) forKey:@"restartTransactionAfterSuccess"];
     [dict setValue:@(self.restartTransactionAfterGeneralError) forKey:@"restartTransactionAfterGeneralError"];
     [dict setValue:@(self.restartTransactionAfterOtherErrors) forKey:@"restartTransactionAfterOtherErrors"];

@@ -117,6 +117,11 @@
         dispatch_queue_t queue = dispatch_get_main_queue();
         dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, READER_RELEASE_TIME_SEC * NSEC_PER_SEC);
         dispatch_after(time, queue, ^{
+            // Call done on releaseHandler
+            if (releaseHandler) {
+                [releaseHandler done];
+            }
+            
             [_deviceStatusHandler onDisconnected];
         });
     }

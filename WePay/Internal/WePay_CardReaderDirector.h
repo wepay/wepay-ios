@@ -92,13 +92,6 @@ typedef NS_ENUM(NSInteger, CardReaderRequest) {
 - (void) setCardReaderRequest:(CardReaderRequest)request;
 
 /**
- * Returns whether or not a card reader is connected
- * 
- * @return Boolean stating if card reader is connected
- */
-- (BOOL) isConnected;
-
-/**
  * Returns whether or not a card reader is being searched for
  *
  * @return Boolean stating if card reader is being searched for

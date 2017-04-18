@@ -214,4 +214,11 @@
  */
 + (NSError *) errorInvalidCardReaderSelection;
 
+/**
+ *  Creates an NSError object representing inability to connect to card reader.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderUnableToConnect;
+
 @end

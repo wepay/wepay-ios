@@ -466,7 +466,7 @@
     cardReaderDelegate.statusChangeBlock = ^(id status){
         
         if (statuses == nil) {
-            NSLog(@"skipping adding nil status");
+            WPLog(@"skipping adding nil status");
         } else {
             [testStatuses addObject:status];
         }
@@ -533,7 +533,7 @@
         [statuses addObject:status];
     }
     
-    NSLog(@"statuses: %@", statuses);
+    WPLog(@"statuses: %@", statuses);
 }
 
 #endif

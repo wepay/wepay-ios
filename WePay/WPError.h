@@ -200,9 +200,12 @@ typedef enum WPErrorCode {
     /**
      *  -10040 Card reader battery too low.
      */
-	WPErrorCardReaderBatteryTooLow = -10040
+	WPErrorCardReaderBatteryTooLow = -10040,
 
-	
+    /**
+     *  -10041 Unable to connect to card reader.
+     */
+    WPErrorCardReaderUnableToConnect = -10041
 
 } WPErrorCode;
 
@@ -332,3 +335,8 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorCardReaderBatteryTooLow, that can be retrieved by calling [error localizedDescription].
  */
 #define WPErrorCardReaderBatteryTooLowErrorMessage NSLocalizedStringFromTable(@"The card reader battery does not have enough charge. Please charge before using.", @"WePay",  @"The card reader battery does not have enough charge. Please charge before using.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderUnsupportedOrBatteryTooLow, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorCardReaderUnableToConnectErrorMessage NSLocalizedStringFromTable(@"Please make sure you’re using a supported card reader and that it is fully charged.", @"WePay",  @"Please make sure you’re using a supported card reader and that it is fully charged.");

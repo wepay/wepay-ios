@@ -201,6 +201,8 @@
 
 - (void) testReaderResetRequest
 {
+    self.config.stopCardReaderAfterOperation = NO;
+    
     XCTestExpectation *wfcExpectation = [self expectationWithDescription:@"cardReaderDidChangeStatus: with kWPCardReaderStatusWaitingForCard expected to be called"];
     XCTestExpectation *cfgExpectation = [self expectationWithDescription:@"cardReaderDidChangeStatus: with kWPCardReaderStatusConfiguringReader expected to be called after shouldResetCardReader is invoked"];
     __block TestCardReaderDelegate *cardReaderDelegate = [[TestCardReaderDelegate alloc] init];
@@ -226,37 +228,29 @@
     XCTAssertTrue(cardReaderDelegate.cardReaderStatusConfiguringReaderInvoked);
 }
 
-- (void) testStopCardReader
+- (void) testStopCardReaderAtStatus_Searching
 {
-    self.config.stopCardReaderAfterOperation = NO;
-    XCTestExpectation *expectation = [self expectationWithDescription:@"cardReaderDidChangeStatus: with kWPCardReaderStatusStopped expected to be called"];
-    XCTestExpectation *disconnectedNotCalledExpectation = [self expectationWithDescription:@"Expected fulfillment after async delay."];
-    TestCardReaderDelegate *cardReaderDelegate = [[TestCardReaderDelegate alloc] init];
-    __block id mostRecentStatus = nil;
-    StatusChangeBlock statusChangeBlock = ^(id status){
-        if (status == kWPCardReaderStatusWaitingForCard) {
-            [self.wepay stopCardReader];
-        } else if (status == kWPCardReaderStatusStopped) {
-            [expectation fulfill];
-        }
-        
-        mostRecentStatus = status;
-    };
-    cardReaderDelegate.statusChangeBlock = statusChangeBlock;
-    cardReaderDelegate.returnFromAuthorizeAmount = YES;
-    
-    [self.wepay startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
-    
-    dispatch_queue_t queue = dispatch_get_main_queue();
-    dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, WAIT_TIME_MEDIUM_SEC * NSEC_PER_SEC);
-    dispatch_after(time, queue, ^{
-        if (!cardReaderDelegate.cardReaderStatusNotConnectedInvoked) {
-            [disconnectedNotCalledExpectation fulfill];
-        }
-    });
-    
-    [self waitForExpectationsWithTimeout:WAIT_TIME_LONG_SEC handler:nil];
-    XCTAssertEqual(mostRecentStatus, kWPCardReaderStatusStopped);
+    [self stopCardReaderTestAtStatusInternal:kWPCardReaderStatusSearching];
+}
+
+- (void) testStopCardReaderAtStatus_Connected
+{
+    [self stopCardReaderTestAtStatusInternal:kWPCardReaderStatusConnected];
+}
+
+- (void) testStopCardReaderAtStatus_CheckingReader
+{
+    [self stopCardReaderTestAtStatusInternal:kWPCardReaderStatusCheckingReader];
+}
+
+- (void) testStopCardReaderAtStatus_WaitingForCard
+{
+    [self stopCardReaderTestAtStatusInternal:kWPCardReaderStatusWaitingForCard];
+}
+
+- (void) testStopCardReaderAtStatus_CardDipped
+{
+    [self stopCardReaderTestAtStatusInternal:kWPCardReaderStatusCardDipped];
 }
 
 - (void) testStopDuringCardReaderSelection
@@ -274,6 +268,8 @@
         if (status == kWPCardReaderStatusStopped) {
             [stopExpectation fulfill];
         }
+        
+        mostRecentStatus = status;
     };
     cardReaderDelegate.statusChangeBlock = statusChangeBlock;
     cardReaderDelegate.returnFromAuthorizeAmount = YES;
@@ -897,6 +893,47 @@
     
     [self.wepay startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
     [self waitForExpectationsWithTimeout:WAIT_TIME_MEDIUM_SEC handler:nil];
+}
+
+#pragma mark - Internal helper functions
+
+/**
+ * Runs a read transaction, then stops the card reader when a specified status is emitted.
+ *
+ * @param testStatus the status on which to call stopCardReader()
+ */
+- (void) stopCardReaderTestAtStatusInternal:(id) testStatus
+{
+    self.config.stopCardReaderAfterOperation = NO;
+    self.config.mockConfig.mockPaymentMethod = kWPPaymentMethodDip;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"cardReaderDidChangeStatus: with kWPCardReaderStatusStopped expected to be called"];
+    XCTestExpectation *disconnectedNotCalledExpectation = [self expectationWithDescription:@"Expected fulfillment after async delay."];
+    TestCardReaderDelegate *cardReaderDelegate = [[TestCardReaderDelegate alloc] init];
+    __block id mostRecentStatus = nil;
+    StatusChangeBlock statusChangeBlock = ^(id status){
+        if (status == testStatus) {
+            [self.wepay stopCardReader];
+        } else if (status == kWPCardReaderStatusStopped) {
+            [expectation fulfill];
+        }
+        
+        mostRecentStatus = status;
+    };
+    cardReaderDelegate.statusChangeBlock = statusChangeBlock;
+    cardReaderDelegate.returnFromAuthorizeAmount = YES;
+    
+    [self.wepay startTransactionForReadingWithCardReaderDelegate:cardReaderDelegate];
+    
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, WAIT_TIME_MEDIUM_SEC * NSEC_PER_SEC);
+    dispatch_after(time, queue, ^{
+        if (!cardReaderDelegate.cardReaderStatusNotConnectedInvoked) {
+            [disconnectedNotCalledExpectation fulfill];
+        }
+    });
+    
+    [self waitForExpectationsWithTimeout:WAIT_TIME_LONG_SEC handler:nil];
+    XCTAssertEqual(mostRecentStatus, kWPCardReaderStatusStopped);
 }
 
 @end

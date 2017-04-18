@@ -107,7 +107,7 @@ NSString *const kRP350XModelName = @"RP350X";
     [transactionParameters setObject:@"000000000000" forKey:[NSNumber numberWithInt:RUAParameterAmountOtherNumeric]];
     [transactionParameters setObject:@"01" forKey:[NSNumber numberWithInt:RUAParameterExtraProgressMessageFlag]];
 
-    NSLog(@"getEMVStartTransactionParameters:\n%@", transactionParameters);
+    WPLog(@"getEMVStartTransactionParameters:\n%@", transactionParameters);
 
     return transactionParameters;
 }
@@ -119,7 +119,7 @@ NSString *const kRP350XModelName = @"RP350X";
                                    cardReaderRequest:(CardReaderRequest)request
 
 {
-    NSLog(@"performEMVTransactionStartCommand");
+    WPLog(@"performEMVTransactionStartCommand");
     
     // save transaction info
     self.amount = amount;
@@ -131,11 +131,21 @@ NSString *const kRP350XModelName = @"RP350X";
     [self startTransaction];
 }
 
-- (void) startTransaction
+- (void) stopTransaction
 {
+    [self resetStates];
+}
+
+- (void) resetStates {
     self.shouldReportSwipedEMVCard = NO;
     self.isFallbackSwipe = NO;
     self.shouldIssueReversal = NO;
+    self.isWaitingForCardRemoval = NO;
+}
+
+- (void) startTransaction
+{
+    [self resetStates];
 
     self.paymentInfo = nil;
     self.selectedAID = nil;
@@ -155,7 +165,7 @@ NSString *const kRP350XModelName = @"RP350X";
     [tmgr sendCommand:RUACommandEMVStartTransaction
        withParameters:params
              progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                 NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                 WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
                  switch (messageType) {
                      case RUAProgressMessagePleaseInsertCard:
                          if (self.shouldReportSwipedEMVCard) {
@@ -193,7 +203,7 @@ NSString *const kRP350XModelName = @"RP350X";
              response: ^(RUAResponse *ruaResponse) {
                  NSMutableDictionary *responseData = [[WPRoamHelper RUAResponse_toDictionary:ruaResponse] mutableCopy];
                  NSError *error = [self validateEMVResponse:responseData];
-                 NSLog(@"RUAResponse: %@", responseData);
+                 WPLog(@"RUAResponse: %@", responseData);
                  
                  if (error != nil) {
                      if ([self shouldReactToError:error]) {
@@ -202,6 +212,7 @@ NSString *const kRP350XModelName = @"RP350X";
                          [self reactToError:error];
                      } else {
                          // Nothing to do here, the flow will continue elsewhere.
+                         WPLog(@"Ignoring error: %@", error);
                      }
                  } else {
                      if ([ruaResponse responseType] == RUAResponseTypeMagneticCardData) {
@@ -298,16 +309,16 @@ NSString *const kRP350XModelName = @"RP350X";
         id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
         NSDictionary *params = @{[NSNumber numberWithInt:RUAParameterApplicationIdentifier]: selectedAppId.aid};
         
-        NSLog(@"performSelectAppIdCommandParameters:\n%@", params);
+        WPLog(@"performSelectAppIdCommandParameters:\n%@", params);
         
         [tmgr  sendCommand:RUACommandEMVFinalApplicationSelection
             withParameters:params
                   progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                      NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                      WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
                   }
          
                   response: ^(RUAResponse *ruaResponse) {
-                      NSLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
+                      WPLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
                       [self handleEMVStartTransactionResponse:ruaResponse];
                   }
          ];
@@ -338,25 +349,25 @@ NSString *const kRP350XModelName = @"RP350X";
     [transactionParameters setObject:tacOnline forKey:[NSNumber numberWithInt:RUAParameterTerminalActionCodeOnline]];
     [transactionParameters setObject:tacDefault forKey:[NSNumber numberWithInt:RUAParameterTerminalActionCodeDefault]];
 
-    NSLog(@"getEMVTransactionDataParameters:\n%@", transactionParameters);
+    WPLog(@"getEMVTransactionDataParameters:\n%@", transactionParameters);
 
     return transactionParameters;
 }
 
 
 - (void) performEMVTransactionDataCommand {
-    NSLog(@"performEMVTransactionDataCommand");
+    WPLog(@"performEMVTransactionDataCommand");
 
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
     NSDictionary *params = [self getEMVTransactionDataParameters];
 
     [tmgr sendCommand:RUACommandEMVTransactionData withParameters:params
              progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                 NSLog(@"RUAProgressMessage: %@ %@", [WPRoamHelper RUAProgressMessage_toString:messageType], additionalMessage);
+                 WPLog(@"RUAProgressMessage: %@ %@", [WPRoamHelper RUAProgressMessage_toString:messageType], additionalMessage);
              }
 
              response: ^(RUAResponse *ruaResponse) {
-                 NSLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                 WPLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
 
                  [self handleEMVTransactionDataResponse:ruaResponse];
              }
@@ -456,7 +467,7 @@ NSString *const kRP350XModelName = @"RP350X";
                                            }];
 
         } else {
-            NSLog(@"[performEMVTransactionDataCommand] Stopping, unhandled response");
+            WPLog(@"[performEMVTransactionDataCommand] Stopping, unhandled response");
             NSError *error = [WPError errorInvalidCardData];
             [self reportAuthorizationSuccess:nil orError:error forPaymentInfo:self.paymentInfo];
             [self reactToError:error];
@@ -557,7 +568,7 @@ NSString *const kRP350XModelName = @"RP350X";
         }
     }
 
-    NSLog(@"getEMVCompleteTransactionParameters:\n%@", transactionParameters);
+    WPLog(@"getEMVCompleteTransactionParameters:\n%@", transactionParameters);
     return transactionParameters;
 }
 
@@ -566,7 +577,7 @@ NSString *const kRP350XModelName = @"RP350X";
  */
 - (void) performEMVCompleteTransactionCommand
 {
-    NSLog(@"performEMVCompleteTransactionCommand");
+    WPLog(@"performEMVCompleteTransactionCommand");
 
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
     NSDictionary *params = [self getEMVCompleteTransactionParameters];
@@ -574,10 +585,10 @@ NSString *const kRP350XModelName = @"RP350X";
     [tmgr  sendCommand:RUACommandEMVCompleteTransaction
         withParameters:params
               progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                  NSLog(@"onCompleteTX RUAProgressMessage: %@ %@", [WPRoamHelper RUAProgressMessage_toString:messageType], additionalMessage);
+                  WPLog(@"onCompleteTX RUAProgressMessage: %@ %@", [WPRoamHelper RUAProgressMessage_toString:messageType], additionalMessage);
               }
               response: ^(RUAResponse *ruaResponse) {
-                  NSLog(@"onCompleteTX RUAResponse: %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                  WPLog(@"onCompleteTX RUAResponse: %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
 
                   [self handleEMVCompleteTransactionResponse:ruaResponse];
               }
@@ -638,19 +649,19 @@ NSString *const kRP350XModelName = @"RP350X";
 
 - (void) stopTransactionWithCompletion:(void (^)(void))completion
 {
-    NSLog(@"stopTransactionWithCompletion");
+    WPLog(@"stopTransactionWithCompletion");
     
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
 
     [tmgr sendCommand:RUACommandEMVTransactionStop withParameters:nil
              progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                 NSLog(@"onStopTX RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                 WPLog(@"onStopTX RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
                  if (messageType == RUAProgressMessagePleaseRemoveCard) {
                      self.isWaitingForCardRemoval = YES;
                  }
              }
              response: ^(RUAResponse *ruaResponse) {
-                 NSLog(@"onStopTX RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
+                 WPLog(@"onStopTX RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
                  if (completion != nil) {
                      completion();
                  }
@@ -788,7 +799,8 @@ NSString *const kRP350XModelName = @"RP350X";
 {
     BOOL isWhitelistError = NO;
     NSArray *const whitelistedMessages = @[[WPRoamHelper RUAErrorCode_toString:RUAErrorCodeReaderDisconnected],
-                                           [WPRoamHelper RUAErrorCode_toString:RUAErrorCodeCommandCancelledUponReceiptOfACancelWaitCommand]];
+                                           [WPRoamHelper RUAErrorCode_toString:RUAErrorCodeCommandCancelledUponReceiptOfACancelWaitCommand],
+                                           [WPRoamHelper RUAErrorCode_toString:RUAErrorCodeReaderDisconnected]];
     
     if (error) {
         for (NSString *message in whitelistedMessages) {

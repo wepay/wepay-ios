@@ -85,14 +85,13 @@
 
 - (void) processCardReaderRequest
 {
-    NSLog(@"processCardReaderRequest");
+    WPLog(@"processCardReaderRequest");
     // clear any pending actions
     [self stopFindingCardReaders];
     [self stopWaitingForCard];
     [self stopPendingOperations];
     self.readerShouldPerformOperation = YES;
     self.isCardReaderStopped = NO;
-    self.deviceSerialNumberFetchCount = 0;
 
     if (self.cardReaderRequest == CardReaderForBatteryLevel) {
         [self checkAndWaitForBatteryLevel];
@@ -118,20 +117,21 @@
 
 - (void) stopCardReader
 {
-    NSLog(@"stopCardReader");
+    WPLog(@"stopCardReader");
 
     self.isCardReaderStopped = YES;
+    self.readerIsConnected = NO;
     [self endOperation];
     [self stopFindingCardReaders];
-
-    // inform delegate
-    [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
+    [self.dipTransactionHelper stopTransaction];
     
     if (self.roamDeviceManager) {
-        // release and delete the device manager
-        [self.roamDeviceManager releaseDevice];
-        self.roamDeviceManager = nil;
-        NSLog(@"released device manager");
+        // iOS-specific workaround to get the result we want.
+        [self stopRoamCardReaderCommandWorkaround];
+    } else {
+        // Card reader was stopped before we could find/initialize the RoamDeviceManager,
+        // so just issue the kWPCardReaderStatusStopped status by default.
+        [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
     }
 }
 
@@ -141,6 +141,49 @@
     
     // stop waiting for card and cancel all pending notifications
     [self stopWaitingForCard];
+}
+
+/** This function is a break from Android implementation because of the varying reader behavior */
+- (void) stopRoamCardReaderCommandWorkaround
+{
+    id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
+    [tmgr sendCommand:RUACommandEMVTransactionStop withParameters:nil
+             progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
+                 NSString *helpMsg = [WPRoamHelper RUAProgressMessage_toString:messageType];
+                 WPLog(@"stopCardReader RUAProgressMessage: %@", helpMsg);
+                 
+                 // For read transactions, Roam gives us this progress message, but then
+                 // hangs instead of responds. Releasing RoamDeviceManager at this point
+                 // will properly bring down the card reader.
+                 if (messageType == RUAProgressMessagePleaseRemoveCard) {
+                     WPLog(@"Encountered expected progress message while stopping card reader. Releasing deviceManager.");
+                     [self tearDownDeviceManager];
+                 }
+             }
+             response: ^(RUAResponse *ruaResponse) {
+                 WPLog(@"stopCardReader RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
+                 
+                 RUAErrorCode errorCode = ruaResponse.errorCode;
+                 
+                 // For tokenize transactions, Roam responds with this error. The workaround
+                 // is to simply try again.
+                 if (errorCode == RUAErrorCodeCommandCancelledUponReceiptOfACancelWaitCommand) {
+                     WPLog(@"Encountered expected error response while stopping card reader. Trying again.");
+                     
+                     [self stopCardReader];
+                 } else {
+                     [self tearDownDeviceManager];
+                 }
+             }
+     ];
+}
+
+- (void) tearDownDeviceManager
+{
+    if (self.roamDeviceManager) {
+        // The external 'kWPCardReaderStatusStopped' status won't get issued until the release finishes.
+        [self.roamDeviceManager releaseDevice:self];
+    }
 }
 
 - (BOOL) shouldStopCardReaderAfterOperation
@@ -156,11 +199,6 @@
     return self.readerIsConnected && self.roamDeviceManager != nil;
 }
 
-- (BOOL) isSearching {
-    return _isSearching;
-}
-
-
 #pragma mark - (private)
 
 - (void) checkAndWaitForBatteryLevel {
@@ -172,7 +210,7 @@
 }
 
 - (void) checkBatteryLevel {
-    NSLog(@"checkBatteryLevel");
+    WPLog(@"checkBatteryLevel");
     if ([self isConnected]) {
         if ([self shouldDelayOperation]) {
             // Recursively delay by 1 second while we should be delaying
@@ -184,7 +222,7 @@
                 NSString *errorCode = [responseData objectForKey: [WPRoamHelper RUAParameter_toString:RUAParameterErrorCode]];
                 
                 if (errorCode) {
-                    NSLog(@"Error getting battery level. RUAResponse: %@", responseData);
+                    WPLog(@"Error getting battery level. RUAResponse: %@", responseData);
                     [self.externalDelegate informExternalBatteryLevelError:[WPError errorFailedToGetBatteryLevel]];
                     if ([self shouldStopCardReaderAfterOperation]) {
                         [self stopCardReader];
@@ -208,8 +246,8 @@
 
 - (void) checkAndWaitForEMVCard
 {
-    NSLog(@"checkAndWaitForEMVCard");
-    if (self.readerIsConnected) {
+    WPLog(@"checkAndWaitForEMVCard");
+    if ([self isConnected]) {
         // inform external checking reader
         [self.externalDelegate informExternalCardReader:kWPCardReaderStatusCheckingReader];
         
@@ -227,10 +265,13 @@
                 }];
             }
         } else {
+            self.deviceSerialNumberFetchCount = 0;
             [self fetchDeviceSerialNumber];
         }
-    } else {
+    } else if (!self.isCardReaderStopped) {
         [self startCardReader];
+    } else {
+        // Nothing to do. Getting to this point means stopCardReader was called.
     }
 }
 
@@ -248,7 +289,7 @@
 }
 
 - (void) waitForReaderTimeout {
-    NSLog(@"Waiting for reader timed out. Signalling not connected.");
+    WPLog(@"Waiting for reader timed out. Signalling not connected.");
     
     readerInformNotConnectedTimer = nil;
     [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
@@ -268,10 +309,10 @@
     self.deviceSerialNumberFetchCount++;
     
     [cmgr getReaderCapabilities: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                            NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                            WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
                         }
                        response: ^(RUAResponse *ruaResponse) {
-                           NSLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
+                           WPLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:ruaResponse]);
                            self.deviceSerialNumber = [[ruaResponse responseData] objectForKey:@((int)RUAParameterInterfaceDeviceSerialNumber)];
                            
                            // Only proceed with completing the connection if we were able to get a serial number.
@@ -312,7 +353,7 @@
  */
 - (void) stopWaitingForCard
 {
-    NSLog(@"stopWaitingForCard");
+    WPLog(@"stopWaitingForCard");
     // cancel waiting for dip timeout timer
     // [self.dipTimeoutTimer invalidate];
 
@@ -322,19 +363,19 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(checkAndWaitForEMVCard)
                                                object:nil];
-
+    
     // cancel any scheduled notifications - kWPCardReaderStatusNotConnected
     [readerInformNotConnectedTimer invalidate];
     readerInformNotConnectedTimer = nil;
 
-
+    
     // cancel transaction in case it is running
     id <RUATransactionManager> tmgr = [self.roamDeviceManager getTransactionManager];
     [tmgr cancelLastCommand];
 }
 
 - (void) stopPendingOperations {
-    NSLog(@"stopPendingOperations");
+    WPLog(@"stopPendingOperations");
     if (delayedOperationTimer) {
         [delayedOperationTimer invalidate];
     }
@@ -350,7 +391,7 @@
 
 - (void) fetchAuthInfoForTransaction
 {
-    if (self.isConnected) {
+    if ([self isConnected]) {
         if ([self shouldDelayOperation]) {
             // Delay by 1 second while we should be delaying
             [self createDelayedOperation:@selector(fetchAuthInfoForTransaction) withDelay:1.0];
@@ -379,11 +420,12 @@
             } else if (self.cardReaderRequest == CardReaderForReading) {
                 amountCallback(YES, READ_AMOUNT, READ_CURRENCY, READ_ACCOUNT_ID);
             } else {
-                NSLog(@"fetchAuthInfoForTransaction called with invalid card reader request type.");
+                WPLog(@"fetchAuthInfoForTransaction called with invalid card reader request type.");
             }
         }
     } else {
-        [self startCardReader];
+        // Nothing to do. Getting to this point either means stopCardReader was called or
+        // the reader got disconnected.
     }
 }
 
@@ -441,23 +483,23 @@
 
 - (void) setupTransactionDOLs
 {
-    NSLog(@"setupTransactionDOLs");
+    WPLog(@"setupTransactionDOLs");
     __weak id <RUAConfigurationManager> cmgr = [self.roamDeviceManager getConfigurationManager];
 
     [cmgr setAmountDOL:self.dipConfigHelper.amountDOL progress:^(RUAProgressMessage messageType, NSString *additionalMessage) {
-        NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+        WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
     } response:^(RUAResponse *response) {
-        NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
+        WPLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
 
         [cmgr setResponseDOL:self.dipConfigHelper.responseDOL progress:^(RUAProgressMessage messageType, NSString *additionalMessage) {
-            NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+            WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
         } response:^(RUAResponse *response) {
-            NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
+            WPLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
 
             [cmgr setOnlineDOL:self.dipConfigHelper.onlineDOL progress:^(RUAProgressMessage messageType, NSString *additionalMessage) {
-                NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
             } response:^(RUAResponse *response) {
-                NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
+                WPLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
 
                 [processor setUserInterfaceOptions];
             }];
@@ -474,10 +516,10 @@
                 withPinPadOptions:0x00
              withBackLightControl:0x00
                          progress: ^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                             NSLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
+                             WPLog(@"RUAProgressMessage: %@",[WPRoamHelper RUAProgressMessage_toString:messageType]);
                          }
                          response: ^(RUAResponse *response) {
-                             NSLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
+                             WPLog(@"RUAResponseMessage: %@",[WPRoamHelper RUAResponse_toDictionary:response]);
                              if (self.cardReaderRequest == CardReaderForBatteryLevel) {
                                  [self checkBatteryLevel];
                              } else {
@@ -509,7 +551,7 @@
     id <RUAConfigurationManager> cmgr = [self.roamDeviceManager getConfigurationManager];
     [cmgr clearAIDSList:NULL
                response: ^(RUAResponse *ruaResponse) {
-                   NSLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                   WPLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
                    [processor clearPublicKeys];
                }];
 }
@@ -518,7 +560,7 @@
     id <RUAConfigurationManager> cmgr = [self.roamDeviceManager getConfigurationManager];
     [cmgr clearPublicKeys:NULL
                  response: ^(RUAResponse *ruaResponse) {
-                     NSLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                     WPLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
                      [processor submitAIDs];
                  }];
 }
@@ -527,10 +569,10 @@
     id <RUAConfigurationManager> cmgr = [self.roamDeviceManager getConfigurationManager];
     [cmgr submitAIDList:self.dipConfigHelper.aidsList
                progress:^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                   NSLog(@"[debug] %s", __FUNCTION__);
+                   WPLog(@"[debug] %s", __FUNCTION__);
                }
                response: ^(RUAResponse *ruaResponse) {
-                   NSLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                   WPLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
                    [processor submitPublicKeys];
                }];
 }
@@ -543,10 +585,10 @@
 
         [cmgr submitPublicKey:pubKey
                      progress:^(RUAProgressMessage messageType, NSString* additionalMessage) {
-                         NSLog(@"[debug] %s", __FUNCTION__);
+                         WPLog(@"[debug] %s", __FUNCTION__);
                      }
                      response: ^(RUAResponse *ruaResponse) {
-                         NSLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
+                         WPLog(@"[debug] %@", [WPRoamHelper RUAResponse_toString:ruaResponse]);
                          if (_currentPublicKeyIndex < [self.dipConfigHelper.publicKeyList count]) {
                              [processor submitPublicKeys];
                          }
@@ -575,13 +617,14 @@
 }
 
 #pragma mark WPCardReaderDetectionDelegate
+
 - (void) onCardReaderDevicesDetected:(NSArray *)devices {
     self.isSearching = NO;
     
     NSArray *deviceNames = [self getNamesFromDevices:devices];
     NSString *rememberedName = nil;
     RUADevice *rememberedDevice = nil;
-    NSLog(@"onCardReaderDevicesDetected: device list: %@", deviceNames);
+    WPLog(@"onCardReaderDevicesDetected: device list: %@", deviceNames);
     
     // Don't want to time out on device detection - partner will need time to pick a card reader
     if (readerInformNotConnectedTimer) {
@@ -593,7 +636,7 @@
     
     if (rememberedDevice) {
         // Detected an existing remembered device, so use that.
-        NSLog(@"Detected remembered device %@. Initializing this device.", rememberedName);
+        WPLog(@"Detected remembered device %@. Initializing this device.", rememberedName);
         
         self.roamDeviceManager = [self getDeviceManagerForDevice:rememberedDevice];
 
@@ -603,7 +646,7 @@
         // No remembered device exists, or the remembered device wasn't detected --
         // ask what it should be from a list.
         [self.externalDelegate informExternalCardReaderSelection:deviceNames completion:^(NSInteger selectedIndex) {
-            NSLog(@"Using card reader at index: %li", (long) selectedIndex);
+            WPLog(@"Using card reader at index: %li", (long) selectedIndex);
             self.roamDeviceManager = [self getDeviceManagerFromDevices:devices atIndex:selectedIndex];
             
             if (self.roamDeviceManager) {
@@ -670,11 +713,11 @@
         deviceManager = mockManager;
     } else if ([device.name isEqualToString:@"AUDIOJACK"]) {
         // Attempt real RP350X connection
-        NSLog(@"Using audiojack card reader");
+        WPLog(@"Using audiojack card reader");
         deviceManager = [RUA getDeviceManager:RUADeviceTypeRP350x];
     } else {
         // Attempt Moby3000 connection
-        NSLog(@"Using Bluetooth card reader for device: %@", device.name);
+        WPLog(@"Using Bluetooth card reader for device: %@", device.name);
         deviceManager = [RUA getDeviceManager:RUADeviceTypeMOBY3000];
     }
     
@@ -682,7 +725,7 @@
 }
 
 - (void) initializeDeviceManager:(id<RUADeviceManager>)roamDeviceManager withDevice:(RUADevice *)device {
-    if (!self.isConnected && self.readerShouldPerformOperation) {
+    if (![self isConnected] && self.readerShouldPerformOperation) {
         // If readerShouldPerformOperation and we're not currently connected, let's reset/start
         // the connection timer.
         [self startWaitingForReader];
@@ -703,21 +746,24 @@
     }
 }
 
-#pragma mark ReaderStatusHandler
+#pragma mark RUADeviceStatusHandler
 
 - (void) onConnected
 {
-    NSLog(@"onConnected");
-    NSLog(@"is device ready? %@", [self.roamDeviceManager isReady] ? @"YES":@"NO");
+    WPLog(@"onConnected");
+    WPLog(@"is device ready? %@", [self.roamDeviceManager isReady] ? @"YES":@"NO");
 
     if (!self.roamDeviceManager) {
+        WPLog(@"roamDeviceManager was nil");
+        
         [self startCardReader];
     } else if (!self.readerIsConnected) {
         if (self.connectedDeviceName) {
             [WPUserDefaultsHelper rememberCardReaderWithIdentifier:self.connectedDeviceName];
         }
         
-        [processor fetchDeviceSerialNumber];
+        self.deviceSerialNumberFetchCount = 0;
+        [self fetchDeviceSerialNumber];
         
         // Cancel any scheduled calls for reader not connected
         if (readerInformNotConnectedTimer) [readerInformNotConnectedTimer invalidate];
@@ -729,13 +775,18 @@
 
 - (void) onDisconnected
 {
-    NSLog(@"onDisconnected");
+    WPLog(@"onDisconnected");
 
-    if (self.readerIsConnected && !self.isCardReaderStopped) {
+    // If a user is unplugging/replugging a card reader fast enough, it's possible that
+    // we get this onDisconnected callback when really the card reader is connected.
+    // The first two checks below ensure that we only try to send
+    // kWPCardReaderStatusNotConnected if the card reader is truly disconnected.
+    if ([self isConnected] && ![self.roamDeviceManager isReady] && !self.isCardReaderStopped) {
         // Inform external delegate if we should wait for card, and the reader was previously connected
         if (self.readerShouldPerformOperation) {
             [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
             [self stopWaitingForCard];
+            [self stopPendingOperations];
         } else if (!self.config.stopCardReaderAfterOperation) {
             // Inform external delegate
             [self.externalDelegate informExternalCardReader:kWPCardReaderStatusNotConnected];
@@ -750,16 +801,41 @@
 - (void) onError:(NSString *)message
 {
     // gets called when wrong reader type is connected
-    NSLog(@"onError: %@", message);
+    WPLog(@"onError: %@", message);
     if (self.readerIsConnected) {
+        NSError *error;
+        
         if (self.readerIsWaitingForCard) {
-            NSError *error = [WPError errorForCardReaderStatusErrorWithMessage:message];
-            [self.externalDelegate informExternalCardReaderFailure:error];
-            [self stopCardReader];
+            error = [WPError errorForCardReaderStatusErrorWithMessage:message];
+        } else {
+            // Roam encountered an error while we're trying to set up the card reader.
+            error = [WPError errorInitializingCardReader];
         }
+        
+        [self.externalDelegate informExternalCardReaderFailure:error];
+        [self stopCardReader];
         
         self.connectedDeviceName = nil;
         self.readerIsConnected = NO;
+    } else {
+        // Failed to initialize (and therefore connect to) the card reader.
+        NSError *error = [WPError errorCardReaderUnableToConnect];
+        
+        [self.externalDelegate informExternalCardReaderFailure:error];
+        [self stopFindingCardReaders];
+        [self stopPendingOperations];
+    }
+}
+
+#pragma mark RUAReleaseHandler
+
+- (void) done {
+    WPLog(@"released device manager");
+    
+    if (self.roamDeviceManager) {
+        self.roamDeviceManager = nil;
+        // inform delegate
+        [self.externalDelegate informExternalCardReader:kWPCardReaderStatusStopped];
     }
 }
 

@@ -49,7 +49,7 @@
         // configure RUA
         #ifdef DEBUG
             // Log response only when in debug builds
-            [RUA enableDebugLogMessages:YES];
+            [RUA enableDebugLogMessages:[kWPLogLevelAll isEqualToString:globalLogLevel]];
         #else
             [RUA enableDebugLogMessages:NO];
         #endif
@@ -73,7 +73,7 @@
     self.sessionId = nil;
     self.cardReaderRequest = CardReaderForReading;
     
-    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
+    if (self.cardReaderManager) {
         [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
         [self.cardReaderManager processCardReaderRequest];
     }
@@ -94,7 +94,7 @@
     self.cardReaderRequest = CardReaderForTokenizing;
 
     
-    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
+    if (self.cardReaderManager) {
         [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
         [self.cardReaderManager processCardReaderRequest];
     }
@@ -103,20 +103,12 @@
     }
 }
 
-- (BOOL) isCardReaderConnected {
-    return self.cardReaderManager != nil && [self.cardReaderManager isConnected];
-}
-
-- (BOOL) isCardReaderSearching {
-    return self.cardReaderManager != nil && [self.cardReaderManager isSearching];
-}
-
 /**
  *  Stops the Roam card reader completely, and informs the delegate.
  */
 - (void) stopCardReader
 {
-    if (![self isCardReaderConnected] && ![self isCardReaderSearching]) {
+    if (!self.cardReaderManager) {
         [self.externalHelper informExternalCardReader:kWPCardReaderStatusStopped];
     } else {
         [self.cardReaderManager stopCardReader];
@@ -131,7 +123,7 @@
     self.externalHelper.externalBatteryLevelDelegate = batteryLevelDelegate;
     self.cardReaderRequest = CardReaderForBatteryLevel;
     
-    if ([self isCardReaderConnected] || [self isCardReaderSearching]) {
+    if (self.cardReaderManager) {
         [self.cardReaderManager setCardReaderRequest:self.cardReaderRequest];
         [self.cardReaderManager processCardReaderRequest];
     } else {

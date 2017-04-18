@@ -60,6 +60,11 @@
 @property (nonatomic, assign) BOOL stopCardReaderAfterOperation;
 
 /**
+ *  The log level to be used, one of (all, none). Defaults to kWPLogLevelAll.
+ */
+@property (nonatomic, strong) NSString *logLevel;
+
+/**
  *  The configuration for using mock card reader and/or mock WepayClient implementation
  */
 @property (nonatomic, strong) WPMockConfig* mockConfig;
@@ -95,9 +100,10 @@
                       useLocation:(BOOL)useLocation
                   useTestEMVCards:(BOOL)useTestEMVCards
   callDelegateMethodsOnMainThread:(BOOL)callDelegateMethodsOnMainThread
-    restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
+   restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
 restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
 restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
-     stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation;
+     stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation
+                         logLevel:(NSString *)logLevel;
 
 @end

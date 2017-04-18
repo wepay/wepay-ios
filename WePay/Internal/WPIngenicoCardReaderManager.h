@@ -13,7 +13,7 @@
 #import "WePay_CardReaderDirector.h"
 #import "WPIngenicoCardReaderDetector.h"
 
-@interface WPIngenicoCardReaderManager : NSObject <WPCardReaderManager, WPTransactionDelegate, WPCardReaderDetectionDelegate, RUADeviceStatusHandler>
+@interface WPIngenicoCardReaderManager : NSObject <WPCardReaderManager, WPTransactionDelegate, WPCardReaderDetectionDelegate, RUADeviceStatusHandler, RUAReleaseHandler>
 
 /**
  *  Initializes an instance of the class with the provided config.

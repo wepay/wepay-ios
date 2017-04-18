@@ -14,7 +14,7 @@
 
 @class WPConfig;
 
-@interface WPRiskHelper : NSObject <CLLocationManagerDelegate>
+@interface WPRiskHelper : NSObject
 
 /**
  *  The designated initializer

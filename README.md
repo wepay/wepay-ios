@@ -1,9 +1,9 @@
 # Getting Started                         {#mainpage}
 
-![WePay logo](https://www.wepay.com/img/redesign/logos/wepay-color.png "WePay")
+![WePay logo](https://go.wepay.com/frontend/images/wepay-logo.svg "WePay")
 
 ## Introduction
-The WePay iOS SDK enables collection of payments via various payment methods(described below).
+The WePay iOS SDK enables collection of payments via various payment methods.
 
 It is meant for consumption by [WePay](http://www.wepay.com) partners who are developing their own iOS apps aimed at merchants and/or consumers.
 
@@ -15,9 +15,8 @@ There are two types of payment methods:
 + Merchant payment methods - to be used in apps where merchants collect payments from their customers
  
 The WePay iOS SDK supports the following payment methods
- - Card Swiper: Using a Card Swiper, a merchant can accept in-person payments by swiping a consumer's traditional magnetic strip card.
- - Card Dipper: Using an Card Dipper, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card.
- - Manual Entry: The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
+- Card Reader: Using an EMV Card Reader, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card. Traditional magnetic stripe cards can be processed as well.
+- Manual Entry (Consumer/Merchant): The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.
 
 ## Installation
 
@@ -46,11 +45,10 @@ The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExamp
     - libstdc++.dylib
     - libz.dylib
 + Also include the framework files you copied:
-    - TrustDefender.framework
     - WePay.framework
 + Done!
 
-Note: Card reader functionality is not available in this SDK by default. If you want to use this SDK with WePay card readers, send an email to mobile@wepay.com.
+Note: Card reader functionality is not available in this SDK by default. If you are interested in using the WePay Card Reader, please contact your sales representative or account manager.  If you have yet to be in direct contact with WePay, please email sales@wepay.com.
 
 ## Documentation
 HTML documentation is hosted on our [Github Pages Site](http://wepay.github.io/wepay-ios/).
@@ -152,11 +150,11 @@ self.wepay = [[WePay alloc] initWithConfig:config];
 config.useLocation = YES;
 ~~~
 
-### Integrating the Swipe payment method
+### Integrating the Card Reader payment methods (Swipe+Dip)
 
-+ Adopt the WPCardReaderDelegate and WPTokenizationDelegate protocols
++ Adopt the WPCardReaderDelegate, WPTokenizationDelegate, and WPAuthorizationDelegate protocols
 ~~~{.m}
-\@interface MyWePayDelegate : NSObject <WPCardReaderDelegate, WPTokenizationDelegate>
+\@interface MyWePayDelegate : NSObject <WPCardReaderDelegate, WPTokenizationDelegate, WPAuthorizationDelegate>
 ~~~
 + Implement the WPCardReaderDelegate protocol methods
 ~~~{.m}
@@ -181,23 +179,6 @@ config.useLocation = YES;
         // handle any other status messages
         self.statusLabel.text = [status description];
     } 
-}  
-
-- (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo 
-{
-    // use the payment info (for display/recordkeeping)
-    // wait for tokenization response
-}
-
-- (void) didFailToReadPaymentInfoWithError:(NSError *)error   
-{
-    // Handle the error
-}
-
-- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
-{
-    // Change this to YES if you want to reset the card reader
-    completion(NO);
 }
 
 - (void) selectCardReader:(NSArray *)cardReaderNames
@@ -209,54 +190,16 @@ config.useLocation = YES;
     completion(selectedIndex);
 }
 
-~~~
-+ Implement the WPTokenizationDelegate protocol methods
-~~~{.m}
-- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
 {
-    // Send the tokenId (paymentToken.tokenId) to your server
-    // Your server would use the tokenId to make a /checkout/create call to complete the transaction
+    // Change this to YES if you want to reset the card reader
+    completion(NO);
 }
 
-- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
-{
-	// Handle the error
-}
-~~~
-+ Make the WePay API call, passing in the instance(s) of the class(es) that implemented the delegate protocols
-~~~{.m}
-[self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self tokenizationDelegate:self authorizationDelegate:nil];
-// Show UI asking the user to insert the card reader and wait for it to be ready
-~~~
-+ That's it! The following sequence of events will occur:
-    1. The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.
-    2. The SDK tries to detect the card reader and initialize it.
-        - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSearching`
-        - If any card readers are discovered, the `selectCardReader:` method will be called with an array of discovered devices. If anything is plugged into the headphone jack, `"AUDIOJACK"` will be one of the devices discovered.
-        - If no card readers are detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
-        - Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.
-        - If the card reader is successfully connected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
-    3. If the card reader successfully initialized, it will wait for the user to swipe a card
-    4. If a recoverable error occurs during swiping, the `didFailToReadPaymentInfoWithError:` method will be called. After a few seconds, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForSwipe` and the card reader will again wait for the user to swipe a card
-    5. If an unrecoverable error occurs during swiping, or the user does not swipe, the `didFailToReadPaymentInfoWithError:` method will be called, and processing will stop
-    6. Otherwise, the user swiped successfully, and the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSwipeDetected` followed by the `didReadPaymentInfo:` method
-    7. Next, the SDK will automatically send the obtained card info to WePay's servers for tokenization (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusTokenizing`)
-    8. If the tokenization succeeds, the `paymentInfo:didTokenize:` method will be called
-    9. Otherwise, if the tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error
-
-### Integrating the Dip payment method
-
-+ Adopt the WPAuthorizationDelegate, WPCardReaderDelegate and WPTokenizationDelegate protocols
-~~~{.m}
-\@interface MyWePayDelegate : NSObject <WPAuthorizationDelegate, WPCardReaderDelegate, WPTokenizationDelegate>
-~~~
-+ Implement the WPCardReaderDelegate and WPTokenizationDelegate protocol methods (as shown above)
-+ Implement the WPAuthorizationDelegate protocol methods
-~~~{.m}
-- (void) authorizeAmountWithCompletion:(void (^)(double amount, NSString *currencyCode, long accountId))completion
+- (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
 {
     // obtain transaction info
-    double amount = 10.00;
+    double amount = @(10.00);
     NSString *currencyCode = @"USD";
     long accountId = 12345678;
 
@@ -282,6 +225,33 @@ config.useLocation = YES;
     completion(email);
 }
 
+- (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo 
+{
+    // use the payment info (for display/recordkeeping)
+    // wait for tokenization(swipe)/authorization(dip) response
+}
+
+- (void) didFailToReadPaymentInfoWithError:(NSError *)error   
+{
+    // Handle the error
+}
+
+~~~
++ Implement the WPTokenizationDelegate protocol methods
+~~~{.m}
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+{
+    // Send the tokenId (paymentToken.tokenId) to your server
+    // Your server would use the tokenId to make a /checkout/create call to complete the transaction
+}
+
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
+{
+	// Handle the error
+}
+~~~
++ Implement the WPAuthorizationDelegate protocol methods
+~~~{.m}
 - (void) paymentInfo:(WPPaymentInfo *)paymentInfo
         didAuthorize:(WPAuthorizationInfo *)authorizationInfo
 {
@@ -301,34 +271,44 @@ didFailAuthorization:(NSError *)error
 // Show UI asking the user to insert the card reader and wait for it to be ready
 ~~~
 + That's it! The following sequence of events will occur:
-    1. The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.
-    2. The SDK tries to detect the card reader and initialize it.
-        - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSearching`
-        - If any card readers are discovered, the `selectCardReader:` method will be called with an array of discovered devices. If anything is plugged into the headphone jack, `"AUDIOJACK"` will be one of the devices discovered.
-        - If no card readers are detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`
-        - Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.
-        - If the card reader is successfully connected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
-    3. Next, the SDK checks if the card reader is correctly configured (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusCheckingReader`).
-        - If the card reader is already configured, the App is given a chance to force configuration. The SDK calls the `shouldResetCardReaderWithCompletion:` method, and the app must execute the completion method, telling the SDK whether or not the reader should be reset.
-        - If the reader was not configured, or the app requested a reset, the card reader is configured (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConfiguringReader`)
-    4. Next, if the card reader is successfully initialized, the SDK asks the app for transaction information by calling the `authorizeAmountWithCompletion:` method. The app must execute the completion method, telling the SDK what the amount, currency code and merchant account id is.
-    5. Next, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForCard` 
-    6. If the user inserts a card successfully, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusCardDipped`
-    7. If the card has multiple applications on it, the payer must choose one:
+    
+1. The user inserts the card reader (or it is already inserted), or powers on their bluetooth card reader.
+2. The SDK tries to detect the card reader and initialize it.
+    - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSearching`.
+    - If any card readers are discovered, the `selectCardReader:` method will be called with an array of discovered devices. If anything is plugged into the headphone jack, `"AUDIOJACK"` will be one of the devices discovered.
+    - If no card readers are detected, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusNotConnected`.
+    - Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.
+    - If the card reader is successfully connected, then the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConnected`.
+3. Next, the SDK checks if the card reader is correctly configured (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusCheckingReader`).
+    - If the card reader is already configured, the app is given a chance to force configuration. The SDK calls the `shouldResetCardReaderWithCompletion:` method, and the app must execute the completion method, telling the SDK whether or not the reader should be reset.
+    - If the reader was not already configured, or the app requested a reset, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusConfiguringReader` and the card reader is configured.
+4. Next, if the card reader is successfully initialized, the SDK asks the app for transaction information by calling the `authorizeAmountWithCompletion:` method. The app must execute the completion method, telling the SDK what the amount, currency code and merchant account id is.
+5. Next, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForCard`.
+6. If the user swipes a card successfully:
+    - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusSwipeDetected`.
+    - The SDK attempts to ask the app for the payer’s email by calling the `insertPayerEmailWithCompletion:` method. If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.
+    - The `didReadPaymentInfo:` method is called with the obtained payment info.
+    - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusTokenizing`, and the SDK will automatically send the obtained card info to WePay's servers for tokenization.
+    - If tokenization succeeds, the `paymentInfo:didTokenize:` method will be called.
+    - If tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error, and processing will stop.
+7. Instead, if the user dips a card successfully:
+    - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusCardDipped`
+    - If the card has multiple applications on it, the payer must choose one:
         - The SDK calls the `selectEMVApplication:completion:` method with a list of Applications on the card.
         - The app must display these Applications to the payer and allow them to choose which application they want to use.
         - Once the payer has decided, the app must inform the SDK of the choice by executing the completion method and passing in the index of the chosen application.
-    8. Next, the SDK extracts card data from the card.
-        - If the SDK is unable to obtain data from the card, the `didFailToReadPaymentInfoWithError:` method will be called with the appropriate error, and processing will stop (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusStopped`)
-        - Otherwise, the SDK attempts to ask the App for the payer’s email by calling the `insertPayerEmailWithCompletion:` method
-    9. If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.
-    10. Next, the `didReadPaymentInfo:` method is called with the obtained payment info.
-    11. Next, the SDK will automatically send the obtained EMV card info to WePay's servers for authorization (the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusAuthorizing`)
-    12. If authorization fails, the `paymentInfo:didFailAuthorization:` method will be called and processing will stop.
-    13. If authorization succeeds, the `paymentInfo:didAuthorize:` method will be called.
-    14. Done!
+    - Next, the SDK obtains card data from the chip on the card.
+    - The SDK attempts to ask the app for the payer’s email by calling the `insertPayerEmailWithCompletion:` method. If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.
+    - The `didReadPaymentInfo:` method is called with the obtained payment info.
+    - The `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusAuthorizing`, and the SDK will automatically send the obtained EMV card info to WePay's servers for authorization.
+    - If authorization succeeds, the `paymentInfo:didAuthorize:` method will be called and processing will stop.
+    - If authorization fails, the `paymentInfo:didFailAuthorization:` method will be called.
+8. If a recoverable error occurs during swiping or dipping, one of the failure methods will be called. After a few seconds, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusWaitingForCard` and the card reader will again wait for the user to swipe/dip a card.
+9. If an unrecoverable error occurs, or if the SDK is unable to obtain data from the card, one of teh failure methods will be called with the appropriate error.
+10. When processing stops, the `cardReaderDidChangeStatus:` method will be called with `status = kWPCardReaderStatusStopped`.
+10. Done!
 
-Note: After the card is inserted into the reader, it must not be removed until a successful auth response (or an error) is returned.
+Note: After the card is dipped into the reader, it must not be removed until a successful auth response (or an error) is returned.
 
 ### Integrating the Manual payment method
 
@@ -352,15 +332,15 @@ Note: After the card is inserted into the reader, it must not be removed until a
 + Instantiate a WPPaymentInfo object using the user's credit card and address data
 ~~~{.m}
 WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
-                                                                 lastName:@"Example"
-                                                                    email:@"wp.ios.example@wepay.com"
-                                                           billingAddress:[[WPAddress alloc] initWithZip:@"94306"]
-                                                          shippingAddress:nil
-                                                               cardNumber:@"5496198584584769"
-                                                                      cvv:@"123"
-                                                                 expMonth:@"04"
-                                                                  expYear:@"2020"
-                                                          virtualTerminal:YES];
+                                                             lastName:@"Example"
+                                                                email:@"wp.ios.example@wepay.com"
+                                                       billingAddress:[[WPAddress alloc] initWithZip:@"94306"]
+                                                      shippingAddress:nil
+                                                           cardNumber:@"5496198584584769"
+                                                                  cvv:@"123"
+                                                             expMonth:@"04"
+                                                              expYear:@"2020"
+                                                      virtualTerminal:YES];
 // Note: the virtualTerminal parameter above should be set to YES if a merchant is collecting payments manually using your app. It should be set to NO if a payer is making a manual payment using your app.
 ~~~
 + Make the WePay API call, passing in the instance of the class that implemented the WPTokenizationDelegate protocol
@@ -368,9 +348,9 @@ WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
 [self.wepay tokenizeManualPaymentInfo:paymentInfo tokenizationDelegate:self];
 ~~~
 + That's it! The following sequence of events will occur:
-    1. The SDK will send the obtained payment info to WePay's servers for tokenization
-    2. If the tokenization succeeds, the `paymentInfo:didTokenize:` method will be called
-    3. Otherwise, if the tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error
+1. The SDK will send the obtained payment info to WePay's servers for tokenization
+2. If the tokenization succeeds, the `paymentInfo:didTokenize:` method will be called
+3. Otherwise, if the tokenization fails, the `paymentInfo:didFailTokenization:` method will be called with the appropriate error
 
 
 ### Integrating the Store Signature API
@@ -438,9 +418,9 @@ UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
 [self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
 ~~~
 + That's it! The following sequence of events will occur:
-    1. The SDK will attempt to read the battery level of the card reader
-    2. If the operation succeeds, WPBatteryLevelDelegate's `didGetBatteryLevel:` method will be called with the result
-    3. Otherwise, if the operation fails, WPBatteryLevelDelegate's `didFailToGetBatteryLevelwithError:` method will be called with the appropriate error
+1. The SDK will attempt to read the battery level of the card reader
+2. If the operation succeeds, WPBatteryLevelDelegate's `didGetBatteryLevel:` method will be called with the result
+3. Otherwise, if the operation fails, WPBatteryLevelDelegate's `didFailToGetBatteryLevelwithError:` method will be called with the appropriate error
 
 ### Configuring the SDK
 

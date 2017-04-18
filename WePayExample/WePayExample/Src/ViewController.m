@@ -288,6 +288,54 @@
 
 #pragma mark - WPCardReaderDelegateMethods
 
+- (void) cardReaderDidChangeStatus:(id)status
+{
+    // Print message to screen
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"cardReaderDidChangeStatus: "];
+    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[status description]
+                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
+                                ];
+    
+    [str appendAttributedString:info];
+    
+    [self consoleLog:str];
+    
+    // Change status label
+    if (status == kWPCardReaderStatusNotConnected) {
+        [self showStatus:@"Connect Card Reader"];
+    } else if (status == kWPCardReaderStatusWaitingForCard) {
+        [self showStatus:@"Swipe/Dip Card"];
+    } else if (status == kWPCardReaderStatusSwipeDetected) {
+        [self showStatus:@"Swipe Detected..."];
+    } else if (status == kWPCardReaderStatusTokenizing) {
+        [self showStatus:@"Tokenizing..."];
+    } else if (status == kWPCardReaderStatusStopped) {
+        [self showStatus:@"Card Reader Stopped"];
+    } else {
+        [self showStatus:[status description]];
+    }
+}
+
+- (void) selectCardReader:(NSArray *)cardReaderNames
+               completion:(void (^)(NSInteger selectedIndex))completion
+{
+    UIActionSheet *selectController = [[UIActionSheet alloc] initWithTitle:@"Choose a card reader device" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:nil];
+    selectController.actionSheetStyle = UIActionSheetStyleDefault;
+    
+    for (NSString *cardReaderName in cardReaderNames) {
+        [selectController addButtonWithTitle:cardReaderName];
+    }
+    
+    self.selectCardReaderCompletion = completion;
+    [selectController showInView:self.view];
+}
+
+- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
+{
+    // Change this to YES if you want to reset the card reader
+    completion(EMV_READER_SHOULD_RESET);
+}
+
 - (void) selectEMVApplication:(NSArray *)applications
                    completion:(void (^)(NSInteger selectedIndex))completion
 {
@@ -309,6 +357,19 @@
     
     // execute the completion
     completion(selectedIndex);
+}
+
+- (void) insertPayerEmailWithCompletion:(void (^)(NSString *email))completion
+{
+    NSString *email = @"emv@example.com";
+    
+    // Print message to console
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@"Providing email: " stringByAppendingString:email]
+                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
+                               ];
+    [self consoleLog:str];
+    
+    completion(email);
 }
 
 - (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo
@@ -340,54 +401,6 @@
     
     // Change status label
     [self showStatus:@"Card Reader error"];
-}
-
-- (void) selectCardReader:(NSArray *)cardReaderNames
-               completion:(void (^)(NSInteger selectedIndex))completion
-{
-    UIActionSheet *selectController = [[UIActionSheet alloc] initWithTitle:@"Choose a card reader device" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:nil];
-    selectController.actionSheetStyle = UIActionSheetStyleDefault;
-    
-    for (NSString *cardReaderName in cardReaderNames) {
-        [selectController addButtonWithTitle:cardReaderName];
-    }
-    
-    self.selectCardReaderCompletion = completion;
-    [selectController showInView:self.view];
-}
-
-- (void) cardReaderDidChangeStatus:(id)status
-{
-    // Print message to screen
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"cardReaderDidChangeStatus: "];
-    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[status description]
-                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
-                                ];
-    
-    [str appendAttributedString:info];
-    
-    [self consoleLog:str];
-    
-    // Change status label
-    if (status == kWPCardReaderStatusNotConnected) {
-        [self showStatus:@"Connect Card Reader"];
-    } else if (status == kWPCardReaderStatusWaitingForCard) {
-        [self showStatus:@"Swipe/Dip Card"];
-    } else if (status == kWPCardReaderStatusSwipeDetected) {
-        [self showStatus:@"Swipe Detected..."];
-    } else if (status == kWPCardReaderStatusTokenizing) {
-        [self showStatus:@"Tokenizing..."];
-    } else if (status == kWPCardReaderStatusStopped) {
-        [self showStatus:@"Card Reader Stopped"];
-    } else {
-        [self showStatus:[status description]];
-    }
-}
-
-- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
-{
-    // Change this to YES if you want to reset the card reader
-    completion(EMV_READER_SHOULD_RESET);
 }
 
 - (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
@@ -481,19 +494,6 @@
 }
 
 #pragma mark - WPAuthorizationDelegate methods
-
-- (void) insertPayerEmailWithCompletion:(void (^)(NSString *email))completion
-{
-    NSString *email = @"emv@example.com";
-
-    // Print message to console
-    NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@"Providing email: " stringByAppendingString:email]
-                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
-                               ];
-    [self consoleLog:str];
-
-    completion(email);
-}
 
 - (void) paymentInfo:(WPPaymentInfo *)paymentInfo
         didAuthorize:(WPAuthorizationInfo *)authorizationInfo

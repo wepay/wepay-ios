@@ -53,7 +53,7 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
         
         #ifdef DEBUG
         // Log unknown error only when in debug builds
-        NSLog(@"[WPError] unknown api error: %@", data);
+        WPLog(@"[WPError] unknown api error: %@", data);
         #endif
     }
     
@@ -99,7 +99,7 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
             
             #ifdef DEBUG
             // Log unknown error only when in debug builds
-            NSLog(@"[WPError] unknown card reader error: %@", data);
+            WPLog(@"[WPError] unknown card reader error: %@", data);
             #endif
             
         }
@@ -144,7 +144,7 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
 {
     #ifdef DEBUG
     // Log status error only when in debug builds
-    NSLog(@"[WPError] card reader status error: %@", message);
+    WPLog(@"[WPError] card reader status error: %@", message);
     #endif
     
     return [WPError makeErrorWithCode:WPErrorCardReaderStatusError
@@ -193,7 +193,7 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
 {
     #ifdef DEBUG
     // Log status error only when in debug builds
-    NSLog(@"[WPError] card reader emv transaction error: %@", message);
+    WPLog(@"[WPError] card reader emv transaction error: %@", message);
     #endif
 
     return [WPError makeErrorWithCode:WPErrorEMVTransactionError
@@ -350,6 +350,15 @@ NSString * const kWPErrorCategorySDK = @"WPErrorCategorySDK";
 {
     NSString *errorText = WPErrorInvalidCardReaderSelectionErrorMessage;
     return [WPError makeErrorWithCode:WPErrorInvalidCardReaderSelection
+                                 text:errorText
+                             category:kWPErrorCategoryCardReader
+                               domain:kWPErrorSDKDomain];
+}
+
++ (NSError *) errorCardReaderUnableToConnect
+{
+    NSString *errorText = WPErrorCardReaderUnableToConnectErrorMessage
+    return [WPError makeErrorWithCode:WPErrorCardReaderUnableToConnect
                                  text:errorText
                              category:kWPErrorCategoryCardReader
                                domain:kWPErrorSDKDomain];

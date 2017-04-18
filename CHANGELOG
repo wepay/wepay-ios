@@ -1,3 +1,9 @@
+2017-04-18
+* Released version 7.0.0-prerelease-1
+* Added logLevel property to WPConfig
+* Added logLevel parameter to designated initializer in WPConfig
+* Added new error code WPErrorCardReaderUnableToConnect to WPError.h
+
 2017-03-13
 * Released version 7.0.0-beta-2
 * Moved selectEMVApplication:completion: from WPAuthorizationDelegate to WPCardReaderDelegate

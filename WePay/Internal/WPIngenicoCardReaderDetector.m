@@ -10,6 +10,8 @@
 #if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
 
 #import <RUA_MFI/RUA.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import "WPConfig.h"
 #import "WPIngenicoCardReaderDetector.h"
@@ -33,7 +35,15 @@
 
 @property (nonatomic, strong) NSTimer *timeoutTimer;
 
+// Allows the detection process to be interrupted at arbitrary times.
+// Without this, unwanted detection restarts would occur in some cases.
+@property (nonatomic, assign) BOOL isStopped;
+
 @end
+
+// Reference to CoreBluetooth so we can determine if user has Bluetooth enabled.
+// Is static so we only initialize once (Bluetooth notification is shown once per init).
+static CBCentralManager *bluetoothManager = nil;
 
 @implementation WPIngenicoCardReaderDetector
 
@@ -46,22 +56,25 @@
         self.supportedDeviceManagers = [NSMutableArray array];
         self.discoveredDevices = [NSMutableArray array];
         completedDiscoveries = 0;
+        
+        if (!bluetoothManager) {
+            bluetoothManager = [[CBCentralManager alloc] initWithDelegate:nil queue:nil];
+        }
     }
     return self;
 }
 
 - (void) findAvailablCardReadersWithConfig:(WPConfig *)config deviceDetectionDelegate:(id<WPCardReaderDetectionDelegate>)delegate {
-    NSLog(@"findAvailableCardReaders");
+    WPLog(@"findAvailableCardReaders");
     WPMockConfig *mockConfig = config.mockConfig;
     
     self.config = config;
     self.delegate = delegate;
     
-    if (mockConfig && mockConfig.useMockCardReader) {
+    if ([self isMockTransaction]) {
         [self.mockRoamDeviceManager setMockConfig:mockConfig];
         [self.supportedDeviceManagers addObject:self.mockRoamDeviceManager];
-    }
-    else {
+    } else {
         [self.supportedDeviceManagers addObject:self.rp350xRoamDeviceManager];
         [self.supportedDeviceManagers addObject:self.moby3000RoamDeviceManager];
     }
@@ -70,18 +83,38 @@
 }
 
 - (void) stopFindingCardReaders {
-    NSLog(@"stopFindingCardReaders");
-    [self stopTimeCounter];
-    [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
+    WPLog(@"stopFindingCardReaders");
+    self.isStopped = YES;
     completedDiscoveries = 0;
     [self.discoveredDevices removeAllObjects];
+    
+    [self stopTimeCounter];
+    [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
 }
 
 #pragma mark - Internal
 
 - (void) beginDetection {
-    for (id<RUADeviceManager> manager in self.supportedDeviceManagers) {
-        [manager searchDevicesForDuration:TIMEOUT_ROAM_SEARCH_MS andListener:self];
+    self.isStopped = NO;
+    
+    if (bluetoothManager.state == CBCentralManagerStatePoweredOn || bluetoothManager.state == CBCentralManagerStateUnknown || [self isMockTransaction]) {
+        // Searching for either device manager type triggers a Bluetooth search.
+        // We want to make sure Bluetooth is enabled before initiating search.
+        for (id<RUADeviceManager> manager in self.supportedDeviceManagers) {
+            [manager searchDevicesForDuration:TIMEOUT_ROAM_SEARCH_MS andListener:self];
+        }
+    } else if ([self isAudioJackPluggedIn]) {
+        // If Bluetooth is not enabled, we can only use a headphone jack device.
+        RUADevice *audioJackDevice = [[RUADevice alloc] initWithName:@"AUDIOJACK"
+                                                      withIdentifier:@"AUDIOJACK"
+                                          withCommunicationInterface:RUACommunicationInterfaceAudioJack];
+        [self discoveredDevice:audioJackDevice];
+        [self detectionComplete];
+    } else {
+        // Nothing to do. Bluetooth isn't enabled and no device is plugged into the
+        // headphone jack.
+        WPLog(@"Unable to search for Bluetooth card readers if Bluetooth is disabled.");
+        WPLog(@"No device detected in headphone jack.");
     }
     
     [self stopTimeCounter];
@@ -112,7 +145,7 @@
 }
 
 - (void) detectionComplete {
-    NSLog(@"detectionComplete");
+    WPLog(@"detectionComplete");
     [self stopTimeCounter];
     [self cancelAllDeviceManagerSearches:self.supportedDeviceManagers];
     
@@ -121,34 +154,55 @@
         NSMutableArray *callbackDevices = self.discoveredDevices;
         self.discoveredDevices = [[NSMutableArray alloc] init];
         [self.delegate onCardReaderDevicesDetected:callbackDevices];
-    } else {
+        self.isStopped = YES;
+    } else if (!self.isStopped) {
         [self beginDetection];
     }
+}
+
+- (BOOL) isAudioJackPluggedIn {
+    AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
+    BOOL result = NO;
+    
+    for (AVAudioSessionPortDescription* description in [route outputs]) {
+        if ([AVAudioSessionPortHeadphones isEqualToString:[description portType]]) {
+            result = YES;
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (BOOL) isMockTransaction {
+    WPMockConfig *mockConfig = self.config.mockConfig;
+    
+    return mockConfig && mockConfig.useMockCardReader;
 }
 
 #pragma mark - RUADeviceSearchListener
 
 - (void) discoveredDevice:(RUADevice *)reader {
-    NSLog(@"onDeviceDiscovered %@", reader.name);
+    WPLog(@"onDeviceDiscovered %@", reader.name);
     
     BOOL isMoby = reader.name && [reader.name hasPrefix:@"MOB30"];
     BOOL isAudioJack = reader.name && [reader.name isEqualToString:@"AUDIOJACK"];
     
     if (isMoby || isAudioJack) {
-        NSLog(@"add device: %@", reader.name);
+        WPLog(@"add device: %@", reader.name);
         [self.discoveredDevices addObject:reader];
     }
     
     if ([[WPUserDefaultsHelper getRememberedCardReader] isEqualToString:reader.name]) {
         // Stop searching for a device if we've found the card reader we rememeber.
-        NSLog(@"onDeviceDiscovered: discovered remembered reader %@", reader.name);
+        WPLog(@"onDeviceDiscovered: discovered remembered reader %@", reader.name);
         
         [self discoveryComplete];
     }
 }
 
 - (void) discoveryComplete {
-    NSLog(@"onDiscoveryComplete");
+    WPLog(@"onDiscoveryComplete");
     completedDiscoveries++;
     
     if (completedDiscoveries >= self.supportedDeviceManagers.count) {

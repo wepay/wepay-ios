@@ -31,6 +31,11 @@
                                    roamDeviceManager:(id<RUADeviceManager>) roamDeviceManager
                                    cardReaderRequest:(CardReaderRequest)request;
 
+/**
+ *  Stops the transaction on the card reader
+ */
+- (void) stopTransaction;
+
 @end
 
 #endif
