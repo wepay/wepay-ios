@@ -51,61 +51,43 @@
               <article class="markdown-body entry-content" itemprop="text" id="grip-content">
                 <h1>
 <a id="user-content-getting-started-------------------------mainpage" class="anchor" href="#getting-started-------------------------mainpage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started                         {#mainpage}</h1>
-
-<p><a href="https://camo.githubusercontent.com/1c7bc24b9669f4744176d69cd4d7d5a826269f92/68747470733a2f2f7777772e77657061792e636f6d2f696d672f726564657369676e2f6c6f676f732f77657061792d636f6c6f722e706e67" target="_blank"><img src="https://camo.githubusercontent.com/1c7bc24b9669f4744176d69cd4d7d5a826269f92/68747470733a2f2f7777772e77657061792e636f6d2f696d672f726564657369676e2f6c6f676f732f77657061792d636f6c6f722e706e67" alt="WePay logo" title="WePay" data-canonical-src="https://www.wepay.com/img/redesign/logos/wepay-color.png" style="max-width:100%;"></a></p>
-
+<p><a href="https://camo.githubusercontent.com/33576bd341f40726687658c177c31ff19edd9b01/68747470733a2f2f676f2e77657061792e636f6d2f66726f6e74656e642f696d616765732f77657061792d6c6f676f2e737667" target="_blank"><img src="https://camo.githubusercontent.com/33576bd341f40726687658c177c31ff19edd9b01/68747470733a2f2f676f2e77657061792e636f6d2f66726f6e74656e642f696d616765732f77657061792d6c6f676f2e737667" alt="WePay logo" title="WePay" data-canonical-src="https://go.wepay.com/frontend/images/wepay-logo.svg" style="max-width:100%;"></a></p>
 <h2>
 <a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
-
-<p>The WePay iOS SDK enables collection of payments via various payment methods(described below).</p>
-
+<p>The WePay iOS SDK enables collection of payments via various payment methods.</p>
 <p>It is meant for consumption by <a href="http://www.wepay.com">WePay</a> partners who are developing their own iOS apps aimed at merchants and/or consumers.</p>
-
 <p>Regardless of the payment method used, the SDK will ultimately return a Payment Token, which must be redeemed via a server-to-server <a href="http://www.wepay.com/developer">API</a> call to complete the transaction.</p>
-
 <h2>
 <a id="user-content-payment-methods" class="anchor" href="#payment-methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Payment methods</h2>
-
 <p>There are two types of payment methods:</p>
-
 <ul>
 <li>Consumer payment methods - to be used in apps where consumers directly pay and/or make donations</li>
 <li>Merchant payment methods - to be used in apps where merchants collect payments from their customers</li>
 </ul>
-
 <p>The WePay iOS SDK supports the following payment methods</p>
-
 <ul>
-<li>Card Swiper: Using a Card Swiper, a merchant can accept in-person payments by swiping a consumer's traditional magnetic strip card.</li>
-<li>Card Dipper: Using an Card Dipper, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card.</li>
-<li>Manual Entry: The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.</li>
+<li>Card Reader: Using an EMV Card Reader, a merchant can accept in-person payments by prosessing a consumer's EMV-enabled chip card. Traditional magnetic stripe cards can be processed as well.</li>
+<li>Manual Entry (Consumer/Merchant): The Manual Entry payment method lets consumer and merchant apps accept payments by allowing the user to manually enter card info.</li>
 </ul>
-
 <h2>
 <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
-
 <h4>
 <a id="user-content-using-cocoapods-recommended" class="anchor" href="#using-cocoapods-recommended" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using <a href="https://cocoapods.org/">cocoapods</a> (recommended)</h4>
-
 <ul>
 <li>Add <code>pod "WePay"</code> to your podfile</li>
 <li>Run <code>pod install</code>
 </li>
 <li>Done!</li>
 </ul>
-
 <p>The <a href="https://github.com/wepay/wepay-ios/tree/master/SwiftExample">SwiftExample app</a> also utilizes <code>cocoapods</code>.</p>
-
 <h4>
 <a id="user-content-using-library-binaries" class="anchor" href="#using-library-binaries" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using library binaries</h4>
-
 <ul>
 <li>Download the latest zip file from our <a href="https://github.com/wepay/wepay-ios/releases/latest">releases page</a>
 </li>
 <li>Unzip the file and copy the contents anywhere inside your project directory</li>
 <li>In Xcode, go to your app's target settings. On the <code>Build Phases</code> tab, expand the <code>Link Binary With Libraries</code> section.</li>
 <li>Include the following iOS frameworks:
-
 <ul>
 <li>AudioToolbox.framework</li>
 <li>AVFoundation.framework</li>
@@ -122,42 +104,29 @@
 </ul>
 </li>
 <li>Also include the framework files you copied:
-
 <ul>
-<li>TrustDefender.framework</li>
 <li>WePay.framework</li>
 </ul>
 </li>
 <li>Done!</li>
 </ul>
-
-<p>Note: Card reader functionality is not available in this SDK by default. If you want to use this SDK with WePay card readers, send an email to <a href="mailto:mobile@wepay.com">mobile@wepay.com</a>.</p>
-
+<p>Note: Card reader functionality is not available in this SDK by default. If you are interested in using the WePay Card Reader, please contact your sales representative or account manager.  If you have yet to be in direct contact with WePay, please email <a href="mailto:sales@wepay.com">sales@wepay.com</a>.</p>
 <h2>
 <a id="user-content-documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
-
 <p>HTML documentation is hosted on our <a href="http://wepay.github.io/wepay-ios/">Github Pages Site</a>.</p>
-
 <p>Pdf documentation is available on the <a href="https://github.com/wepay/wepay-ios/releases/latest">releases page</a> or as a direct <a href="https://github.com/wepay/wepay-ios/raw/master/documentation/wepay-ios.pdf">download</a>.</p>
-
 <p>General documentation about the WePay mobile point of sale (mPOS) program is available <a href="https://developer.wepay.com/mobile/mpos-program-overview">here</a>.</p>
-
 <h2>
 <a id="user-content-sdk-organization" class="anchor" href="#sdk-organization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SDK Organization</h2>
-
 <h3>
 <a id="user-content-wepayh" class="anchor" href="#wepayh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WePay.h</h3>
-
 <p><code>WePay.h</code> is the starting point for consuming the SDK, and contains the primary class you will interact with.
 It exposes all the methods you can call to accept payments via the supported payment methods.
 Detailed reference documentation is available on the reference page for the <code>WePay</code> class.</p>
-
 <h3>
 <a id="user-content-delegate-protocols" class="anchor" href="#delegate-protocols" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Delegate protocols</h3>
-
 <p>The SDK uses delegate protocols to respond to API calls. You must adopt the relevant protocols to receive responses to the API calls you make.
 Detailed reference documentation is available on the reference page for each protocol:</p>
-
 <ul>
 <li><code>WPAuthorizationDelegate</code></li>
 <li><code>WPBatteryLevelDelegate</code></li>
@@ -165,35 +134,24 @@ Detailed reference documentation is available on the reference page for each pro
 <li><code>WPCheckoutDelegate</code></li>
 <li><code>WPTokenizationDelegate</code></li>
 </ul>
-
 <h3>
 <a id="user-content-data-models" class="anchor" href="#data-models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Models</h3>
-
-<p>All other classes in the SDK are data models that are used to exchange data between your app and the SDK. 
+<p>All other classes in the SDK are data models that are used to exchange data between your app and the SDK.
 Detailed reference documentation is available on the reference page for each class.</p>
-
 <h2>
 <a id="user-content-next-steps" class="anchor" href="#next-steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Next Steps</h2>
-
 <p>Head over to the <a href="http://wepay.github.io/wepay-ios/">documentation</a> to see all the API methods available.
 When you are ready, look at the samples below to learn how to interact with the SDK.</p>
-
 <h2>
 <a id="user-content-error-handling" class="anchor" href="#error-handling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Error Handling</h2>
-
 <p><code>WPError.h</code> serves as documentation for all errors surfaced by the WePay iOS SDK.</p>
-
 <h2>
 <a id="user-content-samples" class="anchor" href="#samples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Samples</h2>
-
 <p>See the <a href="https://github.com/wepay/wepay-ios/tree/master/WePayExample">WePayExample app</a> for a working implementation of all API methods.</p>
-
 <p>See the <a href="https://github.com/wepay/wepay-ios/tree/master/SwiftExample">SwiftExample app</a> for a working implementation of all API methods in a Swift 3 application.
- Note: make sure to open the project using <code>SwiftApp.xcworkspace</code> and not <code>SwiftApp.xcodeproj</code>.</p>
-
+Note: make sure to open the project using <code>SwiftApp.xcworkspace</code> and not <code>SwiftApp.xcodeproj</code>.</p>
 <h3>
 <a id="user-content-initializing-a-bridging-header-for-swift-apps" class="anchor" href="#initializing-a-bridging-header-for-swift-apps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initializing a Bridging Header (for Swift apps)</h3>
-
 <ul>
 <li>For using Objective-C modules in a Swift application, you will need to create a bridging header.</li>
 <li>Make sure you are working in <code>{app_name}.xcworkspace</code> file.</li>
@@ -201,10 +159,8 @@ When you are ready, look at the samples below to learn how to interact with the 
 </li>
 <li>In the Header file, import the modules you need:</li>
 </ul>
-
-<pre lang="m"><code>#import &lt;WePay/WePay.h&gt;
+<pre lang="{.m}"><code>#import &lt;WePay/WePay.h&gt;
 </code></pre>
-
 <ul>
 <li>Click on the main application project to get to <code>Build Settings</code>.</li>
 <li>Search for <code>bridging header</code> in your target application to find a setting called <code>Swift Compiler - Code Generation</code>.</li>
@@ -212,84 +168,67 @@ When you are ready, look at the samples below to learn how to interact with the 
 </li>
 <li>There's no need to import the module in your code; you can use the module by calling it directly in your Swift application.</li>
 </ul>
-
 <h3>
 <a id="user-content-initializing-the-sdk" class="anchor" href="#initializing-the-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initializing the SDK</h3>
-
 <ul>
 <li>Complete the installation steps (above).</li>
 <li>Include WePay.h</li>
 </ul>
-
-<pre lang="m"><code>#import &lt;WePay/WePay.h&gt;
+<pre lang="{.m}"><code>#import &lt;WePay/WePay.h&gt;
 </code></pre>
-
 <ul>
 <li>Define a property to store the WePay object</li>
 </ul>
-
-<pre lang="m"><code>\@property (nonatomic, strong) WePay *wepay;
+<pre lang="{.m}"><code>\@property (nonatomic, strong) WePay *wepay;
 </code></pre>
-
 <ul>
 <li>Create a WPConfig object</li>
 </ul>
-
-<pre lang="m"><code>WPConfig *config = [[WPConfig alloc] initWithClientId:@"your_client_id" environment:kWPEnvironmentStage];
+<pre lang="{.m}"><code>WPConfig *config = [[WPConfig alloc] initWithClientId:@"your_client_id" environment:kWPEnvironmentStage];
 </code></pre>
-
 <ul>
 <li>Initialize the WePay object and assign it to the property</li>
 </ul>
-
-<pre lang="m"><code>self.wepay = [[WePay alloc] initWithConfig:config];
+<pre lang="{.m}"><code>self.wepay = [[WePay alloc] initWithConfig:config];
 </code></pre>
-
 <h5>
 <a id="user-content-providing-permission-to-use-microphone-for-card-reader-communication" class="anchor" href="#providing-permission-to-use-microphone-for-card-reader-communication" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Providing permission to use microphone for card reader communication</h5>
-
 <ul>
 <li>Open your app's Info.plist file and add an entry for NSMicrophoneUsageDescription.</li>
 </ul>
-
-<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">key</span>&gt;NSMicrophoneUsageDescription&lt;/<span class="pl-ent">key</span>&gt;
-&lt;<span class="pl-ent">string</span>&gt;Microphone permission is required for operating card reader&lt;/<span class="pl-ent">string</span>&gt;</pre></div>
-
-<h5>
-<a id="user-content-optional-providing-permission-to-use-location-services-for-fraud-detection" class="anchor" href="#optional-providing-permission-to-use-location-services-for-fraud-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(optional) Providing permission to use location services for fraud detection</h5>
-
+<pre lang="{.xml}"><code>&lt;key&gt;NSMicrophoneUsageDescription&lt;/key&gt;
+&lt;string&gt;Microphone permission is required for operating card reader&lt;/string&gt;
+</code></pre>
+<p>#####(optional) Providing permission to use location services for fraud detection</p>
 <ul>
-<li><p>In Xcode, go to your projects settings. On the Build Phases tab, expand the Link Binary With Libraries section and include the CoreLocation.framework iOS framework.</p></li>
-<li><p>Open your app's Info.plist file and add entries for NSLocationUsageDescription and NSLocationWhenInUseUsageDescription.</p></li>
+<li>
+<p>In Xcode, go to your projects settings. On the Build Phases tab, expand the Link Binary With Libraries section and include the CoreLocation.framework iOS framework.</p>
+</li>
+<li>
+<p>Open your app's Info.plist file and add entries for NSLocationUsageDescription and NSLocationWhenInUseUsageDescription.</p>
+</li>
 </ul>
-
-<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">key</span>&gt;NSLocationUsageDescription&lt;/<span class="pl-ent">key</span>&gt;
-&lt;<span class="pl-ent">string</span>&gt;Location information is used for fraud prevention&lt;/<span class="pl-ent">string</span>&gt;
-&lt;<span class="pl-ent">key</span>&gt;NSLocationWhenInUseUsageDescription&lt;/<span class="pl-ent">key</span>&gt;
-&lt;<span class="pl-ent">string</span>&gt;Location information is used for fraud prevention&lt;/<span class="pl-ent">string</span>&gt;</pre></div>
-
+<pre lang="{.xml}"><code>&lt;key&gt;NSLocationUsageDescription&lt;/key&gt;
+&lt;string&gt;Location information is used for fraud prevention&lt;/string&gt;
+&lt;key&gt;NSLocationWhenInUseUsageDescription&lt;/key&gt;
+&lt;string&gt;Location information is used for fraud prevention&lt;/string&gt;
+</code></pre>
 <ul>
 <li>Set the option on the config object, before initializing the WePay object</li>
 </ul>
-
-<pre lang="m"><code>config.useLocation = YES;
+<pre lang="{.m}"><code>config.useLocation = YES;
 </code></pre>
-
 <h3>
-<a id="user-content-integrating-the-swipe-payment-method" class="anchor" href="#integrating-the-swipe-payment-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the Swipe payment method</h3>
-
+<a id="user-content-integrating-the-card-reader-payment-methods-swipedip" class="anchor" href="#integrating-the-card-reader-payment-methods-swipedip" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the Card Reader payment methods (Swipe+Dip)</h3>
 <ul>
-<li>Adopt the WPCardReaderDelegate and WPTokenizationDelegate protocols</li>
+<li>Adopt the WPCardReaderDelegate, WPTokenizationDelegate, and WPAuthorizationDelegate protocols</li>
 </ul>
-
-<pre lang="m"><code>\@interface MyWePayDelegate : NSObject &lt;WPCardReaderDelegate, WPTokenizationDelegate&gt;
+<pre lang="{.m}"><code>\@interface MyWePayDelegate : NSObject &lt;WPCardReaderDelegate, WPTokenizationDelegate, WPAuthorizationDelegate&gt;
 </code></pre>
-
 <ul>
 <li>Implement the WPCardReaderDelegate protocol methods</li>
 </ul>
-
-<pre lang="m"><code>- (void) cardReaderDidChangeStatus:(id) status
+<pre lang="{.m}"><code>- (void) cardReaderDidChangeStatus:(id) status
 {
     if (status == kWPCardReaderStatusNotConnected) {
         // show UI that prompts the user to connect the Card Reader
@@ -310,23 +249,6 @@ When you are ready, look at the samples below to learn how to interact with the 
         // handle any other status messages
         self.statusLabel.text = [status description];
     } 
-}  
-
-- (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo 
-{
-    // use the payment info (for display/recordkeeping)
-    // wait for tokenization response
-}
-
-- (void) didFailToReadPaymentInfoWithError:(NSError *)error   
-{
-    // Handle the error
-}
-
-- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
-{
-    // Change this to YES if you want to reset the card reader
-    completion(NO);
 }
 
 - (void) selectCardReader:(NSArray *)cardReaderNames
@@ -338,79 +260,16 @@ When you are ready, look at the samples below to learn how to interact with the 
     completion(selectedIndex);
 }
 
-</code></pre>
-
-<ul>
-<li>Implement the WPTokenizationDelegate protocol methods</li>
-</ul>
-
-<pre lang="m"><code>- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
 {
-    // Send the tokenId (paymentToken.tokenId) to your server
-    // Your server would use the tokenId to make a /checkout/create call to complete the transaction
+    // Change this to YES if you want to reset the card reader
+    completion(NO);
 }
 
-- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
-{
-    // Handle the error
-}
-</code></pre>
-
-<ul>
-<li>Make the WePay API call, passing in the instance(s) of the class(es) that implemented the delegate protocols</li>
-</ul>
-
-<pre lang="m"><code>[self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self tokenizationDelegate:self authorizationDelegate:nil];
-// Show UI asking the user to insert the card reader and wait for it to be ready
-</code></pre>
-
-<ul>
-<li>That's it! The following sequence of events will occur:
-
-<ol>
-<li>The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.</li>
-<li>The SDK tries to detect the card reader and initialize it.
-
-<ul>
-<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSearching</code>
-</li>
-<li>If any card readers are discovered, the <code>selectCardReader:</code> method will be called with an array of discovered devices. If anything is plugged into the headphone jack, <code>"AUDIOJACK"</code> will be one of the devices discovered.</li>
-<li>If no card readers are detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
-</li>
-<li>Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.</li>
-<li>If the card reader is successfully connected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
-</ul>
-</li>
-<li>If the card reader successfully initialized, it will wait for the user to swipe a card</li>
-<li>If a recoverable error occurs during swiping, the <code>didFailToReadPaymentInfoWithError:</code> method will be called. After a few seconds, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusWaitingForSwipe</code> and the card reader will again wait for the user to swipe a card</li>
-<li>If an unrecoverable error occurs during swiping, or the user does not swipe, the <code>didFailToReadPaymentInfoWithError:</code> method will be called, and processing will stop</li>
-<li>Otherwise, the user swiped successfully, and the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSwipeDetected</code> followed by the <code>didReadPaymentInfo:</code> method</li>
-<li>Next, the SDK will automatically send the obtained card info to WePay's servers for tokenization (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusTokenizing</code>)</li>
-<li>If the tokenization succeeds, the <code>paymentInfo:didTokenize:</code> method will be called</li>
-<li>Otherwise, if the tokenization fails, the <code>paymentInfo:didFailTokenization:</code> method will be called with the appropriate error</li>
-</ol>
-</li>
-</ul>
-
-<h3>
-<a id="user-content-integrating-the-dip-payment-method" class="anchor" href="#integrating-the-dip-payment-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the Dip payment method</h3>
-
-<ul>
-<li>Adopt the WPAuthorizationDelegate, WPCardReaderDelegate and WPTokenizationDelegate protocols</li>
-</ul>
-
-<pre lang="m"><code>\@interface MyWePayDelegate : NSObject &lt;WPAuthorizationDelegate, WPCardReaderDelegate, WPTokenizationDelegate&gt;
-</code></pre>
-
-<ul>
-<li>Implement the WPCardReaderDelegate and WPTokenizationDelegate protocol methods (as shown above)</li>
-<li>Implement the WPAuthorizationDelegate protocol methods</li>
-</ul>
-
-<pre lang="m"><code>- (void) authorizeAmountWithCompletion:(void (^)(double amount, NSString *currencyCode, long accountId))completion
+- (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
 {
     // obtain transaction info
-    double amount = 10.00;
+    double amount = @(10.00);
     NSString *currencyCode = @"USD";
     long accountId = 12345678;
 
@@ -431,12 +290,41 @@ When you are ready, look at the samples below to learn how to interact with the 
 {
     // obtain email
     NSString *email = @"emv@example.com";
-
+    
     // execute the completion
     completion(email);
 }
 
-- (void) paymentInfo:(WPPaymentInfo *)paymentInfo
+- (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo 
+{
+    // use the payment info (for display/recordkeeping)
+    // wait for tokenization(swipe)/authorization(dip) response
+}
+
+- (void) didFailToReadPaymentInfoWithError:(NSError *)error   
+{
+    // Handle the error
+}
+
+</code></pre>
+<ul>
+<li>Implement the WPTokenizationDelegate protocol methods</li>
+</ul>
+<pre lang="{.m}"><code>- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+{
+    // Send the tokenId (paymentToken.tokenId) to your server
+    // Your server would use the tokenId to make a /checkout/create call to complete the transaction
+}
+
+- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didFailTokenization:(NSError *)error
+{
+	// Handle the error
+}
+</code></pre>
+<ul>
+<li>Implement the WPAuthorizationDelegate protocol methods</li>
+</ul>
+<pre lang="{.m}"><code>- (void) paymentInfo:(WPPaymentInfo *)paymentInfo
         didAuthorize:(WPAuthorizationInfo *)authorizationInfo
 {
     // Send the token Id (authorizationInfo.tokenId) and transaction token (authorizationInfo.transactionToken) to your server
@@ -449,84 +337,80 @@ didFailAuthorization:(NSError *)error
     // Handle the error
 }
 </code></pre>
-
 <ul>
 <li>Make the WePay API call, passing in the instance(s) of the class(es) that implemented the delegate protocols</li>
 </ul>
-
-<pre lang="m"><code>[self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self tokenizationDelegate:self authorizationDelegate:self];
+<pre lang="{.m}"><code>[self.wepay startCardReaderForTokenizingWithCardReaderDelegate:self tokenizationDelegate:self authorizationDelegate:self];
 // Show UI asking the user to insert the card reader and wait for it to be ready
 </code></pre>
-
 <ul>
-<li>That's it! The following sequence of events will occur:
-
+<li>That's it! The following sequence of events will occur:</li>
+</ul>
 <ol>
-<li>The user inserts the card reader (or it is already inserted), or powers on their Bluetooth card reader.</li>
+<li>The user inserts the card reader (or it is already inserted), or powers on their bluetooth card reader.</li>
 <li>The SDK tries to detect the card reader and initialize it.
-
 <ul>
-<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSearching</code>
-</li>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSearching</code>.</li>
 <li>If any card readers are discovered, the <code>selectCardReader:</code> method will be called with an array of discovered devices. If anything is plugged into the headphone jack, <code>"AUDIOJACK"</code> will be one of the devices discovered.</li>
-<li>If no card readers are detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>
-</li>
+<li>If no card readers are detected, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusNotConnected</code>.</li>
 <li>Once the card reader selection completion block is called, the SDK will attempt to to connect to the selected card reader.</li>
 <li>If the card reader is successfully connected, then the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConnected</code>.</li>
 </ul>
 </li>
 <li>Next, the SDK checks if the card reader is correctly configured (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusCheckingReader</code>).
-
 <ul>
-<li>If the card reader is already configured, the App is given a chance to force configuration. The SDK calls the <code>shouldResetCardReaderWithCompletion:</code> method, and the app must execute the completion method, telling the SDK whether or not the reader should be reset.</li>
-<li>If the reader was not configured, or the app requested a reset, the card reader is configured (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConfiguringReader</code>)</li>
+<li>If the card reader is already configured, the app is given a chance to force configuration. The SDK calls the <code>shouldResetCardReaderWithCompletion:</code> method, and the app must execute the completion method, telling the SDK whether or not the reader should be reset.</li>
+<li>If the reader was not already configured, or the app requested a reset, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusConfiguringReader</code> and the card reader is configured.</li>
 </ul>
 </li>
 <li>Next, if the card reader is successfully initialized, the SDK asks the app for transaction information by calling the <code>authorizeAmountWithCompletion:</code> method. The app must execute the completion method, telling the SDK what the amount, currency code and merchant account id is.</li>
-<li>Next, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusWaitingForCard</code> </li>
-<li>If the user inserts a card successfully, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusCardDipped</code>
+<li>Next, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusWaitingForCard</code>.</li>
+<li>If the user swipes a card successfully:
+<ul>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusSwipeDetected</code>.</li>
+<li>The SDK attempts to ask the app for the payer’s email by calling the <code>insertPayerEmailWithCompletion:</code> method. If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.</li>
+<li>The <code>didReadPaymentInfo:</code> method is called with the obtained payment info.</li>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusTokenizing</code>, and the SDK will automatically send the obtained card info to WePay's servers for tokenization.</li>
+<li>If tokenization succeeds, the <code>paymentInfo:didTokenize:</code> method will be called.</li>
+<li>If tokenization fails, the <code>paymentInfo:didFailTokenization:</code> method will be called with the appropriate error, and processing will stop.</li>
+</ul>
+</li>
+<li>Instead, if the user dips a card successfully:
+<ul>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusCardDipped</code>
 </li>
 <li>If the card has multiple applications on it, the payer must choose one:
-
 <ul>
 <li>The SDK calls the <code>selectEMVApplication:completion:</code> method with a list of Applications on the card.</li>
 <li>The app must display these Applications to the payer and allow them to choose which application they want to use.</li>
 <li>Once the payer has decided, the app must inform the SDK of the choice by executing the completion method and passing in the index of the chosen application.</li>
 </ul>
 </li>
-<li>Next, the SDK extracts card data from the card.
-
-<ul>
-<li>If the SDK is unable to obtain data from the card, the <code>didFailToReadPaymentInfoWithError:</code> method will be called with the appropriate error, and processing will stop (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusStopped</code>)</li>
-<li>Otherwise, the SDK attempts to ask the App for the payer’s email by calling the <code>insertPayerEmailWithCompletion:</code> method</li>
+<li>Next, the SDK obtains card data from the chip on the card.</li>
+<li>The SDK attempts to ask the app for the payer’s email by calling the <code>insertPayerEmailWithCompletion:</code> method. If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.</li>
+<li>The <code>didReadPaymentInfo:</code> method is called with the obtained payment info.</li>
+<li>The <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusAuthorizing</code>, and the SDK will automatically send the obtained EMV card info to WePay's servers for authorization.</li>
+<li>If authorization succeeds, the <code>paymentInfo:didAuthorize:</code> method will be called and processing will stop.</li>
+<li>If authorization fails, the <code>paymentInfo:didFailAuthorization:</code> method will be called.</li>
 </ul>
 </li>
-<li>If the app implements this optional delegate method, it must execute the completion method and pass in the payer’s email address.</li>
-<li>Next, the <code>didReadPaymentInfo:</code> method is called with the obtained payment info.</li>
-<li>Next, the SDK will automatically send the obtained EMV card info to WePay's servers for authorization (the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusAuthorizing</code>)</li>
-<li>If authorization fails, the <code>paymentInfo:didFailAuthorization:</code> method will be called and processing will stop.</li>
-<li>If authorization succeeds, the <code>paymentInfo:didAuthorize:</code> method will be called.</li>
+<li>If a recoverable error occurs during swiping or dipping, one of the failure methods will be called. After a few seconds, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusWaitingForCard</code> and the card reader will again wait for the user to swipe/dip a card.</li>
+<li>If an unrecoverable error occurs, or if the SDK is unable to obtain data from the card, one of teh failure methods will be called with the appropriate error.</li>
+<li>When processing stops, the <code>cardReaderDidChangeStatus:</code> method will be called with <code>status = kWPCardReaderStatusStopped</code>.</li>
 <li>Done!</li>
 </ol>
-</li>
-</ul>
-
-<p>Note: After the card is inserted into the reader, it must not be removed until a successful auth response (or an error) is returned.</p>
-
+<p>Note: After the card is dipped into the reader, it must not be removed until a successful auth response (or an error) is returned.</p>
 <h3>
 <a id="user-content-integrating-the-manual-payment-method" class="anchor" href="#integrating-the-manual-payment-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the Manual payment method</h3>
-
 <ul>
 <li>Adopt the WPTokenizationDelegate protocol</li>
 </ul>
-
-<div class="highlight highlight-source-c"><pre>\@interface MyWePayDelegate : NSObject &lt;WPTokenizationDelegate&gt;</pre></div>
-
+<pre lang="{.h}"><code>\@interface MyWePayDelegate : NSObject &lt;WPTokenizationDelegate&gt;
+</code></pre>
 <ul>
 <li>Implement the WPTokenizationDelegate protocol methods</li>
 </ul>
-
-<pre lang="m"><code>- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
+<pre lang="{.m}"><code>- (void) paymentInfo:(WPPaymentInfo *)paymentInfo didTokenize:(WPPaymentToken *)paymentToken
 {
     // Send the tokenId (paymentToken.tokenId) to your server
     // Your server can use the tokenId to make a /checkout/create call to complete the transaction
@@ -537,56 +421,45 @@ didFailAuthorization:(NSError *)error
     // Handle error
 }
 </code></pre>
-
 <ul>
 <li>Instantiate a WPPaymentInfo object using the user's credit card and address data</li>
 </ul>
-
-<pre lang="m"><code>WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
-                                                                 lastName:@"Example"
-                                                                    email:@"wp.ios.example@wepay.com"
-                                                           billingAddress:[[WPAddress alloc] initWithZip:@"94306"]
-                                                          shippingAddress:nil
-                                                               cardNumber:@"5496198584584769"
-                                                                      cvv:@"123"
-                                                                 expMonth:@"04"
-                                                                  expYear:@"2020"
-                                                          virtualTerminal:YES];
+<pre lang="{.m}"><code>WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
+                                                             lastName:@"Example"
+                                                                email:@"wp.ios.example@wepay.com"
+                                                       billingAddress:[[WPAddress alloc] initWithZip:@"94306"]
+                                                      shippingAddress:nil
+                                                           cardNumber:@"5496198584584769"
+                                                                  cvv:@"123"
+                                                             expMonth:@"04"
+                                                              expYear:@"2020"
+                                                      virtualTerminal:YES];
 // Note: the virtualTerminal parameter above should be set to YES if a merchant is collecting payments manually using your app. It should be set to NO if a payer is making a manual payment using your app.
 </code></pre>
-
 <ul>
 <li>Make the WePay API call, passing in the instance of the class that implemented the WPTokenizationDelegate protocol</li>
 </ul>
-
-<pre lang="m"><code>[self.wepay tokenizeManualPaymentInfo:paymentInfo tokenizationDelegate:self];
+<pre lang="{.m}"><code>[self.wepay tokenizeManualPaymentInfo:paymentInfo tokenizationDelegate:self];
 </code></pre>
-
 <ul>
-<li>That's it! The following sequence of events will occur:
-
+<li>That's it! The following sequence of events will occur:</li>
+</ul>
 <ol>
 <li>The SDK will send the obtained payment info to WePay's servers for tokenization</li>
 <li>If the tokenization succeeds, the <code>paymentInfo:didTokenize:</code> method will be called</li>
 <li>Otherwise, if the tokenization fails, the <code>paymentInfo:didFailTokenization:</code> method will be called with the appropriate error</li>
 </ol>
-</li>
-</ul>
-
 <h3>
 <a id="user-content-integrating-the-store-signature-api" class="anchor" href="#integrating-the-store-signature-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the Store Signature API</h3>
-
 <ul>
 <li>Adopt the WPCheckoutDelegate protocol</li>
 </ul>
-
-<div class="highlight highlight-source-c"><pre>\@interface MyWePayDelegate : NSObject &lt;WPCheckoutDelegate&gt;</pre></div>
-
+<pre lang="{.h}"><code>\@interface MyWePayDelegate : NSObject &lt;WPCheckoutDelegate&gt;
+</code></pre>
 <ul>
 <li>Implement the WPCheckoutDelegate protocol methods</li>
 </ul>
-
-<pre lang="m"><code>- (void) didStoreSignature:(NSString *)signatureUrl
+<pre lang="{.m}"><code>- (void) didStoreSignature:(NSString *)signatureUrl
              forCheckoutId:(NSString *)checkoutId
 {
     // success! nothing to do here
@@ -600,33 +473,25 @@ didFailAuthorization:(NSError *)error
 }
 
 </code></pre>
-
 <ul>
 <li>Obtain the checkout_id associated with this signature from your server</li>
 </ul>
-
-<pre lang="m"><code>NSString *checkoutId = [self obtainCheckoutId];
+<pre lang="{.m}"><code>NSString *checkoutId = [self obtainCheckoutId];
 </code></pre>
-
 <ul>
 <li>Instantiate a UIImage containing the user's signature</li>
 </ul>
-
-<pre lang="m"><code>UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
+<pre lang="{.m}"><code>UIImage *signature = [UIImage imageNamed:@"dd_signature.png"];
 </code></pre>
-
 <ul>
 <li>Make the WePay API call, passing in the instance of the class that implemented the WPCheckoutDelegate protocol</li>
 </ul>
-
-<pre lang="m"><code>[self.wepay storeSignatureImage:signature 
+<pre lang="{.m}"><code>[self.wepay storeSignatureImage:signature 
                   forCheckoutId:checkoutId
                checkoutDelegate:self];
 </code></pre>
-
 <ul>
 <li>That's it! The following sequence of events will occur:
-
 <ol>
 <li>The SDK will send the obtained signature to WePay's servers</li>
 <li>If the operation succeeds, the <code>didStoreSignature:forCheckoutId:</code> method will be called</li>
@@ -634,21 +499,17 @@ didFailAuthorization:(NSError *)error
 </ol>
 </li>
 </ul>
-
 <h3>
 <a id="user-content-integrating-the-the-battery-level-api" class="anchor" href="#integrating-the-the-battery-level-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integrating the the Battery Level API</h3>
-
 <ul>
 <li>Adopt the WPBatteryLevelDelegate protocol</li>
 </ul>
-
-<div class="highlight highlight-source-c"><pre>\@interface MyWePayDelegate : NSObject &lt;WPBatteryLevelDelegate&gt;</pre></div>
-
+<pre lang="{.h}"><code>\@interface MyWePayDelegate : NSObject &lt;WPBatteryLevelDelegate&gt;
+</code></pre>
 <ul>
 <li>Implement the WPCheckoutDelegate protocol methods</li>
 </ul>
-
-<pre lang="m"><code>- (void) didGetBatteryLevel:(int)batteryLevel
+<pre lang="{.m}"><code>- (void) didGetBatteryLevel:(int)batteryLevel
 {
     // success! Show the current level to the user.
 }
@@ -659,53 +520,39 @@ didFailAuthorization:(NSError *)error
 }
 
 </code></pre>
-
 <ul>
 <li>Make the WePay API call, passing in the instance(s) of the class(es) that implemented the WPCardReaderDelegate and WPBatteryLevelDelegate protocols</li>
 </ul>
-
-<pre lang="m"><code>[self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
+<pre lang="{.m}"><code>[self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
 </code></pre>
-
 <ul>
-<li>That's it! The following sequence of events will occur:
-
+<li>That's it! The following sequence of events will occur:</li>
+</ul>
 <ol>
 <li>The SDK will attempt to read the battery level of the card reader</li>
 <li>If the operation succeeds, WPBatteryLevelDelegate's <code>didGetBatteryLevel:</code> method will be called with the result</li>
 <li>Otherwise, if the operation fails, WPBatteryLevelDelegate's <code>didFailToGetBatteryLevelwithError:</code> method will be called with the appropriate error</li>
 </ol>
-</li>
-</ul>
-
 <h3>
 <a id="user-content-configuring-the-sdk" class="anchor" href="#configuring-the-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuring the SDK</h3>
-
 <p>The experiences described above can be modified by utilizing the configuration options available on the WPConfig object. Detailed descriptions for each configurable property is available in the documentation for WPConfig.</p>
-
 <h3>
 <a id="user-content-testdevelop-using-mock-card-reader-and-mock-wepayclient" class="anchor" href="#testdevelop-using-mock-card-reader-and-mock-wepayclient" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Test/develop using mock card reader and mock WepayClient</h3>
-
 <ul>
 <li>To use mock card reader implementation instead of using the real reader, instantiate a MockConfig object and pass it to Config:</li>
 </ul>
-
-<pre lang="m"><code>WPMockConfig *mockConfig = [[WPMockConfig alloc] init];
+<pre lang="{.m}"><code>WPMockConfig *mockConfig = [[WPMockConfig alloc] init];
 config.mockConfig = mockConfig;
 </code></pre>
-
 <ul>
 <li>To use mock WepayClient implementation instead of interacting with the real WePay server, set the corresponding option on the mockConfig object:</li>
 </ul>
-
-<pre lang="m"><code>mockConfig.useMockWepayClient = YES;
+<pre lang="{.m}"><code>mockConfig.useMockWepayClient = YES;
 </code></pre>
-
 <ul>
 <li>Other options are also available:</li>
 </ul>
-
-<pre lang="m"><code>mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe; // Payment method to mock; Defaults to SWIPE.
+<pre lang="{.m}"><code>mockConfig.mockPaymentMethod = kWPPaymentMethodSwipe; // Payment method to mock; Defaults to SWIPE.
 mockConfig.cardReadTimeOut = YES; // To mock a card reader timeout; Defaults to NO.
 mockConfig.cardReadFailure = YES; // To mock a failure for card reading; Defaults to NO.
 mockConfig.cardTokenizationFailure = YES; // To mock a failure for card tokenization; Defaults to NO.
@@ -714,29 +561,21 @@ mockConfig.multipleEMVApplication = YES; // To mock multiple EMV applications on
 mockConfig.batteryLevelError = YES; // To mock an error while fetching battery level; Defaults to NO.
 mockConfig.mockCardReaderIsDetected = NO; // To mock a card reader being available for connection; Defaults to YES.
 </code></pre>
-
 <h3>
 <a id="user-content-integration-tests-and-unit-tests" class="anchor" href="#integration-tests-and-unit-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integration tests and unit tests</h3>
-
 <p>All the integration tests and unit tests are located in the <code>/WePayTests/</code> directory.</p>
-
 <h5>
 <a id="user-content-from-xcode" class="anchor" href="#from-xcode" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>From Xcode</h5>
-
 <p>From the Tests Navigator tab:</p>
-
 <ul>
 <li>To run a single test, right-click the test method and select "Test ".</li>
 <li>To run all test methods in a class, right-click the class and select "Run ".</li>
 <li>To run all tests in a directory, right-click the directory and select "Run ".</li>
 <li>To run all tests in the project, use the menu option Product &gt; Test  or press (Cmd + U).</li>
 </ul>
-
 <h5>
 <a id="user-content-from-the-command-line" class="anchor" href="#from-the-command-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>From the command line</h5>
-
 <p>Go to this repo directory and execute:</p>
-
 <pre><code>xcodebuild test -project WePay.xcodeproj -scheme "Release Framework"  -destination 'platform=iOS Simulator,name=iPhone 7'
 </code></pre>
 
