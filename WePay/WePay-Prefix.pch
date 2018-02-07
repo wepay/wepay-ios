@@ -1,0 +1,22 @@
+//
+//  WePay-Prefix.pch
+//  WePay
+//
+//  Created by Zach Vega-Perkins on 3/28/17.
+//  Copyright © 2017 WePay. All rights reserved.
+//
+
+#ifndef WePay_Prefix_pch
+#define WePay_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "WPGlobals.h"
+#import "WPConstantsExternal.h"
+
+#define WPLog(fmt, ...)\
+if ([kWPLogLevelAll isEqualToString:globalLogLevel]) {\
+    NSLog((fmt), ##__VA_ARGS__);\
+}\
+
+#endif /* WePay_Prefix_pch */

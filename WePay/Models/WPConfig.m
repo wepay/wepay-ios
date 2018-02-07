@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong, readwrite) NSString *clientId;
 @property (nonatomic, strong, readwrite) NSString *environment;
+
 @end
 
 
@@ -28,8 +29,9 @@
   callDelegateMethodsOnMainThread:YES
     restartTransactionAfterSuccess:NO
 restartTransactionAfterGeneralError:YES
-restartTransactionAfterOtherErrors: NO
-   stopCardReaderAfterTransaction:YES];
+restartTransactionAfterOtherErrors:NO
+     stopCardReaderAfterOperation:YES
+                         logLevel:kWPLogLevelAll];
 }
 
 
@@ -41,7 +43,8 @@ restartTransactionAfterOtherErrors: NO
    restartTransactionAfterSuccess:(BOOL)restartTransactionAfterSuccess
 restartTransactionAfterGeneralError:(BOOL)restartTransactionAfterGeneralError
 restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
-   stopCardReaderAfterTransaction:(BOOL)stopCardReaderAfterTransaction
+     stopCardReaderAfterOperation:(BOOL)stopCardReaderAfterOperation
+                         logLevel:(NSString *)logLevel
 {
     if (self = [super init])
     {
@@ -53,7 +56,8 @@ restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
         self.restartTransactionAfterSuccess = restartTransactionAfterSuccess;
         self.restartTransactionAfterGeneralError = restartTransactionAfterGeneralError;
         self.restartTransactionAfterOtherErrors = restartTransactionAfterOtherErrors;
-        self.stopCardReaderAfterTransaction = stopCardReaderAfterTransaction;
+        self.stopCardReaderAfterOperation = stopCardReaderAfterOperation;
+        self.logLevel = logLevel;
     }
     
     return self;
@@ -65,16 +69,19 @@ restartTransactionAfterOtherErrors:(BOOL)restartTransactionAfterOtherErrors
     
     [dict setValue:self.clientId ? self.clientId : [NSNull null] forKey:@"clientId"];
     [dict setValue:self.environment ? self.environment : [NSNull null] forKey:@"environment"];
+    [dict setValue:self.logLevel ? self.logLevel : [NSNull null] forKey:@"logLevel"];
     [dict setValue:@(self.useLocation) forKey:@"useLocation"];
     [dict setValue:@(self.useTestEMVCards) forKey:@"useTestEMVCards"];
-    [dict setValue:@(self.restartTransactionAfterSuccess) forKey:@"restartCardReaderAfterSuccess"];
-    [dict setValue:@(self.restartTransactionAfterGeneralError) forKey:@"restartCardReaderAfterGeneralError"];
-    [dict setValue:@(self.restartTransactionAfterOtherErrors) forKey:@"restartCardReaderAfterOtherErrors"];
+    [dict setValue:@(self.callDelegateMethodsOnMainThread) forKey:@"callDelegateMethodsOnMainThread"];
+    [dict setValue:@(self.restartTransactionAfterSuccess) forKey:@"restartTransactionAfterSuccess"];
+    [dict setValue:@(self.restartTransactionAfterGeneralError) forKey:@"restartTransactionAfterGeneralError"];
+    [dict setValue:@(self.restartTransactionAfterOtherErrors) forKey:@"restartTransactionAfterOtherErrors"];
+    [dict setValue:@(self.stopCardReaderAfterOperation) forKey:@"stopCardReaderAfterOperation"];
     
     return dict;
 }
 
-- (NSString *)description {
+- (NSString *) description {
     
     NSError *error = nil;
     NSData *json;

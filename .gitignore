@@ -30,14 +30,26 @@ project.xcworkspace
 /SwiftExample/Pods/WePay/G4XSwiper.framework/
 /SwiftExample/Pods/WePay/RPx.framework/
 /SwiftExample/Pods/WePay/RUA.framework/
+/SwiftExample/Pods/WePay/RUA_MFI.framework/
+/SwiftExample/Pods/WePay/RPx_MFI.framework/
+/SwiftExample/Pods/WePay/RKI_MFI.framework/
 /SwiftExample/Pods/WePay/TrustDefenderMobile.framework/
+/SwiftExample/Pods/WePay/TrustDefender.framework/
 /WePayExample/WePayExample/Libs/G4XSwiper.framework/
 /WePayExample/WePayExample/Libs/RPx.framework/
 /WePayExample/WePayExample/Libs/RUA.framework/
+/WePayExample/WePayExample/Libs/RUA_MFI.framework/
+/WePayExample/WePayExample/Libs/RPx_MFI.framework/
+/WePayExample/WePayExample/Libs/RKI_MFI.framework/
+/WePayExample/WePayExample/Libs/TrustDefender.framework/
 /WePayExample/WePayExample/Libs/TrustDefenderMobile.framework/
 /WePay/Libs/G4XSwiper.framework/
 /WePay/Libs/RPx.framework/
 /WePay/Libs/RUA.framework/
+/WePay/Libs/RUA_MFI.framework/
+/WePay/Libs/RPx_MFI.framework/
+/WePay/Libs/RKI_MFI.framework/
+/WePay/Libs/TrustDefender.framework/
 /WePay/Libs/TrustDefenderMobile.framework/
 
 # CocoaPods
@@ -47,3 +59,6 @@ project.xcworkspace
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control?
 #
 # Pods/
+
+# Arcanist
+.arcconfig

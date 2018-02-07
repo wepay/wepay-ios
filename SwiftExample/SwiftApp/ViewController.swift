@@ -16,23 +16,17 @@ let EMV_AMOUNT_STRING = "22.61" // Magic success amount
 let EMV_READER_SHOULD_RESET = false
 let EMV_SELECT_APP_INDEX = 0
 
-class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate , WPBatteryLevelDelegate {
+class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDelegate, WPCheckoutDelegate, WPTokenizationDelegate , WPBatteryLevelDelegate, UIActionSheetDelegate {
     
     var wepay = WePay()
     let userDefaults = UserDefaults.standard
     
-    @IBOutlet var containerView: UIView!
-    @IBOutlet var textView: UITextView!
-    @IBOutlet var statusLabel: UILabel!
-    
-    @IBOutlet var swipeInfoBtn: UIButton!
-    @IBOutlet var swipeTokenBtn: UIButton!
-    @IBOutlet var stopReaderBtn: UIButton!
-    @IBOutlet var manualEntryBtn: UIButton!
-    @IBOutlet var submitSignatureBtn: UIButton!
-    @IBOutlet var batteryBtn: UIButton!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var statusLabel: UILabel!
     
     var accountId = Int()
+    var selectCardReaderCompletion: ((Int) -> Void)!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +39,8 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         
         // Allow WePay to use location services
         config.useLocation = true
+        config.stopCardReaderAfterOperation = false
+        config.restartTransactionAfterOtherErrors = false
         
         // Initialize WePay
         self.wepay = WePay(config: config)
@@ -69,7 +65,6 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
             attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
         )
         self.consoleLog(str)
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -205,10 +200,37 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         )
         self.consoleLog(str)
         
-        self.wepay.getCardReaderBatteryLevel(with: self)
+        self.wepay.getCardReaderBatteryLevel(with: self, batteryLevelDelegate: self)
     }
     
-    @IBAction func consoleLog(_ data: NSAttributedString) {
+    @IBAction func getRememberedCardReaderButtonPressed(_ sender: AnyObject) {
+        self.showStatus("Getting remembered card reader")
+        let cardReader = self.wepay.getRememberedCardReader()
+        var rememberedCardReaderMessage = "No remembered card reader exists"
+        
+        if (cardReader != nil) {
+            rememberedCardReaderMessage = String(format: "Remembered card reader is %@", cardReader!)
+        }
+        
+        let str: NSAttributedString = NSAttributedString(
+            string: rememberedCardReaderMessage,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str);
+    }
+    
+    @IBAction func forgetRememberedCardReaderButtonPressed(_ sender: AnyObject) {
+        self.showStatus("Forgetting remembered card reader")
+        self.wepay.forgetRememberedCardReader()
+        
+        let str: NSAttributedString = NSAttributedString(
+            string: "Forgot the remembered card reader",
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)]
+        )
+        self.consoleLog(str);
+    }
+    
+    func consoleLog(_ data: NSAttributedString) {
         // Fetch current text
         let text: NSMutableAttributedString = self.textView.attributedText.mutableCopy() as! NSMutableAttributedString
         
@@ -234,6 +256,27 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
     }
     
     // MARK: WPCardReaderDelegate methods
+    
+    public func selectEMVApplication(_ applications: [Any]!, completion: ((Int) -> Void)!) {
+        // In production apps, the payer must choose the application they want to use.
+        // Here, we always select the first application in the array
+        let selectedIndex: Int = Int(EMV_SELECT_APP_INDEX)
+        
+        // Print message to console
+        var str: NSMutableAttributedString = NSMutableAttributedString(string: "Select App Id: \n")
+        let info: NSAttributedString = NSAttributedString(
+            string: applications.description,
+            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
+        )
+        str.append(info)
+        self.consoleLog(str)
+        
+        str = NSMutableAttributedString(string: "Selected App Id index: \(selectedIndex)")
+        self.consoleLog(str)
+        
+        // Execute the completion
+        completion(selectedIndex)
+    }
     
     func didRead(_ paymentInfo: WPPaymentInfo) {
         // Print message to screen
@@ -314,6 +357,25 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
         completion(amount, currencyCode, self.accountId)
     }
     
+    func selectCardReader(_ cardReaderNames: [Any]!, completion: ((Int) -> Void)!) {
+        let cardReaderNameStrings = cardReaderNames as! [String]
+        let selectController = UIActionSheet(title: "Choose a card reader device", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil)
+        selectController.actionSheetStyle = .default
+        
+        for cardreaderName in cardReaderNameStrings as [String] {
+            selectController.addButton(withTitle: cardreaderName)
+        }
+        
+        self.selectCardReaderCompletion = completion
+        selectController.show(in: self.view)
+    }
+    
+    // MARK: UIActionSheetDelegate
+    
+    func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
+        self.selectCardReaderCompletion(buttonIndex - 1)
+    }
+    
     // MARK: WPTokenizationDelegate methods
     
     func paymentInfo(_ paymentInfo: WPPaymentInfo, didTokenize paymentToken: WPPaymentToken) {
@@ -375,27 +437,6 @@ class ViewController: UIViewController, WPAuthorizationDelegate, WPCardReaderDel
     }
     
     // MARK: WPAuthorizationDelegate methods
-    
-    public func selectEMVApplication(_ applications: [Any]!, completion: ((Int) -> Void)!) {
-        // In production apps, the payer must choose the application they want to use.
-        // Here, we always select the first application in the array
-        let selectedIndex: Int = Int(EMV_SELECT_APP_INDEX)
-        
-        // Print message to console
-        var str: NSMutableAttributedString = NSMutableAttributedString(string: "Select App Id: \n")
-        let info: NSAttributedString = NSAttributedString(
-            string: applications.description,
-            attributes: [NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 1, alpha: 1)]
-        )
-        str.append(info)
-        self.consoleLog(str)
-        
-        str = NSMutableAttributedString(string: "Selected App Id index: \(selectedIndex)")
-        self.consoleLog(str)
-        
-        // Execute the completion
-        completion(selectedIndex)
-    }
     
     func insertPayerEmail(completion: ((String?) -> Void)!) {
         let email: String = "emv@example.com"

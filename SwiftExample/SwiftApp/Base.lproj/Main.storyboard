@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,10 +18,11 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Console logs:" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="o6A-Uj-q1X">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" editable="NO" text="Console logs:" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="o6A-Uj-q1X">
+                                <rect key="frame" x="8" y="268" width="359" height="391"/>
                                 <color key="backgroundColor" red="0.18039215689999999" green="0.69411764710000001" blue="0.20784313730000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -32,8 +36,10 @@
                                 </userDefinedRuntimeAttributes>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnn-Qd-1bk">
+                                <rect key="frame" x="8" y="28" width="359" height="232"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="amS-uC-jfK" userLabel="Swipe Info Btn">
+                                        <rect key="frame" x="8" y="8" width="75" height="75"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="75" id="Rmk-SP-kcg"/>
                                             <constraint firstAttribute="height" constant="75" id="WNL-ee-VR9"/>
@@ -54,6 +60,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fAC-Px-whH" userLabel="Stop Reader Btn">
+                                        <rect key="frame" x="97.5" y="8" width="75" height="75"/>
                                         <state key="normal" title="Stop" backgroundImage="swiper_stop">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -70,6 +77,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jly-9p-Tjz" userLabel="Manual Entry Btn">
+                                        <rect key="frame" x="186.5" y="8" width="75" height="75"/>
                                         <state key="normal" title="Manual" backgroundImage="manual">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -86,6 +94,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqt-A3-6tl" userLabel="Submit Signature Btn">
+                                        <rect key="frame" x="276" y="8" width="75" height="75"/>
                                         <state key="normal" title="Signature" backgroundImage="signature">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -102,6 +111,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="irw-cR-dzL" userLabel="Swipe Token Btn">
+                                        <rect key="frame" x="8" y="91" width="75" height="75"/>
                                         <state key="normal" title="Token" backgroundImage="swipe tokenize">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -118,6 +128,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zza-xB-iSp" userLabel="Battery Level Btn">
+                                        <rect key="frame" x="97.5" y="91" width="75" height="75"/>
                                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Stop" backgroundImage="card_reader_battery">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -134,7 +145,25 @@
                                             <action selector="batteryLevelButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yzm-1h-D1C"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ONM-Wr-gts" userLabel="Get Remembered Card Reader Btn">
+                                        <rect key="frame" x="187" y="91" width="75" height="75"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                        <state key="normal" backgroundImage="get_remembered_reader"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="getRememberedCardReaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="luF-jf-Ld7"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LCz-72-qNx">
+                                        <rect key="frame" x="8" y="174" width="343" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="FVj-eC-9XP"/>
                                         </constraints>
@@ -151,17 +180,38 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ful-2a-kcS" userLabel="Flexible space 1">
+                                        <rect key="frame" x="83" y="8" width="14.5" height="75"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rZk-P4-jfB" userLabel="Flexible space 2">
+                                        <rect key="frame" x="172.5" y="8" width="14" height="75"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HCo-0W-v4y" userLabel="Flexible space 3">
+                                        <rect key="frame" x="261.5" y="8" width="14.5" height="75"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oUp-kJ-J2N" userLabel="Flexible space 4">
+                                        <rect key="frame" x="83" y="91" width="14.5" height="75"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9GA-rz-hXJ" userLabel="Forget Remembered Card Reader Btn">
+                                        <rect key="frame" x="276" y="92" width="75" height="75"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                        <state key="normal" backgroundImage="forget_remembered_reader"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="forgetRememberedCardReaderButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aSX-qK-1y2"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -176,19 +226,25 @@
                                     <constraint firstItem="LCz-72-qNx" firstAttribute="top" secondItem="irw-cR-dzL" secondAttribute="bottom" constant="8" id="7am-Vt-zsQ"/>
                                     <constraint firstItem="oUp-kJ-J2N" firstAttribute="width" secondItem="ful-2a-kcS" secondAttribute="width" id="7rA-Ud-09F"/>
                                     <constraint firstItem="rZk-P4-jfB" firstAttribute="width" secondItem="ful-2a-kcS" secondAttribute="width" id="7wl-DA-Ml7"/>
+                                    <constraint firstItem="ONM-Wr-gts" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="979-L6-Xaz"/>
                                     <constraint firstItem="oqt-A3-6tl" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="top" constant="8" id="BPL-6F-9tq"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="leading" secondItem="oUp-kJ-J2N" secondAttribute="trailing" id="E9f-cq-XZi"/>
                                     <constraint firstItem="LCz-72-qNx" firstAttribute="top" secondItem="zza-xB-iSp" secondAttribute="bottom" constant="8" id="F6l-UR-kYq"/>
                                     <constraint firstItem="ful-2a-kcS" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="FIV-6n-VJS"/>
                                     <constraint firstItem="oUp-kJ-J2N" firstAttribute="leading" secondItem="irw-cR-dzL" secondAttribute="trailing" id="FgR-Gd-1ol"/>
                                     <constraint firstItem="fAC-Px-whH" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="top" constant="8" id="Iii-S8-mn0"/>
+                                    <constraint firstItem="ONM-Wr-gts" firstAttribute="leading" secondItem="zza-xB-iSp" secondAttribute="trailing" constant="14.5" id="IsR-ma-QUR"/>
+                                    <constraint firstItem="9GA-rz-hXJ" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="JLu-Lg-QqW"/>
                                     <constraint firstItem="irw-cR-dzL" firstAttribute="top" secondItem="amS-uC-jfK" secondAttribute="bottom" constant="8" id="KuD-uZ-aXG"/>
                                     <constraint firstItem="HCo-0W-v4y" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="MIR-Gp-Swa"/>
+                                    <constraint firstItem="ONM-Wr-gts" firstAttribute="top" secondItem="jly-9p-Tjz" secondAttribute="bottom" constant="8" id="N0q-Ej-cRM"/>
+                                    <constraint firstItem="9GA-rz-hXJ" firstAttribute="top" secondItem="oqt-A3-6tl" secondAttribute="bottom" constant="9" id="N48-fR-jNo"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="NDX-mi-poY"/>
                                     <constraint firstItem="jly-9p-Tjz" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="NN5-Jj-M1D"/>
                                     <constraint firstItem="jly-9p-Tjz" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="OCK-Ml-adV"/>
                                     <constraint firstItem="LCz-72-qNx" firstAttribute="top" secondItem="oUp-kJ-J2N" secondAttribute="bottom" constant="8" id="Orf-NN-YMS"/>
                                     <constraint firstItem="oqt-A3-6tl" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="P36-oF-rl3"/>
+                                    <constraint firstItem="ONM-Wr-gts" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="PRx-lK-KqN"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="top" secondItem="fAC-Px-whH" secondAttribute="bottom" constant="8" id="PpL-VE-OiD"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="leading" secondItem="oUp-kJ-J2N" secondAttribute="trailing" id="QRv-ZK-Vfo"/>
                                     <constraint firstItem="HCo-0W-v4y" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="top" constant="8" id="Quh-rk-KYQ"/>
@@ -198,10 +254,12 @@
                                     <constraint firstItem="HCo-0W-v4y" firstAttribute="leading" secondItem="jly-9p-Tjz" secondAttribute="trailing" id="TXX-4E-WCO"/>
                                     <constraint firstItem="fAC-Px-whH" firstAttribute="width" secondItem="amS-uC-jfK" secondAttribute="width" id="Ud3-VB-tyV"/>
                                     <constraint firstItem="HCo-0W-v4y" firstAttribute="width" secondItem="ful-2a-kcS" secondAttribute="width" id="Z23-Ax-3xY"/>
+                                    <constraint firstItem="9GA-rz-hXJ" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="ZHc-dZ-NRg"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="leading" secondItem="oUp-kJ-J2N" secondAttribute="trailing" id="dpA-k1-Lhp"/>
                                     <constraint firstItem="irw-cR-dzL" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="dyk-Sf-JX7"/>
                                     <constraint firstItem="fAC-Px-whH" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="eL3-pu-Ijt"/>
                                     <constraint firstItem="irw-cR-dzL" firstAttribute="leading" secondItem="bnn-Qd-1bk" secondAttribute="leading" constant="8" id="eoJ-3M-RtV"/>
+                                    <constraint firstItem="9GA-rz-hXJ" firstAttribute="leading" secondItem="ONM-Wr-gts" secondAttribute="trailing" constant="14" id="eyJ-04-wtc"/>
                                     <constraint firstItem="ful-2a-kcS" firstAttribute="top" secondItem="bnn-Qd-1bk" secondAttribute="top" constant="8" id="fso-vO-rve"/>
                                     <constraint firstAttribute="bottom" secondItem="LCz-72-qNx" secondAttribute="bottom" constant="8" id="iR9-tv-m0c"/>
                                     <constraint firstItem="zza-xB-iSp" firstAttribute="height" secondItem="amS-uC-jfK" secondAttribute="height" id="jb5-wL-J8w"/>
@@ -236,7 +294,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="batteryBtn" destination="zza-xB-iSp" id="XXI-mV-Y0Z"/>
                         <outlet property="containerView" destination="bnn-Qd-1bk" id="UT7-g2-ryP"/>
                         <outlet property="statusLabel" destination="LCz-72-qNx" id="5Tn-eG-gjc"/>
                         <outlet property="textView" destination="o6A-Uj-q1X" id="ZUb-af-XFj"/>
@@ -249,6 +306,8 @@
     </scenes>
     <resources>
         <image name="card_reader_battery" width="512" height="512"/>
+        <image name="forget_remembered_reader" width="225" height="225"/>
+        <image name="get_remembered_reader" width="225" height="225"/>
         <image name="manual" width="2133" height="2133"/>
         <image name="signature" width="2133" height="2133"/>
         <image name="swipe info" width="2133" height="2133"/>

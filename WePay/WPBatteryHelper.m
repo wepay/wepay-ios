@@ -7,14 +7,14 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import "WPBatteryHelper.h"
 #import "WPMockRoamDeviceManager.h"
 #import "WPError+internal.h"
 #import "WPRoamHelper.h"
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 #define TIMEOUT_DEFAULT_SEC 60
 
 @interface WPBatteryHelper ()
@@ -31,7 +31,7 @@
 - (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate
                                                     config:(WPConfig *)config
 {
-    NSLog(@"getCardReaderBatteryLevelWithBatteryLevelDelegate");
+    WPLog(@"getCardReaderBatteryLevelWithBatteryLevelDelegate");
     if (batteryLevelDelegate == nil) {
         return;
     } else {
@@ -58,20 +58,20 @@
 
 - (void) startWaitingForReader
 {
-    NSLog(@"startWaitingForReader");
+    WPLog(@"startWaitingForReader");
 
     // Wait a few seconds for the reader to be detected, otherwise announce not connected
     // has to be called from the main thread
     dispatch_async(dispatch_get_main_queue(), ^{
         [self performSelector:@selector(informExternalError:)
                    withObject:[WPError errorCardReaderNotConnected]
-                   afterDelay:RP350X_CONNECTION_TIME_SEC];
+                   afterDelay:CONNECTION_TIME_SEC];
     });
 }
 
 - (void) stopWaitingForReader
 {
-    NSLog(@"stopWaitingForReader");
+    WPLog(@"stopWaitingForReader");
 
     // cancel any scheduled notifications
     // has to be called from the main thread
@@ -84,14 +84,14 @@
 
 - (void) informExternalError:(NSError *)error
 {
-    NSLog(@"informExternalError");
+    WPLog(@"informExternalError");
     
     dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         // If the external delegate is listening for errors, send it
         if (self.batteryLevelDelegate && [self.batteryLevelDelegate respondsToSelector:@selector(didFailToGetBatteryLevelwithError:)]) {
             [self.batteryLevelDelegate didFailToGetBatteryLevelwithError:error];
-            NSLog(@"did inform external");
+            WPLog(@"did inform external");
         }
         
         [self cleanup];
@@ -100,14 +100,14 @@
 
 - (void) informExternalSuccess:(int) batteryLevel
 {
-    NSLog(@"informExternalSuccess");
+    WPLog(@"informExternalSuccess");
     
     dispatch_queue_t queue = self.config.callDelegateMethodsOnMainThread ? dispatch_get_main_queue() : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         // If the external delegate is listening for errors, send it
         if (self.batteryLevelDelegate && [self.batteryLevelDelegate respondsToSelector:@selector(didGetBatteryLevel:)]) {
             [self.batteryLevelDelegate didGetBatteryLevel:batteryLevel];
-            NSLog(@"did inform external");
+            WPLog(@"did inform external");
         }
         
         [self cleanup];
@@ -116,7 +116,7 @@
 
 - (void) cleanup
 {
-    NSLog(@"cleanup");
+    WPLog(@"cleanup");
     [self stopWaitingForReader];
     self.batteryLevelDelegate = nil;
     [self.roamDeviceManager releaseDevice];
@@ -127,17 +127,17 @@
 
 - (void) onConnected
 {
-    NSLog(@"WPBatteryHelper onConnected");
+    WPLog(@"WPBatteryHelper onConnected");
     self.isConnected = YES;
 
     [self stopWaitingForReader];
     
-    NSLog(@"stopped waiting, checking battery");
+    WPLog(@"stopped waiting, checking battery");
     
-    NSLog(@"roamDeviceManager: %@", self.roamDeviceManager);
+    WPLog(@"roamDeviceManager: %@", self.roamDeviceManager);
 
     [self.roamDeviceManager getBatteryStatus:^(RUAResponse *response) {
-        NSLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:response]);
+        WPLog(@"RUAResponse: %@", [WPRoamHelper RUAResponse_toDictionary:response]);
         
         NSDictionary *responseData = [WPRoamHelper RUAResponse_toDictionary:response];
         NSString *errorCode = [responseData objectForKey: [WPRoamHelper RUAParameter_toString:RUAParameterErrorCode]];
@@ -150,19 +150,19 @@
                 int batteryLevel = [[responseData objectForKey: [WPRoamHelper RUAParameter_toString:RUAParameterBatteryLevel]] intValue];
                 [self informExternalSuccess:batteryLevel];
             } else {
-                NSLog(@"unexpected command : %@", command);
+                WPLog(@"unexpected command : %@", command);
                 [self informExternalError:[WPError errorFailedToGetBatteryLevel]];
             }
         }
     }];
     
-    NSLog(@"getting battery info");
+    WPLog(@"getting battery info");
 
 }
 
 - (void) onDisconnected
 {
-    NSLog(@"WPBatteryHelper onDisconnected");
+    WPLog(@"WPBatteryHelper onDisconnected");
     
     if (self.isConnected) {
         self.isConnected = NO;
@@ -172,7 +172,7 @@
 
 - (void) onError:(NSString *)message
 {
-    NSLog(@"WPBatteryHelper onError: %@", message);
+    WPLog(@"WPBatteryHelper onError: %@", message);
 
     [self informExternalError:[WPError errorCardReaderUnknownError]];
 }

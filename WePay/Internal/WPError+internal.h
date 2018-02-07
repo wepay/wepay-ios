@@ -179,4 +179,46 @@
  */
 + (NSError *) errorCardReaderModelNotSupported;
 
+/**
+ *  Creates an NSError object representing invalid transaction amount error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionAmount;
+
+/**
+ *  Creates an NSError object representing invalid transaction currency code error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionCurrencyCode;
+
+/**
+ *  Creates an NSError object representing invalid transaction account id error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidTransactionAccountID;
+
+/**
+ *  Creates an NSError object representing card reader battery too low error.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderBatteryTooLow;
+
+/**
+ *  Creates an NSError object representing invalid card reader selection.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorInvalidCardReaderSelection;
+
+/**
+ *  Creates an NSError object representing inability to connect to card reader.
+ *
+ *  @return object representing the error.
+ */
++ (NSError *) errorCardReaderUnableToConnect;
+
 @end

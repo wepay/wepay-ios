@@ -35,7 +35,7 @@
     return dict;
 }
 
-- (NSString *)description {
+- (NSString *) description {
     
     NSError *error = nil;
     NSData *json;

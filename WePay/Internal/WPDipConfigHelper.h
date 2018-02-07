@@ -7,7 +7,7 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import <Foundation/Foundation.h>
 
@@ -30,7 +30,7 @@
  *
  *  @return YES if hash is different or not stored, NO otherwise.
  */
-- (BOOL)compareStoredConfigHashForKey:(NSString *)key;
+- (BOOL) compareStoredConfigHashForKey:(NSString *)key;
 
 /**
  *  Stores the current config hash for the given key.
@@ -47,7 +47,7 @@
 - (void) clearConfigHashForKey:(NSString *)key;
 
 
-- (NSArray *)TACsForAID:(NSString* )aid;
+- (NSArray *) TACsForAID:(NSString* )aid;
 
 @end
 

@@ -67,7 +67,7 @@
         [requestParams setObject:fallback forKey:@"emv_fallback"];
     }
     
-    NSLog(@"%@", requestParams);
+    WPLog(@"%@", requestParams);
     
     return requestParams;
 }

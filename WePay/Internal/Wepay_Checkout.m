@@ -212,7 +212,7 @@ const static CGFloat MAX_WIDTH = 256;
  *
  *  @return corrected bitap info
  */
-- (CGBitmapInfo)normalizeBitmapInfo:(CGBitmapInfo)oldBitmapInfo {
+- (CGBitmapInfo) normalizeBitmapInfo:(CGBitmapInfo)oldBitmapInfo {
     //extract the alpha info by resetting everything else
     CGImageAlphaInfo alphaInfo = oldBitmapInfo & kCGBitmapAlphaInfoMask;
 

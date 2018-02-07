@@ -13,6 +13,7 @@
 - (void) didGetBatteryLevel:(int)batteryLevel
 {
     self.successCallBackInvoked = YES;
+    self.batteryLevel = batteryLevel;
     
     if (self.batteryLevelSuccessBlock != nil) {
         self.batteryLevelSuccessBlock();

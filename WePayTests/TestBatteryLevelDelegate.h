@@ -16,6 +16,7 @@ typedef void(^BatteryLevelFailureBlock)(void);
 
 @property (nonatomic, assign) BOOL successCallBackInvoked;
 @property (nonatomic, assign) BOOL failureCallBackInvoked;
+@property (nonatomic, assign) int batteryLevel;
 @property (nonatomic, strong) BatteryLevelSuccessBlock batteryLevelSuccessBlock;
 @property (nonatomic, strong) BatteryLevelFailureBlock batteryLevelFailureBlock;
 @property (nonatomic, strong) NSError *error;

@@ -12,7 +12,7 @@
 #import "WPError+internal.h"
 #import <XCTest/XCTest.h>
 
-#define RP350X_CONNECTION_TIME_SEC 5
+#define CONNECTION_TIME_SEC 7
 
 @interface IntegrationTest : XCTestCase
 
@@ -140,7 +140,7 @@
 
 #pragma mark - Private helper method
 
-- (WPPaymentInfo *)getPaymentInfoWithCardNumber:(NSString *)cardNumber
+- (WPPaymentInfo *) getPaymentInfoWithCardNumber:(NSString *)cardNumber
 {
     WPPaymentInfo *paymentInfo = [[WPPaymentInfo alloc] initWithFirstName:@"WPiOS"
                                                                  lastName:@"Example"
@@ -155,7 +155,7 @@
     return paymentInfo;
 }
 
-- (UIImage *)getImageWithWidth:(CGFloat) width
+- (UIImage *) getImageWithWidth:(CGFloat) width
                      andHeight:(CGFloat) height
 {
     CGSize size = CGSizeMake(width, height);

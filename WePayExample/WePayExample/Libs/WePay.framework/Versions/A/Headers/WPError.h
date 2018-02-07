@@ -176,6 +176,36 @@ typedef enum WPErrorCode {
      *  -10035 Card reader model not supported.
      */
     WPErrorCardReaderModelNotSupported = -10035,
+    
+    /**
+     *  -10036 Invalid transaction amount.
+     */
+    WPErrorInvalidTransactionAmount = -10036,
+    
+    /**
+     *  -10037 Invalid transaction currency code.
+     */
+    WPErrorInvalidTransactionCurrencyCode = -10037,
+    
+    /**
+     *  -10038 Invalid transaction account id.
+     */
+    WPErrorInvalidTransactionAccountID = -10038,
+    
+    /**
+     *  -10039 Invalid card reader selection.
+     */
+    WPErrorInvalidCardReaderSelection = -10039,
+
+    /**
+     *  -10040 Card reader battery too low.
+     */
+	WPErrorCardReaderBatteryTooLow = -10040,
+
+    /**
+     *  -10041 Unable to connect to card reader.
+     */
+    WPErrorCardReaderUnableToConnect = -10041
 
 } WPErrorCode;
 
@@ -280,3 +310,33 @@ typedef enum WPErrorCode {
  *  The localizable user facing message for WPErrorCardReaderModelNotSupported, that can be retrieved by calling [error localizedDescription].
  */
 #define WPCardReaderModelNotSupportedErrorMessage NSLocalizedStringFromTable(@"This card reader model is not supported.", @"WePay",  @"This card reader model is not supported.");
+
+/**
+ * The localizable user facing message for WPErrorInvalidTransactionAmount, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionAmountErrorMessage NSLocalizedStringFromTable(@"The provided transaction amount is invalid.", @"WePay", @"The provided transaction amount is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidTransactionCurrencyCode, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionCurrencyCodeErrorMessage NSLocalizedStringFromTable(@"The provided currency code is invalid.", @"WePay",  @"The provided currency code is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidTransactionAccountID, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidTransactionAccountIDErrorMessage NSLocalizedStringFromTable(@"The provided account ID is invalid.", @"WePay",  @"The provided account ID is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorInvalidCardReaderSelection, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorInvalidCardReaderSelectionErrorMessage NSLocalizedStringFromTable(@"Card reader selection is invalid.", @"WePay",  @"Card reader selection is invalid.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderBatteryTooLow, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorCardReaderBatteryTooLowErrorMessage NSLocalizedStringFromTable(@"The card reader battery does not have enough charge. Please charge before using.", @"WePay",  @"The card reader battery does not have enough charge. Please charge before using.");
+
+/**
+ *  The localizable user facing message for WPErrorCardReaderUnsupportedOrBatteryTooLow, that can be retrieved by calling [error localizedDescription].
+ */
+#define WPErrorCardReaderUnableToConnectErrorMessage NSLocalizedStringFromTable(@"Please make sure you’re using a supported card reader and that it is fully charged.", @"WePay",  @"Please make sure you’re using a supported card reader and that it is fully charged.");

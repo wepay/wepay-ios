@@ -15,8 +15,6 @@
 #import "WPPaymentToken.h"
 #import "WPAuthorizationInfo.h"
 
-@class WePay_CardReader;
-
 @class WPConfig;
 @class WPPaymentInfo;
 @class WPPaymentToken;
@@ -341,12 +339,6 @@ didFailAuthorization:(NSError *)error;
  *  Any tokenization in progress will not be stopped, and its result will be delivered to the WPTokenizationDelegate.
  */
 - (void) stopCardReader;
-
-///**
-// *  Fetches information about the card reader that is currently connected.
-// */
-//- (void) fetchCardReaderInfoWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate;
-
 
 ///@}
 

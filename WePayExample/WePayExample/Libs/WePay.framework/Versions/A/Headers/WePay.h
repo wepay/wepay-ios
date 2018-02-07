@@ -14,38 +14,11 @@
 #import "WPPaymentInfo.h"
 #import "WPPaymentToken.h"
 #import "WPAuthorizationInfo.h"
+#import "WPConstantsExternal.h"
 
 @class WPConfig;
 @class WPPaymentInfo;
 @class WPPaymentToken;
-
-// Environments
-extern NSString * const kWPEnvironmentStage;
-extern NSString * const kWPEnvironmentProduction;
-
-// Payment Methods
-extern NSString * const kWPPaymentMethodSwipe;
-extern NSString * const kWPPaymentMethodManual;
-extern NSString * const kWPPaymentMethodDip;
-
-// Card Reader status
-extern NSString * const kWPCardReaderStatusNotConnected;
-extern NSString * const kWPCardReaderStatusConnected;
-extern NSString * const kWPCardReaderStatusCheckingReader;
-extern NSString * const kWPCardReaderStatusConfiguringReader;
-extern NSString * const kWPCardReaderStatusWaitingForCard;
-extern NSString * const kWPCardReaderStatusShouldNotSwipeEMVCard;
-extern NSString * const kWPCardReaderStatusCheckCardOrientation;
-extern NSString * const kWPCardReaderStatusChipErrorSwipeCard;
-extern NSString * const kWPCardReaderStatusSwipeErrorSwipeAgain;
-extern NSString * const kWPCardReaderStatusSwipeDetected;
-extern NSString * const kWPCardReaderStatusCardDipped;
-extern NSString * const kWPCardReaderStatusTokenizing;
-extern NSString * const kWPCardReaderStatusAuthorizing;
-extern NSString * const kWPCardReaderStatusStopped;
-
-// Currency Codes
-extern NSString * const kWPCurrencyCodeUSD;
 
 /**
  *  \protocol WPAuthorizationDelegate
@@ -53,18 +26,6 @@ extern NSString * const kWPCurrencyCodeUSD;
  */
 @protocol WPAuthorizationDelegate <NSObject>
 @required
-/**
- *  Called when the EMV card contains more than one application. The applications should be presented to the payer for selection. Once the payer makes a choice, you need to execute the completion block with the index of the selected application. The transaction cannot proceed until the completion block is executed.
- *  Example:
- *      completion(0);
- *
- *  @param applications    The array of NSStrings containing application names from the card.
- *  @param completion      The block to be executed with the index of the selected application.
- *  @param selectedIndex   The index of the selected application in the array of applications from the card.
- */
-- (void) selectEMVApplication:(NSArray *)applications
-                   completion:(void (^)(NSInteger selectedIndex))completion;
-
 /**
  *  Called when an authorization call succeeds.
  *
@@ -131,6 +92,18 @@ didFailAuthorization:(NSError *)error;
 @protocol WPCardReaderDelegate <NSObject>
 @required
 /**
+ *  Called when the EMV card contains more than one application. The applications should be presented to the payer for selection. Once the payer makes a choice, you need to execute the completion block with the index of the selected application. The transaction cannot proceed until the completion block is executed.
+ *  Example:
+ *      completion(0);
+ *
+ *  @param applications    The array of NSStrings containing application names from the card.
+ *  @param completion      The block to be executed with the index of the selected application.
+ *  @param selectedIndex   The index of the selected application in the array of applications from the card.
+ */
+- (void) selectEMVApplication:(NSArray *)applications
+                   completion:(void (^)(NSInteger selectedIndex))completion;
+
+/**
  *  Called when payment info is successfully obtained from a card.
  *
  *  @param paymentInfo The payment info.
@@ -144,11 +117,25 @@ didFailAuthorization:(NSError *)error;
  */
 - (void) didFailToReadPaymentInfoWithError:(NSError *)error;
 
+
+/**
+ * Called after detecting eligible card readers. Either present this card reader list to the merchant, or make some internal default choice. The transaction cannot proceed until the completion block is executed.
+ *  Example:
+ *      completion(0);
+ *
+ * @param cardreaderNames The list of detected card readers. Possible entries include "AUDIOJACK" or "MOB30*", where '*' indicates the last part of the card reader's serial number found on the back of the device.
+ * @param completion The block to be executed with the index of the selected card reader.
+ * @param selectedIndex The index of the selected card reader in the array of cardReaderNames.
+ */
+- (void) selectCardReader:(NSArray *)cardReaderNames
+               completion:(void (^)(NSInteger selectedIndex))completion;
+
 @optional
 /**
  *  Called when the card reader changes status.
  *
  *  @param status Current status of the card reader, one of:
+ *                kWPCardReaderStatusSearching;
  *                kWPCardReaderStatusNotConnected;
  *                kWPCardReaderStatusConnected;
  *                kWPCardReaderStatusCheckingReader;
@@ -306,7 +293,7 @@ didFailAuthorization:(NSError *)error;
  *
  *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusWaitingForCard, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
  *
- *  WARNING: When this method is called, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use the card reader.
+ *  WARNING: When this method is called, if the "AUDIOJACK" device is selected via the onReaderSelection: method in WPCardReaderDelegate, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use a card reader.
  *
  *  @param cardReaderDelegate   The delegate class which will receive the response(s) for this call.
  */
@@ -324,7 +311,7 @@ didFailAuthorization:(NSError *)error;
  *
  *  However, if a general error (domain:kWPErrorCategoryCardReader, errorCode:WPErrorCardReaderGeneralError) occurs while reading, after a few seconds delay, the card reader will automatically start waiting again for another 60 seconds. At that time, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusWaitingForCard, and the user can try to use the card reader again. This behavior can be configured with \ref WPConfig.
  *
- *  WARNING: When this method is called, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use the card reader.
+ *  WARNING: When this method is called, if the "AUDIOJACK" device is selected via the onReaderSelection: method in WPCardReaderDelegate, a (normally inaudible) signal is sent to the headphone jack of the phone, where the card reader is expected to be connected. If headphones are connected instead of the card reader, they may emit a very loud audible tone on receiving this signal. This method should only be called when the user intends to use a card reader.
  *
  *  @param cardReaderDelegate    The delegate class which will receive the card reader response(s) for this call.
  *  @param tokenizationDelegate  The delegate class which will receive the tokenization response(s) for this call.
@@ -335,8 +322,9 @@ didFailAuthorization:(NSError *)error;
                                        authorizationDelegate:(id<WPAuthorizationDelegate>) authorizationDelegate;
 
 /**
- *  Stops the card reader. In response, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusStopped.
- *  Any tokenization in progress will not be stopped, and its result will be delivered to the WPTokenizationDelegate.
+ *  Stops the card reader. In response, WPCardReaderDelegate's cardReaderDidChangeStatus: method will be called with kWPCardReaderStatusStopped. The status can only be returned if you've provided a WPCardReaderDelegate by starting a card reader operation after the WePay object was initialized.
+ *  Any operation in progress may not stop, and its result will be delivered to the appropriate delegate.
+ *
  */
 - (void) stopCardReader;
 
@@ -375,9 +363,32 @@ didFailAuthorization:(NSError *)error;
 /**
  *  Gets the current battery level of the card reader.
  *
+ *  @param cardReaderDelegate the delegate class which will receive the card reader response(s) for this call.
  *  @param batteryLevelDelegate the delegate class which will receive the battery level response(s) for this call.
  */
-- (void) getCardReaderBatteryLevelWithBatteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
+- (void) getCardReaderBatteryLevelWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate
+                                    batteryLevelDelegate:(id<WPBatteryLevelDelegate>) batteryLevelDelegate;
+
+///@}
+
+#pragma mark -
+#pragma mark Remember card reader
+
+/** @name Remember card reader related methods
+ */
+///@{
+
+/**
+ *  Gets the name of the most recently used card reader.
+ *
+ *  @return the name of the card reader.
+ */
+- (NSString *) getRememberedCardReader;
+
+/**
+ * Clears the name of the most recently used card reader.
+ */
+- (void) forgetRememberedCardReader;
 
 ///@}
 

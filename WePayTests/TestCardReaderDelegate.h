@@ -11,10 +11,13 @@
 
 typedef void(^StatusChangeBlock)(id status);
 typedef void(^ReadSuccessBlock)(void);
-typedef void(^ReadFailureBlock)(void);
+typedef void(^ReadFailureBlock)(NSError *);
+typedef void (^SelectCardReaderBlock)(void (^didSelectIndex) (NSInteger));
 
 @interface TestCardReaderDelegate : NSObject <WPCardReaderDelegate>
 
+@property (nonatomic, assign) BOOL selectEMVApplicationInvoked;
+@property (nonatomic, assign) BOOL mockEMVApplicationSelectionError;
 @property (nonatomic, assign) BOOL successCallBackInvoked;
 @property (nonatomic, assign) BOOL failureCallBackInvoked;
 @property (nonatomic, assign) BOOL cardReaderStatusNotConnectedInvoked;
@@ -23,12 +26,15 @@ typedef void(^ReadFailureBlock)(void);
 @property (nonatomic, assign) BOOL shouldResetCardReaderInvoked;
 @property (nonatomic, assign) BOOL shouldResetCardReader;
 @property (nonatomic, assign) BOOL returnFromAuthorizeAmount;
+@property (nonatomic, assign) BOOL selectCardReaderInvoked;
 @property (nonatomic, strong) StatusChangeBlock statusChangeBlock;
 @property (nonatomic, strong) ReadSuccessBlock readSuccessBlock;
 @property (nonatomic, strong) ReadFailureBlock readFailureBlock;
+@property (nonatomic, strong) SelectCardReaderBlock selectCardReaderBlock;
 @property (nonatomic, strong) WPPaymentInfo *paymentInfo;
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) NSString *authorizedAmount;
 @property (nonatomic, assign) long accountId;
+@property (nonatomic, assign) NSInteger selectedCardReaderIndex;
 
 @end

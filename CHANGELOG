@@ -1,3 +1,21 @@
+2018-02-06
+* Released version 7.0.0
+* Added logLevel property to WPConfig
+* Added logLevel parameter to designated initializer in WPConfig
+* Added new error code WPErrorCardReaderUnableToConnect to WPError.h
+* Moved selectEMVApplication:completion: from WPAuthorizationDelegate to WPCardReaderDelegate
+* Added selectCardReader:completion: to WPCardReaderDelegate that's called when the SDK finds card readers
+* Added new status (kWPCardReaderStatusSearching) that indicates the SDK is searching for card readers
+* Changed getCardReaderBatteryLevelWithBatteryLevelDelegate: to getCardReaderBatteryLevelWithCardReaderDelegate:batteryLevelDelegate: in WePay.h so the SDK can call back with the appropriate statuses
+* Added getRememberedCardReader in WePay.h to retrieve the name of the most recently connected card reader
+* Added forgetRememberedCardReader in WePay.h to tell the SDK to forget the most recently connected card reader name
+* Renamed WPConfig.stopCardReaderAfterTransaction to WPConfig.stopCardReaderAfterOperation
+* Added WPMockConfig.mockCardReaderIsDetected
+* Added new error codes WPErrorInvalidCardReaderSelection and WPErrorCardReaderBatteryTooLow
+* The most recently connected card reader is now remembered and used when discovered.
+* Added support for Moby 3000 bluetooth card reader
+* Replaced WPErrorInvalidAuthInfo with more explicit error codes
+
 2016-12-13
 * Released version 6.0.0
 * Added APIs for fetching card reader battery levels

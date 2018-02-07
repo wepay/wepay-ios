@@ -13,7 +13,7 @@
 #define SETTINGS_ENVIRONMENT_KEY @"settingEnvironment"
 #define SETTINGS_ACCOUNT_ID_KEY @"settingAccountId"
 
-#define EMV_AMOUNT_STRING @"22.61" // Magic success amount
+#define EMV_AMOUNT_STRING @"21.61" // Magic success amount
 #define EMV_READER_SHOULD_RESET NO
 #define EMV_SELECT_APP_INDEX 0
 
@@ -23,18 +23,13 @@
 
 @property (nonatomic, strong) WePay *wepay;
 
-@property (nonatomic, weak) IBOutlet UIButton *swipeInfoBtn;
-@property (nonatomic, weak) IBOutlet UIButton *swipeTokenBtn;
-@property (nonatomic, weak) IBOutlet UIButton *stopReaderBtn;
-@property (nonatomic, weak) IBOutlet UIButton *manualEntryBtn;
-@property (nonatomic, weak) IBOutlet UIButton *submitSignatureBtn;
-@property (nonatomic, weak) IBOutlet UIButton *batteryLevelBtn;
-
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
 @property (nonatomic, weak) IBOutlet UITextView *textView;
 @property (nonatomic, weak) IBOutlet UIView *containerView;
 
 @property (assign, nonatomic) long accountId;
+@property (assign, nonatomic) BOOL cardReaderStarted;
+@property (strong, nonatomic, nullable) void (^selectCardReaderCompletion) (NSInteger);
 
 @end
 
@@ -52,8 +47,8 @@
     
     // Allow WePay to use location services
     config.useLocation = YES;
-    config.stopCardReaderAfterTransaction = NO;
-    config.restartTransactionAfterOtherErrors = YES;
+    config.stopCardReaderAfterOperation = NO;
+    config.restartTransactionAfterOtherErrors = NO;
     
     if (USE_MOCK) {
         // To use mock card reader and/or WPClient implementation
@@ -106,33 +101,6 @@
 
 - (void) setupUserInterface
 {
-    self.containerView.layer.borderWidth = 1.0;
-    self.containerView.layer.cornerRadius = 8;
-    
-    self.swipeInfoBtn.layer.borderWidth = 1.0;
-    self.swipeInfoBtn.layer.cornerRadius = 8;
-    
-    self.swipeTokenBtn.layer.borderWidth = 1.0;
-    self.swipeTokenBtn.layer.cornerRadius = 8;
-
-    self.stopReaderBtn.layer.borderWidth = 1.0;
-    self.stopReaderBtn.layer.cornerRadius = 8;
-    
-    self.manualEntryBtn.layer.borderWidth = 1.0;
-    self.manualEntryBtn.layer.cornerRadius = 8;
-
-    self.submitSignatureBtn.layer.borderWidth = 1.0;
-    self.submitSignatureBtn.layer.cornerRadius = 8;
-    
-    self.batteryLevelBtn.layer.borderWidth = 1.0;
-    self.batteryLevelBtn.layer.cornerRadius = 8;
-    
-    self.statusLabel.layer.borderWidth = 1.0;
-    self.statusLabel.layer.cornerRadius = 8;
-    
-    self.textView.layer.borderWidth = 1.0;
-    self.textView.layer.cornerRadius = 8;
-    
     [self showStatus:@"Choose a payment method"];
 }
 
@@ -149,6 +117,9 @@
 
     // Make WePay API call
     [self.wepay startTransactionForReadingWithCardReaderDelegate:self];
+    
+    // Remember that we've started the card reader, to show the right message while stopping
+    self.cardReaderStarted = YES;
 }
 
 - (IBAction) swipeTokenButtonPressed:(id)sender
@@ -166,12 +137,15 @@
     [self.wepay startTransactionForTokenizingWithCardReaderDelegate:self
                                               tokenizationDelegate:self
                                              authorizationDelegate:self];
+    
+    // Remember that we've started the card reader, to show the right message while stopping
+    self.cardReaderStarted = YES;
 }
 
 - (IBAction) stopCardReaderButtonPressed:(id)sender
 {
-    // Change status label
-    [self showStatus:@"Stopping Card Reader"];
+    // Change status label depending on whether or not a reader was used
+    [self showStatus:self.cardReaderStarted ? @"Stopping Card Reader" : @"Card reader not started"];
 
     // Print message to screen
     NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"Stop Card Reader selected"
@@ -249,7 +223,39 @@
                                ];
     [self consoleLog:str];
     
-    [self.wepay getCardReaderBatteryLevelWithBatteryLevelDelegate:self];
+    [self.wepay getCardReaderBatteryLevelWithCardReaderDelegate:self batteryLevelDelegate:self];
+    
+    // Remember that we've started the card reader, to show the right message while stopping
+    self.cardReaderStarted = YES;
+}
+
+- (IBAction) getRememberedCardReaderButtonPressed:(id)sender
+{
+    [self showStatus:@"Getting remembered card reader"];
+    
+    // Print message to screen
+    NSString *cardReader = [self.wepay getRememberedCardReader];
+    NSString *rememberedCardReaderMessage = @"No remembered card reader exists";
+    
+    if (cardReader) {
+        rememberedCardReaderMessage = [NSString stringWithFormat:@"Remembered card reader is %@", cardReader];
+    }
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:rememberedCardReaderMessage
+                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
+                               ];
+    [self consoleLog:str];
+}
+
+- (IBAction) forgetRememberedCardReaderButtonPressed:(id)sender
+{
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"Forgot the remembered card reader"
+                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
+                               ];
+    
+    [self showStatus:@"Forgetting remembered card reader"];
+    [self.wepay forgetRememberedCardReader];
+    
+    [self consoleLog:str];
 }
 
 
@@ -282,6 +288,90 @@
 
 #pragma mark - WPCardReaderDelegateMethods
 
+- (void) cardReaderDidChangeStatus:(id)status
+{
+    // Print message to screen
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"cardReaderDidChangeStatus: "];
+    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[status description]
+                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
+                                ];
+    
+    [str appendAttributedString:info];
+    
+    [self consoleLog:str];
+    
+    // Change status label
+    if (status == kWPCardReaderStatusNotConnected) {
+        [self showStatus:@"Connect Card Reader"];
+    } else if (status == kWPCardReaderStatusWaitingForCard) {
+        [self showStatus:@"Swipe/Dip Card"];
+    } else if (status == kWPCardReaderStatusSwipeDetected) {
+        [self showStatus:@"Swipe Detected..."];
+    } else if (status == kWPCardReaderStatusTokenizing) {
+        [self showStatus:@"Tokenizing..."];
+    } else if (status == kWPCardReaderStatusStopped) {
+        [self showStatus:@"Card Reader Stopped"];
+    } else {
+        [self showStatus:[status description]];
+    }
+}
+
+- (void) selectCardReader:(NSArray *)cardReaderNames
+               completion:(void (^)(NSInteger selectedIndex))completion
+{
+    UIActionSheet *selectController = [[UIActionSheet alloc] initWithTitle:@"Choose a card reader device" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:nil];
+    selectController.actionSheetStyle = UIActionSheetStyleDefault;
+    
+    for (NSString *cardReaderName in cardReaderNames) {
+        [selectController addButtonWithTitle:cardReaderName];
+    }
+    
+    self.selectCardReaderCompletion = completion;
+    [selectController showInView:self.view];
+}
+
+- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
+{
+    // Change this to YES if you want to reset the card reader
+    completion(EMV_READER_SHOULD_RESET);
+}
+
+- (void) selectEMVApplication:(NSArray *)applications
+                   completion:(void (^)(NSInteger selectedIndex))completion
+{
+    // In production apps, the payer must choose the application they want to use.
+    // Here, we always select the first application in the array
+    int selectedIndex = (int)EMV_SELECT_APP_INDEX;
+    
+    // Print message to console
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"Select App Id: \n"];
+    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[applications description]
+                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
+                                ];
+    
+    [str appendAttributedString:info];
+    [self consoleLog:str];
+    
+    str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Selected App Id index: %d", selectedIndex]];
+    [self consoleLog:str];
+    
+    // execute the completion
+    completion(selectedIndex);
+}
+
+- (void) insertPayerEmailWithCompletion:(void (^)(NSString *email))completion
+{
+    NSString *email = @"emv@example.com";
+    
+    // Print message to console
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@"Providing email: " stringByAppendingString:email]
+                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
+                               ];
+    [self consoleLog:str];
+    
+    completion(email);
+}
+
 - (void) didReadPaymentInfo:(WPPaymentInfo *)paymentInfo
 {
     // Print message to screen
@@ -311,40 +401,6 @@
     
     // Change status label
     [self showStatus:@"Card Reader error"];
-}
-
-- (void) cardReaderDidChangeStatus:(id)status
-{
-    // Print message to screen
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"cardReaderDidChangeStatus: "];
-    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[status description]
-                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
-                                ];
-    
-    [str appendAttributedString:info];
-    
-    [self consoleLog:str];
-    
-    // Change status label
-    if (status == kWPCardReaderStatusNotConnected) {
-        [self showStatus:@"Connect Card Reader"];
-    } else if (status == kWPCardReaderStatusWaitingForCard) {
-        [self showStatus:@"Swipe/Dip Card"];
-    } else if (status == kWPCardReaderStatusSwipeDetected) {
-        [self showStatus:@"Swipe Detected..."];
-    } else if (status == kWPCardReaderStatusTokenizing) {
-        [self showStatus:@"Tokenizing..."];
-    } else if (status == kWPCardReaderStatusStopped) {
-        [self showStatus:@"Card Reader Stopped"];
-    } else {
-        [self showStatus:[status description]];
-    }
-}
-
-- (void) shouldResetCardReaderWithCompletion:(void (^)(BOOL))completion
-{
-    // Change this to YES if you want to reset the card reader
-    completion(EMV_READER_SHOULD_RESET);
 }
 
 - (void) authorizeAmountWithCompletion:(void (^)(NSDecimalNumber *amount, NSString *currencyCode, long accountId))completion
@@ -439,42 +495,6 @@
 
 #pragma mark - WPAuthorizationDelegate methods
 
-- (void) selectEMVApplication:(NSArray *)applications
-                   completion:(void (^)(NSInteger selectedIndex))completion
-{
-    // In production apps, the payer must choose the application they want to use.
-    // Here, we always select the first application in the array
-    int selectedIndex = (int)EMV_SELECT_APP_INDEX;
-
-    // Print message to console
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"Select App Id: \n"];
-    NSAttributedString *info = [[NSAttributedString alloc] initWithString:[applications description]
-                                                               attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0 blue:1 alpha:1]}
-                                ];
-
-    [str appendAttributedString:info];
-    [self consoleLog:str];
-
-    str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"Selected App Id index: %d", selectedIndex]];
-    [self consoleLog:str];
-
-    // execute the completion
-    completion(selectedIndex);
-}
-
-- (void) insertPayerEmailWithCompletion:(void (^)(NSString *email))completion
-{
-    NSString *email = @"emv@example.com";
-
-    // Print message to console
-    NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@"Providing email: " stringByAppendingString:email]
-                                                              attributes:@{NSForegroundColorAttributeName: [UIColor colorWithRed:0 green:0.2 blue:0 alpha:1]}
-                               ];
-    [self consoleLog:str];
-
-    completion(email);
-}
-
 - (void) paymentInfo:(WPPaymentInfo *)paymentInfo
         didAuthorize:(WPAuthorizationInfo *)authorizationInfo
 {
@@ -542,6 +562,13 @@ didFailAuthorization:(NSError *)error
     
     // Change status label
     [self showStatus:@"Battery Level error"];
+}
+
+#pragma mark - UIActionSheetDelegate methods
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    self.selectCardReaderCompletion(buttonIndex - 1);
 }
 
 @end

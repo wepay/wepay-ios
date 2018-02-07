@@ -7,10 +7,10 @@
 //
 
 #if defined(__has_include)
-#if __has_include("RPx/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA/RUA.h") 
+#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
 
 #import <Foundation/Foundation.h>
-#import <RUA/RUA.h>
+#import <RUA_MFI/RUA.h>
 #import "WePay.h"
 
 @interface WPBatteryHelper : NSObject <RUADeviceStatusHandler>
