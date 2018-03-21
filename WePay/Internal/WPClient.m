@@ -13,8 +13,8 @@
 
 @implementation WPClient
 
-static NSString * const SDK_VERSION = @"v7.0.0";
-static NSString * const WEPAY_API_VERSION = @"2016-03-30";
+static NSString * const SDK_VERSION = @"v7.0.1";
+static NSString * const WEPAY_API_VERSION = @"2017-05-31";
 
 #pragma mark config class property
 
@@ -147,7 +147,7 @@ static WPConfig *config;
     // Get json from nsdictionary parameter
     NSData *requestData = [NSJSONSerialization dataWithJSONObject: params options: kNilOptions error: &parseError];
     [request setHTTPBody: requestData];
-
+    
     if (parseError) {
         errorHandler(parseError);
     } else {

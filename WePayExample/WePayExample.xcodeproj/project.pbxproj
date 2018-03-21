@@ -101,11 +101,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
 				D7378AE21E4E8C9C00CDB7BC /* libz.tbd in Frameworks */,
 				7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */,
 				7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */,
 				7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */,
-				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
 				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
 				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
 				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,

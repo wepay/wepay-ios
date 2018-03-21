@@ -106,6 +106,24 @@
     NSString *name = [self fullNameFromPaymentInfo:paymentInfo];
     NSDictionary *manualInfo = (NSDictionary *)paymentInfo.manualInfo;
     
+    // Convert the paymentInfo billing address into the international address format.
+    NSDictionary *addressParams = [paymentInfo.billingAddress toDict];
+    NSMutableDictionary *transformedAddressParams = [NSMutableDictionary dictionary];
+    
+    for (id key in addressParams) {
+        id value = [addressParams objectForKey:key];
+        if (value != [NSNull null]) {
+            NSString *keyString = (NSString *) key;
+            if ([keyString isEqualToString:@"zip"] || [keyString isEqualToString:@"postcode"]) {
+                [transformedAddressParams setObject:value forKey:@"postal_code"];
+            } else if ([keyString isEqualToString:@"state"]) {
+                [transformedAddressParams setObject:value forKey:@"region"];
+            } else {
+                [transformedAddressParams setObject:value forKey:key];
+            }
+        }
+    }
+    
     NSMutableDictionary *requestParams = [@{
                                     @"client_id":self.config.clientId,
                                     @"cc_number":[manualInfo objectForKey:@"cc_number"],
@@ -114,7 +132,7 @@
                                     @"expiration_year":[manualInfo objectForKey:@"expiration_year"],
                                     @"user_name": name ? name : [NSNull null],
                                     @"email": paymentInfo.email ? paymentInfo.email : [NSNull null],
-                                    @"address": [paymentInfo.billingAddress toDict]
+                                    @"address":transformedAddressParams
                                     } mutableCopy];
     if (paymentInfo.isVirtualTerminal) {
         [requestParams setObject:@"mobile" forKey:@"virtual_terminal"];

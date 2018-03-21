@@ -520,8 +520,19 @@ NSString *const kRP350XModelName = @"RP350X";
         [self reactToError:nil];
 
     } else {
-        // complete the transaction
-        [self performEMVCompleteTransactionCommand];
+        if (self.authorizationError == nil) {
+            // short circuit the cryptogram request to the card via the reader
+            // since we did not authorize the card and received no transaction cryptogram
+            [self reportAuthorizationSuccess:[self createAuthInfoWithTC:MAGIC_TC
+                                                           creditCardId:self.creditCardId]
+                                                                orError:nil
+                                                         forPaymentInfo:self.paymentInfo];
+        } else {
+            // we found an error, return it
+            [self reportAuthorizationSuccess:nil orError:self.authorizationError forPaymentInfo:self.paymentInfo];
+        }
+        
+        [self reactToError:self.authorizationError];
     }
 
 }

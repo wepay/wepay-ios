@@ -105,6 +105,7 @@ static CBCentralManager *bluetoothManager = nil;
         }
     } else if ([self isAudioJackPluggedIn]) {
         // If Bluetooth is not enabled, we can only use a headphone jack device.
+        WPLog(@"Manually creating AUDIOJACK device since it was not detected, but a device is plugged into the audio jack.");
         RUADevice *audioJackDevice = [[RUADevice alloc] initWithName:@"AUDIOJACK"
                                                       withIdentifier:@"AUDIOJACK"
                                           withCommunicationInterface:RUACommunicationInterfaceAudioJack];
@@ -162,10 +163,11 @@ static CBCentralManager *bluetoothManager = nil;
 
 - (BOOL) isAudioJackPluggedIn {
     AVAudioSessionRouteDescription *route = [[AVAudioSession sharedInstance] currentRoute];
-    BOOL result = NO;
-    
+    BOOL result = self.config.mockConfig && self.config.mockConfig.useMockCardReader;
+        
     for (AVAudioSessionPortDescription* description in [route outputs]) {
         if ([AVAudioSessionPortHeadphones isEqualToString:[description portType]]) {
+            WPLog(@"Detected that something is plugged into the audio jack.");
             result = YES;
             break;
         }
@@ -186,7 +188,9 @@ static CBCentralManager *bluetoothManager = nil;
     WPLog(@"onDeviceDiscovered %@", reader.name);
     
     BOOL isMoby = reader.name && [reader.name hasPrefix:@"MOB30"];
-    BOOL isAudioJack = reader.name && [reader.name isEqualToString:@"AUDIOJACK"];
+    // We check if something is plugged into AUDIOJACK because ROAM incorrectly detects
+    // a device there on some versions of iOS.
+    BOOL isAudioJack = reader.name && [reader.name isEqualToString:@"AUDIOJACK"] && [self isAudioJackPluggedIn];
     
     if (isMoby || isAudioJack) {
         WPLog(@"add device: %@", reader.name);
