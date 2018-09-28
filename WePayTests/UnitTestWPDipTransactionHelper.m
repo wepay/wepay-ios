@@ -6,7 +6,7 @@
 //  Copyright © 2016 WePay. All rights reserved.
 //
 #if defined(__has_include)
-#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
+#if __has_include("RUA_MFI/RUA.h")
 
 #import <XCTest/XCTest.h>
 #import "WPConfig.h"

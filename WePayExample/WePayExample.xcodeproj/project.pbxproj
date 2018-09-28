@@ -21,28 +21,20 @@
 		574173E91A37F39700B73D95 /* manual.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E41A37F39700B73D95 /* manual.png */; };
 		574173EA1A37F39700B73D95 /* swipe info.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E51A37F39700B73D95 /* swipe info.png */; };
 		574173EB1A37F39700B73D95 /* swipe tokenize.png in Resources */ = {isa = PBXBuildFile; fileRef = 574173E61A37F39700B73D95 /* swipe tokenize.png */; };
-		57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC41A1AE8DB0092B3AA /* SystemConfiguration.framework */; };
-		57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC61A1AE9060092B3AA /* AVFoundation.framework */; };
-		57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */; };
-		57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */; };
-		57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCE1A1AEAFB0092B3AA /* CoreFoundation.framework */; };
-		57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD01A1AEB050092B3AA /* UIKit.framework */; };
-		57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BD21A1AEBAB0092B3AA /* CoreBluetooth.framework */; };
-		57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
-		57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */; };
-		57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */; };
-		7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */; };
-		7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */; };
-		7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */; };
 		9C2FFCFC1D401F5D00294BB0 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
 		C33405E81E6DDFAF00CF2C59 /* forget_remembered_reader.png in Resources */ = {isa = PBXBuildFile; fileRef = C33405E61E6DDFAF00CF2C59 /* forget_remembered_reader.png */; };
 		C33405E91E6DDFAF00CF2C59 /* get_remembered_reader.png in Resources */ = {isa = PBXBuildFile; fileRef = C33405E71E6DDFAF00CF2C59 /* get_remembered_reader.png */; };
-		D7378AE21E4E8C9C00CDB7BC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D7378AE11E4E8C9C00CDB7BC /* libz.tbd */; };
+		C35515A221470D38008AA494 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C45AC21B4E04120007E918 /* WePay.framework */; };
+		C398A3C721498A6F00017E06 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BC61A1AE9060092B3AA /* AVFoundation.framework */; };
+		C398A3C821498A9200017E06 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCA1A1AE9700092B3AA /* AudioToolbox.framework */; };
+		C398A3C921498ACE00017E06 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D7378AE11E4E8C9C00CDB7BC /* libz.tbd */; };
+		C398A3CA21498ADC00017E06 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C355159D21470B4C008AA494 /* libc++.tbd */; };
+		C398A3CB21498BB500017E06 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57664BCC1A1AE9800092B3AA /* MediaPlayer.framework */; };
+		C398A3CC21498BC400017E06 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */; };
+		C398A3CD214990D500017E06 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C355159921470A70008AA494 /* WebKit.framework */; };
 		D77FBA191D9D781B0078961A /* card_reader_battery.png in Resources */ = {isa = PBXBuildFile; fileRef = D77FBA181D9D781B0078961A /* card_reader_battery.png */; };
 		D7F2C4A420254639005737C4 /* WePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7F2C49F20254639005737C4 /* WePay.framework */; };
 		D7F2C4A820254647005737C4 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D7378AE11E4E8C9C00CDB7BC /* libz.tbd */; };
-		D7F2C4A920254651005737C4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */; };
-		D7F2C4AA2025465E005737C4 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,10 +79,11 @@
 		57CB382F1ACCDCF900C8A6B2 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		57CB38311ACCF2D300C8A6B2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7E5BFAE41DF23E3E00AB77D8 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
-		7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
-		7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		C33405E61E6DDFAF00CF2C59 /* forget_remembered_reader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forget_remembered_reader.png; path = Resources/forget_remembered_reader.png; sourceTree = "<group>"; };
 		C33405E71E6DDFAF00CF2C59 /* get_remembered_reader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = get_remembered_reader.png; path = Resources/get_remembered_reader.png; sourceTree = "<group>"; };
+		C355159921470A70008AA494 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		C355159D21470B4C008AA494 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		C398A3C521498A4500017E06 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		D7378AE11E4E8C9C00CDB7BC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		D77FBA181D9D781B0078961A /* card_reader_battery.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = card_reader_battery.png; path = Resources/card_reader_battery.png; sourceTree = "<group>"; };
 		D7F2C49F20254639005737C4 /* WePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WePay.framework; path = WePayExample/libs/WePay.framework; sourceTree = "<group>"; };
@@ -101,20 +94,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57C45AC31B4E04120007E918 /* WePay.framework in Frameworks */,
-				D7378AE21E4E8C9C00CDB7BC /* libz.tbd in Frameworks */,
-				7E5BFAEF1DF241D100AB77D8 /* libstdc++.6.0.9.tbd in Frameworks */,
-				7E5BFAED1DF241AB00AB77D8 /* libstdc++.tbd in Frameworks */,
-				7E5BFAE51DF23E3E00AB77D8 /* ExternalAccessory.framework in Frameworks */,
-				57CB38321ACCF2D300C8A6B2 /* CoreLocation.framework in Frameworks */,
-				57CB38301ACCDCF900C8A6B2 /* CoreTelephony.framework in Frameworks */,
-				57664BD31A1AEBAB0092B3AA /* CoreBluetooth.framework in Frameworks */,
-				57664BD11A1AEB050092B3AA /* UIKit.framework in Frameworks */,
-				57664BCF1A1AEAFB0092B3AA /* CoreFoundation.framework in Frameworks */,
-				57664BCD1A1AE9800092B3AA /* MediaPlayer.framework in Frameworks */,
-				57664BCB1A1AE9700092B3AA /* AudioToolbox.framework in Frameworks */,
-				57664BC71A1AE9060092B3AA /* AVFoundation.framework in Frameworks */,
-				57664BC51A1AE8DB0092B3AA /* SystemConfiguration.framework in Frameworks */,
+				C398A3C821498A9200017E06 /* AudioToolbox.framework in Frameworks */,
+				C398A3C721498A6F00017E06 /* AVFoundation.framework in Frameworks */,
+				C398A3CC21498BC400017E06 /* ExternalAccessory.framework in Frameworks */,
+				C398A3CB21498BB500017E06 /* MediaPlayer.framework in Frameworks */,
+				C398A3CD214990D500017E06 /* WebKit.framework in Frameworks */,
+				C35515A221470D38008AA494 /* WePay.framework in Frameworks */,
+				C398A3CA21498ADC00017E06 /* libc++.tbd in Frameworks */,
+				C398A3C921498ACE00017E06 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,8 +109,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7F2C4AA2025465E005737C4 /* libstdc++.tbd in Frameworks */,
-				D7F2C4A920254651005737C4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				D7F2C4A820254647005737C4 /* libz.tbd in Frameworks */,
 				D7F2C4A420254639005737C4 /* WePay.framework in Frameworks */,
 				9C2FFCFC1D401F5D00294BB0 /* WePay.framework in Frameworks */,
@@ -137,8 +122,6 @@
 			isa = PBXGroup;
 			children = (
 				D7378AE11E4E8C9C00CDB7BC /* libz.tbd */,
-				7E5BFAEE1DF241D100AB77D8 /* libstdc++.6.0.9.tbd */,
-				7E5BFAEC1DF241AB00AB77D8 /* libstdc++.tbd */,
 				570693AF1A02FF3800182EA2 /* WePayExample */,
 				570693C91A02FF3800182EA2 /* WePayExampleTests */,
 				570693AE1A02FF3800182EA2 /* Products */,
@@ -236,6 +219,9 @@
 		D7F2C49C20254638005737C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C398A3C521498A4500017E06 /* CoreAudio.framework */,
+				C355159D21470B4C008AA494 /* libc++.tbd */,
+				C355159921470A70008AA494 /* WebKit.framework */,
 				D7F2C49F20254639005737C4 /* WePay.framework */,
 			);
 			name = Frameworks;
@@ -434,7 +420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -473,7 +459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -496,7 +482,7 @@
 					"$(PROJECT_DIR)/WePayExample/libs",
 				);
 				INFOPLIST_FILE = WePayExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DRUA_MFI";
@@ -522,7 +508,7 @@
 					"$(PROJECT_DIR)/WePayExample/libs",
 				);
 				INFOPLIST_FILE = WePayExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DRUA_MFI";

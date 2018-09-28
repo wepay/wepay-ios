@@ -17,8 +17,6 @@
 		8DAB3F821BDEE40400B8BA98 /* SwiftAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DAB3F811BDEE40400B8BA98 /* SwiftAppTests.swift */; };
 		9A7915757E84A3ECDF17164F /* Pods_SwiftApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462228E5D58440F523F244A5 /* Pods_SwiftApp.framework */; };
 		C3526B4E1E6A1360003E814B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C3526B4D1E6A1360003E814B /* libz.tbd */; };
-		C3526B501E6A137A003E814B /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C3526B4F1E6A137A003E814B /* libstdc++.tbd */; };
-		D730C58B1D95FC32008BB3DC /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D730C58A1D95FC32008BB3DC /* libstdc++.6.0.9.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,8 +46,6 @@
 		8DAB3F831BDEE40400B8BA98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A607ECA502BAA465D28BD72A /* Pods-SwiftApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftApp/Pods-SwiftApp.release.xcconfig"; sourceTree = "<group>"; };
 		C3526B4D1E6A1360003E814B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		C3526B4F1E6A137A003E814B /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
-		D730C58A1D95FC32008BB3DC /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		DA565C9F9F967F98E02D1A19 /* Pods-SwiftApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftApp/Pods-SwiftApp.debug.xcconfig"; sourceTree = "<group>"; };
 		F72E6616DC2591FFE3DE2921 /* Pods-SwiftAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftAppTests/Pods-SwiftAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		FBED3BAC0AD084CA81B03640 /* Pods-SwiftAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftAppTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftAppTests/Pods-SwiftAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -61,8 +57,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3526B4E1E6A1360003E814B /* libz.tbd in Frameworks */,
-				D730C58B1D95FC32008BB3DC /* libstdc++.6.0.9.tbd in Frameworks */,
-				C3526B501E6A137A003E814B /* libstdc++.tbd in Frameworks */,
 				9A7915757E84A3ECDF17164F /* Pods_SwiftApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,9 +130,7 @@
 		F9FD45A6F0BF43BA8C726C11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C3526B4F1E6A137A003E814B /* libstdc++.tbd */,
 				C3526B4D1E6A1360003E814B /* libz.tbd */,
-				D730C58A1D95FC32008BB3DC /* libstdc++.6.0.9.tbd */,
 				462228E5D58440F523F244A5 /* Pods_SwiftApp.framework */,
 				4E8CF737205FC70D5AC48EF2 /* Pods_SwiftAppTests.framework */,
 			);
@@ -503,7 +495,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"stdc++.6.0.9\"",
 					"-framework",
 					"\"AVFoundation\"",
 					"-framework",
@@ -554,7 +545,6 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
-					"-l\"stdc++.6.0.9\"",
 					"-framework",
 					"\"AVFoundation\"",
 					"-framework",

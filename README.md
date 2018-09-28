@@ -34,16 +34,12 @@ The [SwiftExample app](https://github.com/wepay/wepay-ios/tree/master/SwiftExamp
 + Include the following iOS frameworks:
     - AudioToolbox.framework
     - AVFoundation.framework
-    - CoreBluetooth.framework
-    - CoreLocation.framework
-    - CoreTelephony.framework
     - ExternalAccessory.framework
     - MediaPlayer.framework
     - SystemConfiguration.framework
-    - UIKit.framework
-    - libstdc++.6.0.9.dylib
-    - libstdc++.dylib
-    - libz.dylib
+    - WebKit.framework
+    - libc++.tbd
+    - libz.tbd
 + Also include the framework files you copied:
     - WePay.framework
 + Done!

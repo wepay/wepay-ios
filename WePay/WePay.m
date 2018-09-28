@@ -9,7 +9,7 @@
 #import "WePay.h"
 
 #if defined(__has_include)
-#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h")
+#if __has_include("RUA_MFI/RUA.h")
 #import <WePay_CardReaderDirector.h>
 #endif
 
@@ -88,7 +88,7 @@
 
 #if defined(__has_include)
 
-#if __has_include("RPx_MFI/MPOSCommunicationManager/RDeviceInfo.h") && __has_include("RUA_MFI/RUA.h") 
+#if __has_include("RUA_MFI/RUA.h")
 #pragma mark - Card Reader available
 
 - (void) startTransactionForReadingWithCardReaderDelegate:(id<WPCardReaderDelegate>) cardReaderDelegate

@@ -43,6 +43,8 @@ project.xcworkspace
 /WePayExample/WePayExample/Libs/RKI_MFI.framework/
 /WePayExample/WePayExample/Libs/TrustDefender.framework/
 /WePayExample/WePayExample/Libs/TrustDefenderMobile.framework/
+/WePayExample/WePayExample/Libs/IngenicoMposSdk_MFI.framework/
+/WePayExample/WePayExample/Libs/LandiSDK_MFI.framework/
 /WePay/Libs/G4XSwiper.framework/
 /WePay/Libs/RPx.framework/
 /WePay/Libs/RUA.framework/
@@ -51,6 +53,8 @@ project.xcworkspace
 /WePay/Libs/RKI_MFI.framework/
 /WePay/Libs/TrustDefender.framework/
 /WePay/Libs/TrustDefenderMobile.framework/
+/WePay/Libs/IngenicoMposSdk_MFI.framework/
+/WePay/Libs/LandiSDK_MFI.framework/
 
 # CocoaPods
 #
